@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIUKM - Sistem Informasi Manajemen Rekrutmen UKM Terpusat</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --secondary: #f1f5f9;
+      --text-dark: #1e293b;
+      --text-light: #475569;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      background: #f8fbff;
+      color: var(--text-dark);
+    }
+
+    /* Navbar */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 70px;
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .logo {
+      font-weight: bold;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-dark);
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 28px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .login-btn {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: left;
+      max-width: 900px;
+      margin: 70px auto;
+      padding: 0 20px;
+    }
+
+    .hero h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .hero p {
+      font-size: 16px;
+      color: var(--text-light);
+      margin-bottom: 28px;
+    }
+
+    .hero .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .hero .btn-secondary {
+      background: #e5e7eb;
+      color: #1e293b;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* Features */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .feature-card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+      color: var(--text-dark);
+      font-size: 15px;
+    }
+
+    /* Tentang */
+    .about {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 900px;
+      margin: 70px auto;
+      padding: 0 20px;
+      gap: 40px;
+    }
+
+    .about-text {
+      flex: 1;
+    }
+
+    .about-text h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .about-text p {
+      color: var(--text-light);
+      font-size: 15px;
+    }
+
+    .about img {
+      flex: 1;
+      max-width: 280px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid #e5e7eb;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header {
+        padding: 16px 20px;
+      }
+      nav ul {
+        display: none;
+      }
+      .features {
+        grid-template-columns: 1fr;
+      }
+      .about {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header>
+    <div class="logo">🔰 SIUKM</div>
+    <nav>
+      <ul>
+        <li><a href="#">Beranda</a></li>
+        <li><a href="#">Tentang SIUKM</a></li>
+        <li><a href="#">Daftar UKM</a></li>
+        <li><a href="#">Informasi UKM</a></li>
+        <li><a href="#">Pengumuman</a></li>
+      </ul>
+    </nav>
+    <button class="login-btn">Jelajahi</button>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>SIUKM – Sistem Informasi Manajemen Rekrutmen UKM Terpusat</h1>
+    <p>Meningkatkan Efisiensi dan Transparansi Pendaftaran Mahasiswa Baru</p>
+    <button class="btn-primary">Mulai Sekarang</button>
+    <button class="btn-secondary">Jelajahi</button>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="feature-card">📑 Pendaftaran UKM Terpusat</div>
+    <div class="feature-card">🔍 Tracking Status Pendaftaran</div>
+    <div class="feature-card">ℹ️ Informasi UKM Kampus</div>
+    <div class="feature-card">📢 Pengumuman & Jadwal</div>
+  </section>
+
+  <!-- Tentang -->
+  <section class="about">
+    <div class="about-text">
+      <h2>Tentang SIUKM</h2>
+      <p>SIUKM adalah sistem informasi manajemen rekrutmen UKM terpadu berbasis website untuk meningkatkan efisiensi dan transparansi pendaftaran mahasiswa baru.</p>
+    </div>
+    <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Ilustrasi Sistem">
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <span>Kontak</span>
+    <span>Sosial Media</span>
+    <span>Hak Cipta</span>
+  </footer>
+</body>
+</html>
