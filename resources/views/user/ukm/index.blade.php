@@ -12,7 +12,7 @@
   <div class="relative text-center py-16 px-6 md:px-12">
     <div class="max-w-3xl mx-auto">
       <h1 class="text-5xl md:text-6xl font-extrabold text-indigo-700 tracking-tight mb-3 animate-fadeInDown">
-        Jelajahi UKM
+        Jelajahi UKM 
       </h1>
       <p class="text-gray-600 text-lg md:text-xl animate-fadeInUp">
         Pilih UKM yang sesuai dengan passion-mu, jadilah bagian dari komunitas yang menginspirasi.
