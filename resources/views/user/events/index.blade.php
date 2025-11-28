@@ -1,7 +1,6 @@
 @extends('layouts.user')
 
 @section('content')
-    <!-- Hero Section -->
     <section class="navbar-bg py-16 text-white text-center shadow-lg -mx-8 mb-14">
         <h1 class="text-3xl font-semibold tracking-wider">Events & Kegiatan</h1>
         <p class="mt-2 text-sm text-gray-400">Temukan event menarik dari berbagai UKM</p>
@@ -9,7 +8,6 @@
 
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 -mt-24">
         <div class="bg-white p-6 rounded-xl shadow-lg">
-            <!-- Categories Filter -->
             <div class="flex flex-wrap gap-2 mb-8 border-b pb-4 overflow-x-auto whitespace-nowrap">
                 <button
                     class="px-4 py-2 text-sm font-medium rounded-full bg-gray-900 text-white shadow-md flex-shrink-0 category-filter active"
@@ -25,12 +23,10 @@
                 @endforeach
             </div>
 
-            <!-- Events Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="events-grid">
                 @foreach ($events as $event)
                     <div class="bg-white rounded-xl shadow-md overflow-hidden transform hover:scale-[1.02] transition duration-300 event-card"
                         data-ukm="{{ $event->ukm->id }}">
-                        <!-- Event Image -->
                         <div
                             class="h-40 bg-gray-200 flex items-center justify-center text-gray-400 overflow-hidden relative">
                             @if ($event->poster_image)
@@ -43,7 +39,6 @@
                                 </div>
                             @endif
 
-                            <!-- UKM Badge -->
                             <div class="absolute top-3 right-3">
                                 <span
                                     class="px-2 py-1 bg-white/90 backdrop-blur-sm text-gray-800 text-xs rounded-full font-semibold shadow-sm">
@@ -51,7 +46,6 @@
                                 </span>
                             </div>
 
-                            <!-- Date Badge -->
                             <div class="absolute top-3 left-3">
                                 <div class="bg-black/70 text-white text-xs rounded-lg px-2 py-1 text-center">
                                     <div class="font-bold">{{ $event->event_date->format('d') }}</div>
@@ -60,12 +54,10 @@
                             </div>
                         </div>
 
-                        <!-- Event Content -->
                         <div class="p-4">
                             <h3 class="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">{{ $event->title }}</h3>
                             <p class="text-sm text-gray-500 mb-3 line-clamp-2">{{ Str::limit($event->description, 80) }}</p>
 
-                            <!-- Event Details -->
                             <div class="space-y-2 text-xs text-gray-600 mb-4">
                                 <div class="flex items-center">
                                     <i class="fas fa-clock mr-2 w-4 text-blue-500"></i>
@@ -77,9 +69,9 @@
                                 </div>
                             </div>
 
-                            <!-- Action Buttons -->
                             <div class="flex space-x-2">
-                                <button onclick="showEventDetails({{ $event }})"
+                                {{-- Ubah tombol detail agar mengirim data lengkap, termasuk relasi ukm --}}
+                                <button onclick="showEventDetails({{ json_encode($event->load('ukm')) }})"
                                     class="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition text-sm font-medium flex items-center justify-center">
                                     <i class="fas fa-eye mr-1 text-xs"></i>
                                     Detail
@@ -96,7 +88,6 @@
                 @endforeach
             </div>
 
-            <!-- Empty State for No Events -->
             @if ($events->count() == 0)
                 <div class="text-center py-12" id="no-events-empty">
                     <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -107,7 +98,6 @@
                 </div>
             @endif
 
-            <!-- Empty State for Filtered Results -->
             <div class="text-center py-12 hidden" id="no-filtered-events">
                 <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-search text-gray-400 text-2xl"></i>
@@ -123,97 +113,85 @@
         </div>
     </main>
 
-    <!-- Event Details Modal -->
-    <dialog id="eventModal" class="bg-white rounded-2xl shadow-2xl p-0 w-full max-w-2xl backdrop:bg-black/30">
-        <div class="p-6 border-b border-gray-200">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <div
-                        class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-calendar text-white text-sm"></i>
+    {{-- START MODAL ASIMETRIS ELEGANT BARU (Revisi Penataan) --}}
+    <dialog id="eventModal" 
+        class="bg-white rounded-2xl shadow-2xl p-0 w-full max-w-5xl max-h-[90vh] 
+               backdrop:bg-black/40 backdrop:backdrop-blur-sm 
+               transform transition-all duration-300 opacity-0 scale-95 flex flex-col overflow-hidden">
+        
+        <div class="relative flex h-full">
+            
+            {{-- KOLOM KIRI: Judul, Meta, dan Konten Teks --}}
+            <div class="w-7/12 flex-shrink-0 p-8 overflow-y-auto max-h-[90vh] pb-20">
+                
+                {{-- Header/Judul --}}
+                <h1 class="text-4xl font-extrabold text-gray-900 mb-6 leading-tight" id="eventModalTitle">Judul Event</h1>
+                
+                {{-- UKM & Meta Info Block --}}
+                <div class="mb-8 p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-3">
+                    
+                    {{-- UKM Info / Organizer --}}
+                    <div class="flex items-center text-sm font-semibold text-gray-700">
+                        <div id="eventModalLogo" class="w-8 h-8 rounded-full flex items-center justify-center mr-3 border border-gray-200 flex-shrink-0 overflow-hidden">
+                            {{-- Logo will be inserted here --}}
+                        </div>
+                        <span id="eventModalUkm" class="text-base text-blue-600 font-bold">Nama UKM (Organizer)</span>
                     </div>
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900" id="eventTitle"></h3>
-                        <p class="text-sm text-gray-500" id="eventUkm"></p>
+                    
+                    {{-- Tanggal, Waktu, Lokasi --}}
+                    <div class="space-y-3 pt-2 border-t border-gray-200">
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-calendar-alt mr-3 text-blue-500 w-4"></i>
+                            <span id="eventModalDate">Tanggal Event</span>
+                        </div>
+                        
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-clock mr-3 text-green-500 w-4"></i>
+                            <span id="eventModalTime">Waktu Event</span>
+                        </div>
+
+                        <div class="flex items-start text-sm text-gray-600">
+                            <i class="fas fa-map-marker-alt mr-3 text-red-500 mt-1 w-4"></i>
+                            <span id="eventModalLocation" class="font-medium">Lokasi Event</span>
+                        </div>
                     </div>
                 </div>
-                <button onclick="document.getElementById('eventModal').close()"
-                    class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors">
-                    <i class="fas fa-times text-gray-500"></i>
+                
+                {{-- Konten Utama (Deskripsi) --}}
+                <div class="prose max-w-none text-gray-700 leading-relaxed text-base">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Deskripsi Kegiatan</h2>
+                    <div id="eventModalDescription" class="whitespace-pre-line">
+                        {{-- Deskripsi event akan masuk di sini --}}
+                    </div>
+                </div>
+                
+            </div>
+            
+            {{-- KOLOM KANAN: Gambar Poster, Tombol Close, dan Tombol Daftar --}}
+            <div class="w-5/12 flex-shrink-0 bg-gray-100 relative rounded-r-2xl overflow-hidden shadow-inner flex items-center justify-center">
+                
+                {{-- Container Gambar Poster dengan object-cover --}}
+                {{-- Pastikan ini mengisi tinggi penuh, dan gambar di dalamnya object-cover --}}
+                <div id="eventModalPoster" class="w-full h-full">
+                    {{-- Poster akan masuk di sini --}}
+                </div>
+                
+                {{-- Tombol Close di atas gambar, posisi elegan --}}
+                <button data-close-modal 
+                    class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/70 backdrop-blur-sm hover:bg-white flex items-center justify-center transition-colors shadow-lg border border-gray-100">
+                    <i class="fas fa-times text-gray-600 text-lg"></i>
                 </button>
-            </div>
-        </div>
-
-        <div class="p-6">
-            <!-- Event Poster -->
-            <div id="eventPoster"
-                class="w-full h-64 bg-gray-200 rounded-xl mb-6 flex items-center justify-center overflow-hidden">
-                <!-- Poster will be inserted here -->
-            </div>
-
-            <!-- Event Details -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div class="flex items-center p-3 bg-blue-50 rounded-lg border border-blue-100">
-                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-calendar text-blue-600 text-sm"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-blue-600 font-medium">Tanggal</p>
-                        <p class="text-gray-900 font-semibold" id="eventDate"></p>
-                    </div>
-                </div>
-
-                <div class="flex items-center p-3 bg-green-50 rounded-lg border border-green-100">
-                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-clock text-green-600 text-sm"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-green-600 font-medium">Waktu</p>
-                        <p class="text-gray-900 font-semibold" id="eventTime"></p>
-                    </div>
-                </div>
-
-                <div class="flex items-center p-3 bg-red-50 rounded-lg border border-red-100">
-                    <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-map-marker-alt text-red-600 text-sm"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-red-600 font-medium">Lokasi</p>
-                        <p class="text-gray-900 font-semibold" id="eventLocation"></p>
-                    </div>
-                </div>
-
-                <div class="flex items-center p-3 bg-purple-50 rounded-lg border border-purple-100">
-                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-users text-purple-600 text-sm"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-purple-600 font-medium">Organizer</p>
-                        <p class="text-gray-900 font-semibold" id="eventOrganizer"></p>
+                
+                {{-- Tombol Daftar/Tutup di Bawah (Fixed) --}}
+                <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/50 to-transparent flex justify-center">
+                    <div id="eventModalRegistrationButton">
+                        {{-- Tombol pendaftaran atau tombol Tutup akan masuk di sini --}}
                     </div>
                 </div>
             </div>
-
-            <!-- Event Description -->
-            <div class="mb-6">
-                <h4 class="font-semibold text-gray-900 mb-3">Deskripsi Event</h4>
-                <p id="eventDescription" class="text-gray-700 leading-relaxed whitespace-pre-line"></p>
-            </div>
-
-            <!-- Registration Section -->
-            <div id="eventRegistration"
-                class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200">
-                <!-- Registration content will be inserted here -->
-            </div>
-        </div>
-
-        <div class="flex justify-end p-6 border-t border-gray-200">
-            <button onclick="document.getElementById('eventModal').close()"
-                class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 font-medium transition-colors">
-                Tutup
-            </button>
         </div>
     </dialog>
+    {{-- END MODAL ASIMETRIS ELEGANT BARU (Revisi Penataan) --}}
 
     <style>
         .navbar-bg {
@@ -255,6 +233,68 @@
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 2;
         }
+
+        /* --- Styles MODAL ASIMETRIS BARU (Revisi Penataan) --- */
+        dialog#eventModal {
+            display: flex;
+            align-items: center; /* Center Vertikal */
+            justify-content: center; /* Center Horizontal */
+            max-width: 90vw; 
+            max-height: 90vh;
+            /* Tambahan: Pastikan modalnya tidak melebihi viewport */
+            width: fit-content;
+            height: fit-content;
+        }
+
+        dialog#eventModal > div.relative {
+            height: 100%; /* Memastikan flex child mengisi tinggi penuh parent */
+            display: flex; /* Aktifkan flex pada container kolom */
+            max-height: 90vh; /* Batasi tinggi total modal */
+        }
+        
+        dialog#eventModal[open] {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Kolom Kiri: Konten */
+        dialog#eventModal .w-7/12 {
+            height: 100%; /* Pastikan mengisi tinggi penuh */
+        }
+
+        /* Kolom Kanan: Gambar Poster */
+        dialog#eventModal .w-5/12 {
+            height: 100%; /* Pastikan mengisi tinggi penuh */
+            /* Pastikan elemen poster di tengah jika gambarnya lebih kecil */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Container Gambar Poster */
+        #eventModalPoster {
+            width: 100%;
+            height: 100%; /* Ini penting agar div poster mengisi penuh kolom kanan */
+            overflow: hidden; /* Sembunyikan jika ada bagian gambar yang keluar */
+        }
+
+        /* Gambar di dalam container poster */
+        #eventModalPoster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* KRUSIAL: Ini yang membuat gambar mengisi penuh dan tidak terdistorsi */
+            display: block; /* Menghilangkan spasi bawah default pada img */
+        }
+
+        /* Konten utama deskripsi */
+        .prose {
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .prose p {
+            margin-bottom: 1.5rem;
+        }
     </style>
 
     <script>
@@ -264,18 +304,17 @@
             const noEventsEmpty = document.getElementById('no-events-empty');
             const noFilteredEvents = document.getElementById('no-filtered-events');
             const eventsGrid = document.getElementById('events-grid');
+            const modal = document.getElementById('eventModal');
+            const transitionDuration = 300;
 
-            // Hide empty state initially if there are events
             if (eventCards.length > 0 && noEventsEmpty) {
                 noEventsEmpty.style.display = 'none';
             }
 
-            // Category filter functionality
             categoryFilters.forEach(filter => {
                 filter.addEventListener('click', function() {
                     const selectedUkm = this.getAttribute('data-category');
 
-                    // Update active state
                     categoryFilters.forEach(f => {
                         f.classList.remove('active');
                         f.classList.remove('bg-gray-900', 'text-white');
@@ -288,7 +327,6 @@
 
                     let visibleCount = 0;
 
-                    // Filter event cards
                     eventCards.forEach(card => {
                         const cardUkm = card.getAttribute('data-ukm');
 
@@ -296,7 +334,6 @@
                             card.classList.remove('hidden');
                             visibleCount++;
 
-                            // Add animation delay for staggered appearance
                             setTimeout(() => {
                                 card.style.opacity = '1';
                                 card.style.transform = 'scale(1)';
@@ -310,7 +347,6 @@
                         }
                     });
 
-                    // Show/hide empty states
                     if (visibleCount === 0) {
                         if (noEventsEmpty) noEventsEmpty.style.display = 'none';
                         noFilteredEvents.classList.remove('hidden');
@@ -323,7 +359,6 @@
                 });
             });
 
-            // Add loading animation for initial cards
             eventCards.forEach((card, index) => {
                 card.style.opacity = '0';
                 card.style.transform = 'translateY(20px)';
@@ -335,7 +370,6 @@
                 }, index * 100);
             });
 
-            // Handle "Tampilkan Semua Event" button in empty state
             const showAllButton = noFilteredEvents.querySelector('.category-filter');
             if (showAllButton) {
                 showAllButton.addEventListener('click', function() {
@@ -345,72 +379,104 @@
                     }
                 });
             }
+
+            function closeModal() {
+                if (!modal.hasAttribute('open')) return;
+                modal.classList.remove('opacity-100', 'scale-100');
+                modal.classList.add('opacity-0', 'scale-95');
+
+                setTimeout(() => {
+                    modal.close();
+                }, transitionDuration);
+            }
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            const closeButtons = document.querySelectorAll('#eventModal [data-close-modal]');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', closeModal);
+            });
         });
 
+        /**
+         * Membuka modal detail event dan mengisi kontennya.
+         * @param {object} event - Objek event yang dimuat dengan relasi UKM.
+         */
         function showEventDetails(event) {
-            document.getElementById('eventTitle').textContent = event.title;
-            document.getElementById('eventUkm').textContent = event.ukm.name;
-            document.getElementById('eventDate').textContent = new Date(event.event_date).toLocaleDateString('id-ID', {
+            const modal = document.getElementById('eventModal');
+
+            // 1. Isi Konten Teks (Kolom Kiri)
+            document.getElementById('eventModalTitle').textContent = event.title;
+            document.getElementById('eventModalUkm').textContent = event.ukm.name;
+
+            const date = new Date(event.event_date);
+            document.getElementById('eventModalDate').textContent = date.toLocaleDateString('id-ID', {
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
             });
-            document.getElementById('eventTime').textContent = event.event_time;
-            document.getElementById('eventLocation').textContent = event.location;
-            document.getElementById('eventOrganizer').textContent = event.ukm.name;
-            document.getElementById('eventDescription').textContent = event.description;
+            document.getElementById('eventModalTime').textContent = event.event_time;
+            document.getElementById('eventModalLocation').textContent = event.location;
 
-            // Set poster image
-            const posterContainer = document.getElementById('eventPoster');
+            document.getElementById('eventModalDescription').innerHTML = event.description;
+
+            const logoContainer = document.getElementById('eventModalLogo');
+            logoContainer.innerHTML = '';
+            logoContainer.classList.remove('bg-gray-200');
+
+            if (event.ukm.logo) {
+                logoContainer.innerHTML =
+                    `<img src="${event.ukm.logo}" alt="${event.ukm.name}" class="w-full h-full object-cover rounded-full">`;
+            } else {
+                logoContainer.innerHTML = `<i class="fas fa-users text-gray-400 text-sm"></i>`;
+                logoContainer.classList.add('bg-gray-200');
+            }
+
+            // 2. Isi Poster & Tombol (Kolom Kanan)
+            const posterContainer = document.getElementById('eventModalPoster');
+            posterContainer.innerHTML = '';
+
             if (event.poster_image) {
+                // Class object-cover diterapkan via CSS dan di HTML
                 posterContainer.innerHTML =
-                    `<img src="${event.poster_image}" alt="${event.title}" class="w-full h-full object-cover rounded-xl">`;
+                    `<img src="${event.poster_image}" alt="${event.title}" class="w-full h-full object-cover">`;
             } else {
                 posterContainer.innerHTML = `
-            <div class="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center rounded-xl">
-                <i class="fas fa-calendar text-white text-4xl"></i>
-            </div>
-        `;
+                    <div class="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                        <i class="fas fa-calendar-alt text-white text-5xl"></i>
+                    </div>
+                `;
             }
 
-            // Set registration section
-            const registrationDiv = document.getElementById('eventRegistration');
+            const registrationButtonDiv = document.getElementById('eventModalRegistrationButton');
+
             if (event.registration_link) {
-                registrationDiv.innerHTML = `
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                        <i class="fas fa-external-link-alt text-green-600"></i>
-                    </div>
-                    <div>
-                        <p class="font-semibold text-gray-900">Pendaftaran Terbuka</p>
-                        <p class="text-sm text-gray-600">Klik link di bawah untuk mendaftar</p>
-                    </div>
-                </div>
-                <a href="${event.registration_link}" target="_blank" 
-                   class="bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 font-medium transition-colors flex items-center">
-                    <i class="fas fa-user-plus mr-2"></i>
-                    Daftar Sekarang
-                </a>
-            </div>
-        `;
+                registrationButtonDiv.innerHTML = `
+                    <a href="${event.registration_link}" target="_blank" 
+                        class="px-8 py-2.5 bg-green-600 text-white rounded-full hover:bg-green-700 font-medium transition-colors shadow-xl flex items-center">
+                        <i class="fas fa-user-plus mr-2"></i> Daftar Sekarang
+                    </a>
+                `;
             } else {
-                registrationDiv.innerHTML = `
-            <div class="text-center py-2">
-                <p class="text-gray-600">Untuk informasi pendaftaran, hubungi UKM penyelenggara</p>
-            </div>
-        `;
+                registrationButtonDiv.innerHTML = `
+                    <button data-close-modal
+                            class="px-8 py-2.5 bg-white/90 text-gray-800 rounded-full hover:bg-white font-medium transition-colors shadow-xl">
+                        <i class="fas fa-chevron-circle-up rotate-180 mr-2 text-sm"></i> Tutup Detail
+                    </button>
+                `;
             }
 
-            document.getElementById('eventModal').showModal();
+            // 3. Buka Modal dengan Animasi Masuk
+            modal.showModal();
+            setTimeout(() => {
+                modal.classList.add('opacity-100', 'scale-100');
+                modal.classList.remove('opacity-0', 'scale-95');
+            }, 10);
         }
-
-        // Close modal when clicking outside
-        document.getElementById('eventModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.close();
-            }
-        });
     </script>
 @endsection

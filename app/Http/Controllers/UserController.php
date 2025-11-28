@@ -8,326 +8,391 @@ use App\Models\Event;
 use App\Models\Feed;
 use App\Models\Registration;
 use App\Models\UkmCategory;
-use Illuminate\Support\Facades\Log; 
-use Illuminate\Support\Facades\Auth; // Tambahkan ini
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    // Dashboard User - UPDATE VERSION
     public function dashboard()
     {
-        $user = auth()->user();
-        $registrations = $user->registrations()->with('ukm')->latest()->get();
-        
-        // Trending Events (untuk slider) - ambil lebih banyak
-        $trendingEvents = Event::with('ukm')
-            ->where('event_date', '>=', now())
-            ->orderBy('created_at', 'desc')
-            ->take(8) // Ambil lebih banyak buat slider
-            ->get();
+        try {
+            $user = auth()->user();
 
-        // Trending Feeds (untuk grid 2 kolom)
-        $trendingFeeds = Feed::with('ukm')
-            ->latest()
-            ->take(4) // Ambil 4 untuk grid 2x2
-            ->get();
+            $registrations = $user->registrations()
+                ->with('ukm')
+                ->latest()
+                ->get();
 
-        // Upcoming Events (untuk statistik)
-        $upcomingEvents = Event::where('event_date', '>=', now())->get();
-        
-        // Recent Feeds (untuk statistik)
-        $recentFeeds = Feed::latest()->take(6)->get();
-        
-        // Total UKM Active
-        $totalUkm = Ukm::where('status', 'active')->count();
-        
-        return view('user.dashboard', compact(
-            'user', 
-            'registrations', 
-            'trendingEvents',
-            'trendingFeeds',
-            'upcomingEvents',
-            'recentFeeds',
-            'totalUkm'
-        ));
+            // Trending Events
+            $trendingEvents = Event::with('ukm')
+                ->where('event_date', '>=', now())
+                ->orderBy('created_at', 'desc')
+                ->take(8)
+                ->get();
+
+            // Trending Feeds
+            $trendingFeeds = Feed::with('ukm')
+                ->latest()
+                ->take(4)
+                ->get();
+
+            // Upcoming Events untuk statistik
+            $upcomingEvents = Event::where('event_date', '>=', now())->get();
+
+            // Recent Feeds untuk statistik
+            $recentFeeds = Feed::latest()->take(6)->get();
+
+            // Total UKM Active
+            $totalUkm = Ukm::where('status', 'active')->count();
+
+            // UKM Terpopuler
+            $ukms = Ukm::with('category')
+                ->where('status', 'active')
+                ->withCount(['registrations as members_count' => function ($query) {
+                    $query->where('status', 'approved');
+                }])
+                ->orderBy('members_count', 'desc')
+                ->take(3)
+                ->get();
+
+            $categories = UkmCategory::all();
+
+            return view('user.dashboard', compact(
+                'user',
+                'registrations',
+                'trendingEvents',
+                'trendingFeeds',
+                'upcomingEvents',
+                'recentFeeds',
+                'totalUkm',
+                'ukms',
+                'categories'
+            ));
+        } catch (\Exception $e) {
+            Log::error('Dashboard error: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan sistem saat memuat dashboard.');
+        }
     }
 
-    // List UKM untuk User - TAMBAHIN SEARCH & FILTER
     public function ukmList(Request $request)
     {
-        $query = Ukm::with('category')->where('status', 'active');
-        
-        // Search by name
-        if ($request->has('search') && $request->search != '') {
-            $query->where('name', 'like', '%'.$request->search.'%');
+        try {
+            $query = Ukm::with('category')->where('status', 'active');
+
+            // Search by name
+            if ($request->filled('search')) {
+                $query->where('name', 'like', '%' . $request->search . '%');
+            }
+
+            // Filter by category
+            if ($request->filled('category')) {
+                $query->where('category_id', $request->category);
+            }
+
+            $ukms = $query->get();
+            $categories = UkmCategory::all();
+
+            return view('user.ukm.list', compact('ukms', 'categories'));
+        } catch (\Exception $e) {
+            Log::error('UKM List error: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat memuat daftar UKM.');
         }
-        
-        // Filter by category
-        if ($request->has('category') && $request->category != '') {
-            $query->where('category_id', $request->category);
-        }
-        
-        $ukms = $query->get();
-        $categories = UkmCategory::all();
-        
-        return view('user.ukm.list', compact('ukms', 'categories'));
     }
 
-    // Detail UKM - TAMBAHIN EVENT & FEED TERBARU
     public function ukmDetail($id)
     {
-        $ukm = Ukm::with(['category', 'events', 'feeds'])->findOrFail($id);
-        $user = auth()->user();
-        
-        $isRegistered = Registration::where('user_id', $user->id)
-            ->where('ukm_id', $id)
-            ->exists();
-            
-        $similarUkms = Ukm::where('category_id', $ukm->category_id)
-            ->where('id', '!=', $id)
-            ->where('status', 'active')
-            ->take(4)
-            ->get();
+        try {
+            $ukm = Ukm::with(['category', 'events', 'feeds'])->findOrFail($id);
+            $user = auth()->user();
 
-        // Ambil events terbaru UKM ini (3 terbaru)
-        $recentEvents = $ukm->events()
-            ->where('event_date', '>=', now())
-            ->orderBy('event_date')
-            ->take(3)
-            ->get();
+            $isRegistered = Registration::where('user_id', $user->id)
+                ->where('ukm_id', $id)
+                ->exists();
 
-        // Ambil feeds terbaru UKM ini (3 terbaru)
-        $recentFeeds = $ukm->feeds()
-            ->latest()
-            ->take(3)
-            ->get();
-            
-        return view('user.ukm.detail', compact(
-            'ukm', 
-            'isRegistered', 
-            'similarUkms',
-            'recentEvents',
-            'recentFeeds'
-        ));
+            $similarUkms = Ukm::where('category_id', $ukm->category_id)
+                ->where('id', '!=', $id)
+                ->where('status', 'active')
+                ->take(4)
+                ->get();
+
+            // Recent events UKM
+            $recentEvents = $ukm->events()
+                ->where('event_date', '>=', now())
+                ->orderBy('event_date')
+                ->take(3)
+                ->get();
+
+            // Recent feeds UKM
+            $recentFeeds = $ukm->feeds()
+                ->latest()
+                ->take(3)
+                ->get();
+
+            return view('user.ukm.detail', compact(
+                'ukm',
+                'isRegistered',
+                'similarUkms',
+                'recentEvents',
+                'recentFeeds'
+            ));
+        } catch (\Exception $e) {
+            Log::error('UKM Detail error: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat memuat detail UKM.');
+        }
     }
 
-    // Daftar UKM - TAMBAHIN VALIDASI MAX 3 UKM
-public function registerUkm(Request $request, $ukmId)
-{
-    $user = auth()->user();
-    
-    // DEBUG 1: Cek user dan request
-    \Log::info('=== REGISTER UKM DEBUG START ===');
-    \Log::info('User ID: ' . $user->id);
-    \Log::info('UKM ID: ' . $ukmId);
-    \Log::info('Request Data:', $request->all());
-    \Log::info('Request Headers:', $request->headers->all());
+    public function registerUkm(Request $request, $ukmId)
+    {
+        try {
+            $user = auth()->user();
 
-    // Validasi maksimal 3 UKM
-    $currentRegistrations = Registration::where('user_id', $user->id)
-        ->whereIn('status', ['pending', 'approved'])
-        ->count();
+            // Validasi input
+            $validator = Validator::make($request->all(), [
+                'motivation' => 'required|string|min:20|max:1000',
+                'experience' => 'nullable|string|max:500',
+                'skills' => 'nullable|string|max:500',
+            ], [
+                'motivation.required' => 'Motivasi wajib diisi.',
+                'motivation.min' => 'Motivasi minimal 20 karakter.',
+                'motivation.max' => 'Motivasi maksimal 1000 karakter.',
+                'experience.max' => 'Pengalaman maksimal 500 karakter.',
+                'skills.max' => 'Keahlian maksimal 500 karakter.',
+            ]);
 
-    \Log::info('Current Registrations Count: ' . $currentRegistrations);
+            if ($validator->fails()) {
+                return back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('error', 'Terjadi kesalahan validasi. Silakan periksa form Anda.');
+            }
 
-    if ($currentRegistrations >= 3) {
-        \Log::warning('Max registration limit reached for user: ' . $user->id);
-        return back()->with('error', 'Anda sudah mencapai batas maksimal pendaftaran UKM (3 UKM).');
+            // Validasi maksimal 3 UKM
+            $currentRegistrations = Registration::where('user_id', $user->id)
+                ->whereIn('status', ['pending', 'approved'])
+                ->count();
+
+            if ($currentRegistrations >= 3) {
+                return back()
+                    ->withInput()
+                    ->with('error', 'Anda sudah mencapai batas maksimal pendaftaran UKM (3 UKM).');
+            }
+
+            // Cek apakah sudah mendaftar UKM ini
+            $existingRegistration = Registration::where('user_id', $user->id)
+                ->where('ukm_id', $ukmId)
+                ->first();
+
+            if ($existingRegistration) {
+                return back()
+                    ->withInput()
+                    ->with('error', 'Anda sudah mendaftar UKM ini sebelumnya.');
+            }
+
+            // Cek apakah UKM exists
+            $ukm = Ukm::where('status', 'active')->find($ukmId);
+            if (!$ukm) {
+                return back()
+                    ->withInput()
+                    ->with('error', 'UKM tidak ditemukan atau tidak aktif.');
+            }
+
+            $registration = Registration::create([
+                'user_id' => $user->id,
+                'ukm_id' => $ukmId,
+                'motivation' => $request->motivation,
+                'experience' => $request->experience,
+                'skills' => $request->skills,
+                'status' => 'pending',
+            ]);
+
+            Log::info('Registration created successfully', [
+                'registration_id' => $registration->id,
+                'user_id' => $user->id,
+                'ukm_id' => $ukmId
+            ]);
+
+            return back()->with('success', 'Pendaftaran berhasil! Tunggu konfirmasi dari admin/staff UKM.');
+        } catch (\Exception $e) {
+            Log::error('Registration error: ' . $e->getMessage());
+            return back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan sistem: ' . $e->getMessage());
+        }
     }
-    
-    // Cek apakah sudah mendaftar UKM ini
-    $existingRegistration = Registration::where('user_id', $user->id)
-        ->where('ukm_id', $ukmId)
-        ->first();
 
-    \Log::info('Existing Registration Check:', [
-        'exists' => !is_null($existingRegistration),
-        'registration' => $existingRegistration
-    ]);
-
-    if ($existingRegistration) {
-        \Log::warning('User already registered for this UKM', [
-            'user_id' => $user->id,
-            'ukm_id' => $ukmId
-        ]);
-        return back()->with('error', 'Anda sudah mendaftar UKM ini.');
-    }
-
-    // DEBUG 2: Sebelum validasi
-    Log::info('Before validation');
-
-    $request->validate([
-        'motivation' => 'required|string|min:10',
-        'experience' => 'nullable|string',
-        'skills' => 'nullable|string',
-    ]);
-
-    Log::info('Validation passed');
-
-    try {
-        // DEBUG 3: Sebelum create
-        Log::info('Attempting to create registration', [
-            'user_id' => $user->id,
-            'ukm_id' => $ukmId,
-            'motivation_length' => strlen($request->motivation),
-            'experience_length' => strlen($request->experience ?? ''),
-            'skills_length' => strlen($request->skills ?? '')
-        ]);
-
-        $registration = Registration::create([
-            'user_id' => $user->id,
-            'ukm_id' => $ukmId,
-            'motivation' => $request->motivation,
-            'experience' => $request->experience,
-            'skills' => $request->skills,
-            'status' => 'pending', // Pastikan ada status
-        ]);
-
-        // DEBUG 4: Setelah create
-        Log::info('Registration created successfully', [
-            'registration_id' => $registration->id,
-            'registration_data' => $registration->toArray()
-        ]);
-
-        // DEBUG 5: Verify data saved
-        $savedRegistration = Registration::find($registration->id);
-        Log::info('Verified saved registration:', [
-            'exists' => !is_null($savedRegistration),
-            'data' => $savedRegistration ? $savedRegistration->toArray() : null
-        ]);
-
-        Log::info('=== REGISTER UKM DEBUG END - SUCCESS ===');
-
-        return back()->with('success', 'Pendaftaran berhasil! Tunggu konfirmasi dari admin/staff UKM.');
-
-    } catch (\Exception $e) {
-        Log::error('Registration creation failed', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
-            'user_id' => $user->id,
-            'ukm_id' => $ukmId
-        ]);
-
-        return back()->with('error', 'Terjadi kesalahan sistem: ' . $e->getMessage());
-    }
-}
-
-    // Lihat Events - TAMBAHIN SEARCH & FILTER
     public function events(Request $request)
     {
-        $query = Event::with('ukm')->where('event_date', '>=', now());
-        
-        // Search events
-        if ($request->has('search') && $request->search != '') {
-            $query->where('title', 'like', '%'.$request->search.'%');
+        try {
+            $query = Event::with('ukm')->where('event_date', '>=', now());
+
+            // Search events
+            if ($request->filled('search')) {
+                $query->where('title', 'like', '%' . $request->search . '%');
+            }
+
+            // Filter by UKM
+            if ($request->filled('ukm')) {
+                $query->where('ukm_id', $request->ukm);
+            }
+
+            $events = $query->orderBy('event_date')->get();
+
+            $pastEvents = Event::with('ukm')
+                ->where('event_date', '<', now())
+                ->orderBy('event_date', 'desc')
+                ->take(10)
+                ->get();
+
+            $ukms = Ukm::where('status', 'active')->get();
+
+            return view('user.events.index', compact('events', 'pastEvents', 'ukms'));
+        } catch (\Exception $e) {
+            Log::error('Events error: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat memuat daftar event.');
         }
-        
-        // Filter by UKM
-        if ($request->has('ukm') && $request->ukm != '') {
-            $query->where('ukm_id', $request->ukm);
-        }
-        
-        $events = $query->orderBy('event_date')->get();
-        
-        $pastEvents = Event::with('ukm')
-            ->where('event_date', '<', now())
-            ->orderBy('event_date', 'desc')
-            ->take(10)
-            ->get();
-            
-        $ukms = Ukm::where('status', 'active')->get(); // Untuk filter dropdown
-            
-        return view('user.events.index', compact('events', 'pastEvents', 'ukms'));
     }
 
-    // Detail Event - SUDAH BAGUS
     public function eventDetail($id)
     {
-        $event = Event::with('ukm')->findOrFail($id);
-        $similarEvents = Event::where('ukm_id', $event->ukm_id)
-            ->where('id', '!=', $id)
-            ->where('event_date', '>=', now())
-            ->take(3)
-            ->get();
-            
-        return view('user.events.detail', compact('event', 'similarEvents'));
+        try {
+            $event = Event::with('ukm')->findOrFail($id);
+            $similarEvents = Event::where('ukm_id', $event->ukm_id)
+                ->where('id', '!=', $id)
+                ->where('event_date', '>=', now())
+                ->take(3)
+                ->get();
+
+            return view('user.events.detail', compact('event', 'similarEvents'));
+        } catch (\Exception $e) {
+            Log::error('Event Detail error: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat memuat detail event.');
+        }
     }
 
-    // Lihat Feeds - TAMBAHIN SEARCH & FILTER
     public function feeds(Request $request)
     {
-        $query = Feed::with('ukm');
-        
-        // Search feeds
-        if ($request->has('search') && $request->search != '') {
-            $query->where('title', 'like', '%'.$request->search.'%')
-                  ->orWhere('content', 'like', '%'.$request->search.'%');
+        try {
+            $query = Feed::with('ukm');
+
+            // Search feeds
+            if ($request->filled('search')) {
+                $query->where(function ($q) use ($request) {
+                    $q->where('title', 'like', '%' . $request->search . '%')
+                        ->orWhere('content', 'like', '%' . $request->search . '%');
+                });
+            }
+
+            // Filter by UKM
+            if ($request->filled('ukm')) {
+                $query->where('ukm_id', $request->ukm);
+            }
+
+            $feeds = $query->latest()->get();
+            $ukms = Ukm::where('status', 'active')->get();
+
+            return view('user.feeds.index', compact('feeds', 'ukms'));
+        } catch (\Exception $e) {
+            Log::error('Feeds error: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat memuat daftar feed.');
         }
-        
-        // Filter by UKM
-        if ($request->has('ukm') && $request->ukm != '') {
-            $query->where('ukm_id', $request->ukm);
-        }
-        
-        $feeds = $query->latest()->get();
-        $ukms = Ukm::where('status', 'active')->get(); // Untuk filter dropdown
-        
-        return view('user.feeds.index', compact('feeds', 'ukms'));
     }
 
-    // Profile User - SUDAH BAGUS
+    public function feedDetail($id)
+    {
+        try {
+            $feed = Feed::with('ukm')->findOrFail($id);
+            $relatedFeeds = Feed::where('ukm_id', $feed->ukm_id)
+                ->where('id', '!=', $id)
+                ->latest()
+                ->take(3)
+                ->get();
+
+            return view('user.feeds.detail', compact('feed', 'relatedFeeds'));
+        } catch (\Exception $e) {
+            Log::error('Feed Detail error: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat memuat detail feed.');
+        }
+    }
+
     public function profile()
     {
-        $user = auth()->user();
-        $registrations = $user->registrations()->with(['ukm', 'approver'])->get();
-        
-        return view('user.profile', compact('user', 'registrations'));
+        try {
+            $user = auth()->user();
+            $registrations = $user->registrations()
+                ->with(['ukm', 'approver'])
+                ->get();
+
+            return view('user.profile', compact('user', 'registrations'));
+        } catch (\Exception $e) {
+            Log::error('Profile error: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat memuat profil.');
+        }
     }
 
-    // Update Profile - TAMBAHIN VALIDASI EMAIL UNIK
     public function updateProfile(Request $request)
     {
-        $user = auth()->user();
-        
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,'.$user->id,
-            'phone' => 'required|string|max:15',
-            'fakultas' => 'required|string|max:255',
-            'jurusan' => 'required|string|max:255',
-            'angkatan' => 'required|integer|min:2000|max:'.(date('Y')+1),
-        ]);
+        try {
+            $user = auth()->user();
 
-        $user->update($request->only('name', 'email', 'phone', 'fakultas', 'jurusan', 'angkatan'));
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255|min:2',
+                'email' => 'required|email|unique:users,email,' . $user->id,
+                'phone' => 'required|string|max:15|min:10',
+                'fakultas' => 'required|string|max:255|min:2',
+                'jurusan' => 'required|string|max:255|min:2',
+                'angkatan' => 'required|integer|min:2000|max:' . (date('Y') + 1),
+            ], [
+                'name.required' => 'Nama wajib diisi.',
+                'name.min' => 'Nama minimal 2 karakter.',
+                'email.required' => 'Email wajib diisi.',
+                'email.email' => 'Format email tidak valid.',
+                'email.unique' => 'Email sudah digunakan.',
+                'phone.required' => 'Nomor HP wajib diisi.',
+                'phone.min' => 'Nomor HP minimal 10 digit.',
+                'phone.max' => 'Nomor HP maksimal 15 digit.',
+                'fakultas.required' => 'Fakultas wajib diisi.',
+                'fakultas.min' => 'Fakultas minimal 2 karakter.',
+                'jurusan.required' => 'Jurusan wajib diisi.',
+                'jurusan.min' => 'Jurusan minimal 2 karakter.',
+                'angkatan.required' => 'Angkatan wajib diisi.',
+                'angkatan.min' => 'Angkatan minimal tahun 2000.',
+                'angkatan.max' => 'Angkatan maksimal tahun ' . (date('Y') + 1) . '.',
+            ]);
 
-        return back()->with('success', 'Profile berhasil diupdate!');
+            if ($validator->fails()) {
+                return back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('error', 'Terjadi kesalahan validasi. Silakan periksa form Anda.');
+            }
+
+            $user->update($request->only('name', 'email', 'phone', 'fakultas', 'jurusan', 'angkatan'));
+
+            return back()->with('success', 'Profile berhasil diupdate!');
+        } catch (\Exception $e) {
+            Log::error('Update Profile error: ' . $e->getMessage());
+            return back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan sistem: ' . $e->getMessage());
+        }
     }
 
-    // 🔥 NEW METHOD: Batalkan Pendaftaran UKM
     public function cancelRegistration($registrationId)
     {
-        $user = auth()->user();
-        
-        $registration = Registration::where('id', $registrationId)
-            ->where('user_id', $user->id)
-            ->where('status', 'pending') // Hanya bisa batalkan yang masih pending
-            ->firstOrFail();
-            
-        $registration->delete();
-        
-        return back()->with('success', 'Pendaftaran berhasil dibatalkan.');
-    }
+        try {
+            $user = auth()->user();
 
-    // Tambahkan method ini di UserController
-public function feedDetail($id)
-{
-    $feed = Feed::with('ukm')->findOrFail($id);
-    $relatedFeeds = Feed::where('ukm_id', $feed->ukm_id)
-        ->where('id', '!=', $id)
-        ->latest()
-        ->take(3)
-        ->get();
-        
-    return view('user.feeds.detail', compact('feed', 'relatedFeeds'));
-}
+            $registration = Registration::where('id', $registrationId)
+                ->where('user_id', $user->id)
+                ->where('status', 'pending')
+                ->firstOrFail();
+
+            $registration->delete();
+
+            return back()->with('success', 'Pendaftaran berhasil dibatalkan.');
+        } catch (\Exception $e) {
+            Log::error('Cancel Registration error: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat membatalkan pendaftaran.');
+        }
+    }
 }

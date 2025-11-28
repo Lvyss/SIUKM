@@ -23,8 +23,10 @@
     use App\Http\Controllers\Staff\RegistrationController as StaffRegistrationController;
 
     // Public Routes
-    Route::get('/', [HomeController::class, 'home'])->name('home');
-    Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/', [HomeController::class, 'welcome'])->name('welcome');
+
+// Halaman Home/Dashboard (bisa diakses guest & auth)
+Route::get('/home', [HomeController::class, 'home'])->name('home');
 
     // Auth Routes
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

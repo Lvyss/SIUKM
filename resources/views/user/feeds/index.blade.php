@@ -1,16 +1,15 @@
 @extends('layouts.user')
 
 @section('content')
-<!-- Hero Section -->
 <section class="navbar-bg py-16 text-white text-center shadow-lg -mx-8 mb-14">
-    <h1 class="text-3xl font-semibold tracking-wider">Feeds & Berita</h1>
+    <h1 class="text-3xl font-semibold tracking-wider pt-16">Feeds</h1>
     <p class="mt-2 text-sm text-gray-400">Update terbaru dari berbagai UKM</p>
 </section>
 
 <main class="container mx-auto px-4 sm:px-6 lg:px-8 -mt-24">
     <div class="bg-white p-6 rounded-xl shadow-lg">
-        <!-- Categories Filter -->
-        <div class="flex flex-wrap gap-2 mb-8 border-b pb-4 overflow-x-auto whitespace-nowrap">
+        {{-- Tombol Filter dan Grid Feeds --}}
+        <div class="flex flex-wrap gap-2 mb-8 border-b pb-4 overflow-x-auto whitespace-nowrap scrollbar-hide">
             <button class="px-4 py-2 text-sm font-medium rounded-full bg-gray-900 text-white shadow-md flex-shrink-0 category-filter active" data-category="all">
                 SEMUA UKM
             </button>
@@ -21,11 +20,9 @@
             @endforeach
         </div>
         
-        <!-- Feeds Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="feeds-grid">
             @foreach($feeds as $feed)
             <div class="bg-white rounded-xl shadow-md overflow-hidden transform hover:scale-[1.02] transition duration-300 feed-card" data-ukm="{{ $feed->ukm->id }}">
-                <!-- Feed Image -->
                 <div class="h-48 bg-gray-200 flex items-center justify-center text-gray-400 overflow-hidden relative">
                     @if($feed->image)
                         <img src="{{ $feed->image }}" alt="{{ $feed->title }}" class="w-full h-full object-cover">
@@ -35,14 +32,12 @@
                         </div>
                     @endif
                     
-                    <!-- UKM Badge -->
                     <div class="absolute top-3 right-3">
                         <span class="px-2 py-1 bg-white/90 backdrop-blur-sm text-gray-800 text-xs rounded-full font-semibold shadow-sm">
                             {{ $feed->ukm->name }}
                         </span>
                     </div>
                     
-                    <!-- Time Badge -->
                     <div class="absolute top-3 left-3">
                         <div class="bg-black/70 text-white text-xs rounded-lg px-2 py-1">
                             {{ $feed->created_at->diffForHumans() }}
@@ -50,9 +45,7 @@
                     </div>
                 </div>
                 
-                <!-- Feed Content -->
                 <div class="p-4">
-                    <!-- UKM Info -->
                     <div class="flex items-center mb-3">
                         @if($feed->ukm->logo)
                             <img src="{{ $feed->ukm->logo }}" alt="{{ $feed->ukm->name }}" class="w-6 h-6 rounded-full object-cover mr-2">
@@ -69,8 +62,7 @@
                     <h3 class="text-lg font-semibold text-gray-800 mb-3 line-clamp-2">{{ $feed->title }}</h3>
                     <p class="text-sm text-gray-500 mb-4 line-clamp-3">{{ Str::limit($feed->content, 100) }}</p>
                     
-                    <!-- Action Button -->
-                    <button onclick="showFeedDetails({{ $feed }})" 
+                    <button onclick="showFeedDetails({{ json_encode($feed->load('ukm')) }})" 
                             class="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 transition text-sm font-medium flex items-center justify-center group">
                         <span>Baca Selengkapnya</span>
                         <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform text-xs"></i>
@@ -80,7 +72,7 @@
             @endforeach
         </div>
 
-        <!-- Empty State for No Feeds -->
+        {{-- Empty States --}}
         @if($feeds->count() == 0)
         <div class="text-center py-12" id="no-feeds-empty">
             <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -91,7 +83,6 @@
         </div>
         @endif
 
-        <!-- Empty State for Filtered Results -->
         <div class="text-center py-12 hidden" id="no-filtered-feeds">
             <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fas fa-search text-gray-400 text-2xl"></i>
@@ -105,55 +96,76 @@
     </div>
 </main>
 
-<!-- Feed Details Modal -->
-<dialog id="feedModal" class="bg-white rounded-2xl shadow-2xl p-0 w-full max-w-4xl max-h-[90vh] overflow-y-auto backdrop:bg-black/30">
-    <div class="p-6 border-b border-gray-200">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center">
-                <div id="feedModalLogo" class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mr-4">
-                    <!-- Logo will be inserted here -->
+{{-- MODAL ASIMETRIS ELEGANT SAMA SEPERTI EVENT --}}
+<dialog id="feedModal" 
+    class="bg-white rounded-2xl shadow-2xl p-0 w-full max-w-5xl max-h-[90vh] 
+           backdrop:bg-black/40 backdrop:backdrop-blur-sm 
+           transform transition-all duration-300 opacity-0 scale-95 flex flex-col overflow-hidden">
+    
+    <div class="relative flex h-full">
+        
+        {{-- KOLOM KIRI: Judul, Meta, dan Konten Teks --}}
+        <div class="w-7/12 flex-shrink-0 p-8 overflow-y-auto max-h-[90vh] pb-20">
+            
+            {{-- Header/Judul --}}
+            <h1 class="text-4xl font-extrabold text-gray-900 mb-6 leading-tight" id="feedModalTitle">Judul Feed</h1>
+            
+            {{-- UKM & Meta Info Block --}}
+            <div class="mb-8 p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-3">
+                
+                {{-- UKM Info --}}
+                <div class="flex items-center text-sm font-semibold text-gray-700">
+                    <div id="feedModalLogo" class="w-8 h-8 rounded-full flex items-center justify-center mr-3 border border-gray-200 flex-shrink-0 overflow-hidden">
+                        {{-- Logo will be inserted here --}}
+                    </div>
+                    <span id="feedModalUkm" class="text-base text-blue-600 font-bold">{{ $feed->ukm->name ?? 'Nama UKM' }}</span>
                 </div>
-                <div>
-                    <h3 class="text-xl font-semibold text-gray-900" id="feedModalTitle"></h3>
-                    <p class="text-sm text-gray-500" id="feedModalUkm"></p>
+                
+                {{-- Tanggal & Waktu --}}
+                <div class="space-y-3 pt-2 border-t border-gray-200">
+                    <div class="flex items-center text-sm text-gray-600">
+                        <i class="fas fa-calendar-alt mr-3 text-blue-500 w-4"></i>
+                        <span id="feedModalDate">Tanggal Posting</span>
+                    </div>
+                    
+                    <div class="flex items-center text-sm text-gray-600">
+                        <i class="fas fa-clock mr-3 text-green-500 w-4"></i>
+                        <span id="feedModalTime">Waktu Posting</span>
+                    </div>
                 </div>
             </div>
-            <button onclick="document.getElementById('feedModal').close()" 
-                    class="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors">
-                <i class="fas fa-times text-gray-500"></i>
+            
+            {{-- Konten Utama --}}
+            <div class="prose max-w-none text-gray-700 leading-relaxed text-base">
+                <div id="feedModalContent" class="whitespace-pre-line">
+                    {{-- Konten feed akan masuk di sini --}}
+                </div>
+            </div>
+            
+        </div>
+        
+        {{-- KOLOM KANAN: Gambar dan Tombol Close --}}
+        <div class="w-5/12 flex-shrink-0 bg-gray-100 relative rounded-r-2xl overflow-hidden shadow-inner flex items-center justify-center">
+            
+            {{-- Container Gambar dengan object-cover --}}
+            <div id="feedModalImage" class="w-full h-full">
+                {{-- Gambar akan masuk di sini --}}
+            </div>
+            
+            {{-- Tombol Close di atas gambar --}}
+            <button data-close-modal 
+                class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/70 backdrop-blur-sm hover:bg-white flex items-center justify-center transition-colors shadow-lg border border-gray-100">
+                <i class="fas fa-times text-gray-600 text-lg"></i>
             </button>
-        </div>
-    </div>
-    
-    <div class="p-6">
-        <!-- Feed Meta -->
-        <div class="flex items-center text-sm text-gray-500 mb-6">
-            <div class="flex items-center mr-4">
-                <i class="fas fa-calendar mr-2 text-blue-500"></i>
-                <span id="feedModalDate"></span>
-            </div>
-            <div class="flex items-center">
-                <i class="fas fa-clock mr-2 text-green-500"></i>
-                <span id="feedModalTime"></span>
+            
+            {{-- Tombol Tutup di Bawah --}}
+            <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/50 to-transparent flex justify-center">
+                <button data-close-modal
+                    class="px-8 py-2.5 bg-white/90 text-gray-800 rounded-full hover:bg-white font-medium transition-colors shadow-xl">
+                    <i class="fas fa-chevron-circle-up rotate-180 mr-2 text-sm"></i> Tutup
+                </button>
             </div>
         </div>
-        
-        <!-- Feed Image -->
-        <div id="feedModalImage" class="w-full h-80 bg-gray-200 rounded-xl mb-6 flex items-center justify-center overflow-hidden">
-            <!-- Image will be inserted here -->
-        </div>
-        
-        <!-- Feed Content -->
-        <div class="prose max-w-none">
-            <div id="feedModalContent" class="text-gray-700 leading-relaxed text-lg whitespace-pre-line"></div>
-        </div>
-    </div>
-    
-    <div class="flex justify-end p-6 border-t border-gray-200">
-        <button onclick="document.getElementById('feedModal').close()" 
-                class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 font-medium transition-colors">
-            Tutup
-        </button>
     </div>
 </dialog>
 
@@ -184,6 +196,13 @@
     overflow: hidden;
 }
 
+.line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+}
+
 .line-clamp-2 {
     overflow: hidden;
     display: -webkit-box;
@@ -198,6 +217,57 @@
     -webkit-line-clamp: 3;
 }
 
+/* --- Styles MODAL ASIMETRIS --- */
+dialog#feedModal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 90vw; 
+    max-height: 90vh;
+    width: fit-content;
+    height: fit-content;
+}
+
+dialog#feedModal > div.relative {
+    height: 100%;
+    display: flex;
+    max-height: 90vh;
+}
+
+dialog#feedModal[open] {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Kolom Kiri: Konten */
+dialog#feedModal .w-7/12 {
+    height: 100%;
+}
+
+/* Kolom Kanan: Gambar */
+dialog#feedModal .w-5/12 {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Container Gambar */
+#feedModalImage {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Gambar di dalam container */
+#feedModalImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Konten utama */
 .prose {
     line-height: 1.8;
     font-size: 16px;
@@ -206,15 +276,27 @@
 .prose p {
     margin-bottom: 1.5rem;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Category Filter Functionality
     const categoryFilters = document.querySelectorAll('.category-filter');
     const feedCards = document.querySelectorAll('.feed-card');
     const noFeedsEmpty = document.getElementById('no-feeds-empty');
     const noFilteredFeeds = document.getElementById('no-filtered-feeds');
     const feedsGrid = document.getElementById('feeds-grid');
+    const modal = document.getElementById('feedModal');
+    const transitionDuration = 300;
 
     // Hide empty state initially if there are feeds
     if (feedCards.length > 0 && noFeedsEmpty) {
@@ -290,51 +372,96 @@ document.addEventListener('DOMContentLoaded', function() {
     const showAllButton = noFilteredFeeds.querySelector('.category-filter');
     if (showAllButton) {
         showAllButton.addEventListener('click', function() {
+            // Find and click the "All" category filter
             const allFilter = document.querySelector('.category-filter[data-category="all"]');
             if (allFilter) {
                 allFilter.click();
             }
         });
     }
-});
 
-function showFeedDetails(feed) {
-    document.getElementById('feedModalTitle').textContent = feed.title;
-    document.getElementById('feedModalUkm').textContent = feed.ukm.name;
-    document.getElementById('feedModalDate').textContent = new Date(feed.created_at).toLocaleDateString('id-ID', { 
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
-    });
-    document.getElementById('feedModalTime').textContent = feed.created_at.substring(11, 16) + ' WIB';
-    document.getElementById('feedModalContent').textContent = feed.content;
-    
-    // Set UKM logo
-    const logoContainer = document.getElementById('feedModalLogo');
-    if (feed.ukm.logo) {
-        logoContainer.innerHTML = `<img src="${feed.ukm.logo}" alt="${feed.ukm.name}" class="w-full h-full object-cover rounded-xl">`;
-    } else {
-        logoContainer.innerHTML = `<i class="fas fa-users text-white"></i>`;
+    // Modal Functionality
+    function closeModal() {
+        if (!modal.hasAttribute('open')) return;
+        modal.classList.remove('opacity-100', 'scale-100');
+        modal.classList.add('opacity-0', 'scale-95');
+
+        setTimeout(() => {
+            modal.close();
+        }, transitionDuration);
     }
     
-    // Set feed image
+    // Close modal on backdrop click
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Close modal using data-close-modal buttons
+    const closeButtons = document.querySelectorAll('#feedModal [data-close-modal]');
+    closeButtons.forEach(button => {
+        button.addEventListener('click', closeModal);
+    });
+});
+
+/**
+ * Membuka modal detail feed dan mengisi kontennya.
+ * @param {object} feed - Objek feed yang dimuat dengan relasi UKM.
+ */
+function showFeedDetails(feed) {
+    const modal = document.getElementById('feedModal');
+
+    // 1. Isi Konten Teks (Kolom Kiri)
+    document.getElementById('feedModalTitle').textContent = feed.title;
+    document.getElementById('feedModalUkm').textContent = feed.ukm.name;
+
+    const date = new Date(feed.created_at);
+    document.getElementById('feedModalDate').textContent = date.toLocaleDateString('id-ID', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    document.getElementById('feedModalTime').textContent = date.toLocaleTimeString('id-ID', {
+        hour: '2-digit',
+        minute: '2-digit'
+    }) + ' WIB';
+
+    document.getElementById('feedModalContent').innerHTML = feed.content;
+
+    const logoContainer = document.getElementById('feedModalLogo');
+    logoContainer.innerHTML = '';
+    logoContainer.classList.remove('bg-gray-200');
+
+    if (feed.ukm.logo) {
+        logoContainer.innerHTML = `<img src="${feed.ukm.logo}" alt="${feed.ukm.name}" class="w-full h-full object-cover rounded-full">`;
+    } else {
+        logoContainer.innerHTML = `<i class="fas fa-users text-gray-400 text-sm"></i>`;
+        logoContainer.classList.add('bg-gray-200');
+    }
+
+    // 2. Isi Gambar (Kolom Kanan)
     const imageContainer = document.getElementById('feedModalImage');
+    imageContainer.innerHTML = '';
+
     if (feed.image) {
-        imageContainer.innerHTML = `<img src="${feed.image}" alt="${feed.title}" class="w-full h-full object-cover rounded-xl">`;
+        // Class object-cover diterapkan via CSS
+        imageContainer.innerHTML = `<img src="${feed.image}" alt="${feed.title}" class="w-full h-full object-cover">`;
     } else {
         imageContainer.innerHTML = `
-            <div class="w-full h-full bg-gradient-to-br from-purple-100 to-pink-200 flex items-center justify-center rounded-xl">
-                <i class="fas fa-newspaper text-gray-400 text-4xl"></i>
+            <div class="w-full h-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
+                <i class="fas fa-newspaper text-white text-5xl"></i>
             </div>
         `;
     }
-    
-    document.getElementById('feedModal').showModal();
-}
 
-// Close modal when clicking outside
-document.getElementById('feedModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        this.close();
-    }
-});
+    // 3. Buka Modal dengan Animasi Masuk
+    modal.showModal();
+    setTimeout(() => {
+        modal.classList.add('opacity-100', 'scale-100');
+        modal.classList.remove('opacity-0', 'scale-95');
+    }, 10);
+}
 </script>
 @endsection
