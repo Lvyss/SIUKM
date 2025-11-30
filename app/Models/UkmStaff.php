@@ -14,6 +14,7 @@ class UkmStaff extends Model
     protected $fillable = [
         'user_id',
         'ukm_id',
+        'created_by', // ✅ PASTIKAN INI ADA
     ];
 
     public function user()
@@ -24,5 +25,11 @@ class UkmStaff extends Model
     public function ukm()
     {
         return $this->belongsTo(Ukm::class);
+    }
+
+    // ✅ TAMBAHIN RELATIONSHIP INI
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

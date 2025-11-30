@@ -8,7 +8,6 @@ use App\Models\Feed;
 use App\Models\Ukm;
 use App\Services\CloudinaryService;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class FeedController extends Controller
 {
@@ -19,138 +18,196 @@ class FeedController extends Controller
         $this->cloudinary = new CloudinaryService();
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $feeds = Feed::with(['ukm', 'creator'])->latest()->get();
-        $ukms = Ukm::where('status', 'active')->get();
-        return view('admin.feeds.index', compact('feeds', 'ukms'));
-    }
+        $query = Feed::with(['ukm', 'creator']);
 
-public function store(Request $request)
-{
-    $request->validate([
-        'ukm_id' => 'required|exists:ukms,id',
-        'title' => 'required|string|max:255',
-        'content' => 'required|string',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
-
-    try {
-        Log::info('Feed store request received', [
-            'title' => $request->title,
-            'has_image' => $request->hasFile('image'),
-            'file_size' => $request->hasFile('image') ? $request->file('image')->getSize() : 0
-        ]);
-
-        $imageUrl = null;
-        
-        if ($request->hasFile('image')) {
-            Log::info('Processing image upload', [
-                'file_name' => $request->file('image')->getClientOriginalName(),
-                'file_extension' => $request->file('image')->getClientOriginalExtension(),
-                'file_mime' => $request->file('image')->getMimeType()
-            ]);
-            
-            // Test file readability
-            $filePath = $request->file('image')->getRealPath();
-            Log::info('File info', ['file_path' => $filePath, 'readable' => is_readable($filePath)]);
-            
-            $imageUrl = $this->cloudinary->upload($request->file('image'), 'feed-images');
-            
-            if (!$imageUrl) {
-                Log::warning('Cloudinary upload returned null or false');
-                throw new \Exception('Cloudinary upload failed - returned null');
-            }
-            
-            Log::info('Image upload completed', ['url' => $imageUrl]);
+        // Search functionality
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('content', 'like', "%{$search}%")
+                  ->orWhereHas('ukm', function($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%");
+                  });
+            });
         }
 
-        $feed = Feed::create([
-            'ukm_id' => $request->ukm_id,
-            'title' => $request->title,
-            'content' => $request->content,
-            'image' => $imageUrl,
-            'created_by' => auth()->id(),
-        ]);
+        // Filter by UKM
+        if ($request->has('ukm_id') && $request->ukm_id) {
+            $query->where('ukm_id', $request->ukm_id);
+        }
 
-        Log::info('Feed created successfully', [
-            'feed_id' => $feed->id,
-            'image_url' => $imageUrl
-        ]);
+        // Filter by date
+        if ($request->has('date_filter') && $request->date_filter) {
+            switch ($request->date_filter) {
+                case 'today':
+                    $query->whereDate('created_at', today());
+                    break;
+                case 'week':
+                    $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+                    break;
+                case 'month':
+                    $query->whereMonth('created_at', now()->month);
+                    break;
+            }
+        }
 
-        return redirect()->route('admin.feeds.index')->with('success', 'Feed berhasil ditambahkan!');
-        
-    } catch (\Exception $e) {
-        Log::error('Feed store failed', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
-            'request_data' => $request->except(['_token', 'image'])
-        ]);
-        
-        return redirect()->back()
-            ->with('error', 'Gagal menambahkan feed: ' . $e->getMessage())
-            ->withInput();
+        // Sort functionality
+        $sort = $request->get('sort', 'newest');
+        switch ($sort) {
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'title_asc':
+                $query->orderBy('title', 'asc');
+                break;
+            case 'title_desc':
+                $query->orderBy('title', 'desc');
+                break;
+            default:
+                $query->latest();
+        }
+
+        $perPage = $request->get('per_page', 10);
+        $feeds = $query->paginate($perPage);
+        $ukms = Ukm::where('status', 'active')->get();
+
+        // Statistics
+        $totalFeeds = Feed::count();
+        $feedsWithImages = Feed::whereNotNull('image')->count();
+        $todayFeeds = Feed::whereDate('created_at', today())->count();
+
+        return view('admin.feeds.index', compact(
+            'feeds',
+            'ukms',
+            'totalFeeds',
+            'feedsWithImages',
+            'todayFeeds'
+        ));
     }
-}
 
-    public function update(Request $request, $id)
+    public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'ukm_id' => 'required|exists:ukms,id',
             'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'content' => 'required|string|min:10|max:2000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ], [
+            'ukm_id.required' => 'Pilih UKM wajib diisi',
+            'ukm_id.exists' => 'UKM yang dipilih tidak valid',
+            'title.required' => 'Judul feed wajib diisi',
+            'title.max' => 'Judul feed maksimal 255 karakter',
+            'content.required' => 'Konten feed wajib diisi',
+            'content.min' => 'Konten feed minimal 10 karakter',
+            'content.max' => 'Konten feed maksimal 2000 karakter',
+            'image.image' => 'File harus berupa gambar',
+            'image.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau webp',
+            'image.max' => 'Ukuran gambar maksimal 2MB',
         ]);
 
         try {
-            $feed = Feed::findOrFail($id);
+            DB::transaction(function () use ($validated, $request) {
+                $imageUrl = null;
+                
+                if ($request->hasFile('image')) {
+                    $imageUrl = $this->cloudinary->upload(
+                        $request->file('image'), 
+                        'feed-images',
+                        [
+                            'width' => 800,
+                            'height' => 600,
+                            'crop' => 'fill'
+                        ]
+                    );
+                }
 
-            DB::transaction(function () use ($request, $feed) {
+                Feed::create([
+                    'ukm_id' => $validated['ukm_id'],
+                    'title' => $validated['title'],
+                    'content' => $validated['content'],
+                    'image' => $imageUrl,
+                    'created_by' => auth()->id(),
+                ]);
+            });
+
+            return redirect()->route('admin.feeds.index')
+                ->with('success', 'Feed berhasil ditambahkan!');
+            
+        } catch (\Exception $e) {
+            \Log::error('Feed creation failed: ' . $e->getMessage());
+            
+            return redirect()->back()
+                ->with('error', 'Gagal menambahkan feed: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $feed = Feed::findOrFail($id);
+
+        $validated = $request->validate([
+            'ukm_id' => 'required|exists:ukms,id',
+            'title' => 'required|string|max:255',
+            'content' => 'required|string|min:10|max:2000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ], [
+            'ukm_id.required' => 'Pilih UKM wajib diisi',
+            'ukm_id.exists' => 'UKM yang dipilih tidak valid',
+            'title.required' => 'Judul feed wajib diisi',
+            'title.max' => 'Judul feed maksimal 255 karakter',
+            'content.required' => 'Konten feed wajib diisi',
+            'content.min' => 'Konten feed minimal 10 karakter',
+            'content.max' => 'Konten feed maksimal 2000 karakter',
+            'image.image' => 'File harus berupa gambar',
+            'image.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau webp',
+            'image.max' => 'Ukuran gambar maksimal 2MB',
+        ]);
+
+        try {
+            DB::transaction(function () use ($validated, $request, $feed) {
                 $oldImageUrl = $feed->image;
                 $imageUrl = $oldImageUrl;
                 
                 if ($request->hasFile('image')) {
-                    Log::info('Starting image upload for feed update', [
-                        'feed_id' => $feed->id,
-                        'file_name' => $request->file('image')->getClientOriginalName()
-                    ]);
-                    
                     // Upload new image
-                    $imageUrl = $this->cloudinary->upload($request->file('image'), 'feed-images');
-                    
-                    Log::info('New image uploaded', ['url' => $imageUrl]);
+                    $imageUrl = $this->cloudinary->upload(
+                        $request->file('image'), 
+                        'feed-images',
+                        [
+                            'width' => 800,
+                            'height' => 600,
+                            'crop' => 'fill'
+                        ]
+                    );
                     
                     // Delete old image if exists
                     if ($oldImageUrl) {
-                        Log::info('Deleting old image', ['old_url' => $oldImageUrl]);
-                        $deleteSuccess = $this->cloudinary->delete($oldImageUrl);
-                        Log::info('Old image deletion result', ['success' => $deleteSuccess]);
+                        $this->cloudinary->delete($oldImageUrl);
                     }
                 }
 
                 $feed->update([
-                    'ukm_id' => $request->ukm_id,
-                    'title' => $request->title,
-                    'content' => $request->content,
+                    'ukm_id' => $validated['ukm_id'],
+                    'title' => $validated['title'],
+                    'content' => $validated['content'],
                     'image' => $imageUrl,
-                ]);
-
-                Log::info('Feed updated successfully', [
-                    'feed_id' => $feed->id,
-                    'has_new_image' => $request->hasFile('image')
                 ]);
             });
 
-            return redirect()->route('admin.feeds.index')->with('success', 'Feed berhasil diupdate!');
+            return redirect()->route('admin.feeds.index')
+                ->with('success', 'Feed berhasil diupdate!');
             
         } catch (\Exception $e) {
-            Log::error('Feed update failed', [
-                'error' => $e->getMessage(),
-                'feed_id' => $id,
-                'request' => $request->all()
-            ]);
+            \Log::error('Feed update failed: ' . $e->getMessage());
             
-            return redirect()->back()->with('error', 'Gagal mengupdate feed: ' . $e->getMessage())->withInput();
+            return redirect()->back()
+                ->with('error', 'Gagal mengupdate feed: ' . $e->getMessage())
+                ->withInput()
+                ->with('edit_errors', true);
         }
     }
 
@@ -162,29 +219,20 @@ public function store(Request $request)
             DB::transaction(function () use ($feed) {
                 // Delete image if exists
                 if ($feed->image) {
-                    Log::info('Deleting feed image on destroy', [
-                        'feed_id' => $feed->id,
-                        'image_url' => $feed->image
-                    ]);
-                    
-                    $deleteSuccess = $this->cloudinary->delete($feed->image);
-                    Log::info('Feed image deletion result', ['success' => $deleteSuccess]);
+                    $this->cloudinary->delete($feed->image);
                 }
 
                 $feed->delete();
-                
-                Log::info('Feed deleted successfully', ['feed_id' => $feed->id]);
             });
 
-            return redirect()->route('admin.feeds.index')->with('success', 'Feed berhasil dihapus!');
+            return redirect()->route('admin.feeds.index')
+                ->with('success', 'Feed berhasil dihapus!');
             
         } catch (\Exception $e) {
-            Log::error('Feed destroy failed', [
-                'error' => $e->getMessage(),
-                'feed_id' => $id
-            ]);
+            \Log::error('Feed deletion failed: ' . $e->getMessage());
             
-            return redirect()->back()->with('error', 'Gagal menghapus feed: ' . $e->getMessage());
+            return redirect()->route('admin.feeds.index')
+                ->with('error', 'Gagal menghapus feed: ' . $e->getMessage());
         }
     }
 }

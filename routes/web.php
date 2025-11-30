@@ -29,10 +29,9 @@ Route::get('/', [HomeController::class, 'welcome'])->name('welcome');
 Route::get('/home', [HomeController::class, 'home'])->name('home');
 
     // Auth Routes
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
+
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Authenticated Routes
@@ -58,7 +57,7 @@ Route::get('/home', [HomeController::class, 'home'])->name('home');
 
             // Profile Routes
             Route::get('/profile', [UserController::class, 'profile'])->name('profile');
-            Route::post('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
+            Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
         });
 
         // ==================== ADMIN ROUTES ====================
@@ -67,31 +66,39 @@ Route::get('/home', [HomeController::class, 'home'])->name('home');
             Route::get('/dashboard', [AdminDashboardController::class, 'dashboard'])->name('dashboard');
 
             // Categories Management
-            Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');
-            Route::post('/categories', [AdminCategoryController::class, 'store'])->name('categories.store');
-            Route::put('/categories/{id}', [AdminCategoryController::class, 'update'])->name('categories.update');
-            Route::delete('/categories/{id}', [AdminCategoryController::class, 'destroy'])->name('categories.destroy');
-
+// Category routes
+Route::prefix('admin')->group(function () {
+    Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');
+    Route::post('/categories', [AdminCategoryController::class, 'store'])->name('categories.store');
+    Route::put('/categories/{id}', [AdminCategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{id}', [AdminCategoryController::class, 'destroy'])->name('categories.destroy');
+});
             // UKM Routes
-            Route::get('/ukms', [AdminUkmController::class, 'index'])->name('ukms.index');
-            Route::post('/ukms', [AdminUkmController::class, 'store'])->name('ukms.store');
-            Route::put('/ukms/{id}', [AdminUkmController::class, 'update'])->name('ukms.update');
-            Route::delete('/ukms/{id}', [AdminUkmController::class, 'destroy'])->name('ukms.destroy');
+            
+                Route::get('/ukms', [AdminUkmController::class, 'index'])->name('ukms.index');
+    Route::post('/ukms', [AdminUkmController::class, 'store'])->name('ukms.store');
+    Route::put('ukms/{id}', [AdminUkmController::class, 'update'])->name('ukms.update');
+    Route::delete('ukms/{id}', [AdminUkmController::class, 'destroy'])->name('ukms.destroy');
+    Route::patch('ukms/{id}/toggle-status', [AdminUkmController::class, 'toggleStatus'])->name('ukms.toggle-status');
 
             // Users Management
             Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
             Route::put('/users/{id}/role', [AdminUserController::class, 'updateRole'])->name('users.updateRole');
             Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])->name('users.destroy');
+            // Tambahkan di routes/web.php
+Route::post('/staff/bulk-assign', [AdminStaffController::class, 'bulkAssign'])->name('staff.bulk-assign');
+Route::get('/staff/available/{ukmId}', [AdminStaffController::class, 'getAvailableStaff'])->name('staff.available');
 
             // Staff Management
             Route::get('/staff', [AdminStaffController::class, 'index'])->name('staff.index');
             Route::post('/staff/assign', [AdminStaffController::class, 'assign'])->name('staff.assign');
             Route::delete('/staff/{id}', [AdminStaffController::class, 'remove'])->name('staff.remove');
 
-            // Registrations
-            Route::get('/registrations', [AdminRegistrationController::class, 'index'])->name('registrations.index');
-            Route::put('/registrations/{id}/status', [AdminRegistrationController::class, 'updateStatus'])->name('registrations.updateStatus');
-
+// Registration routes
+Route::get('/registrations', [AdminRegistrationController::class, 'index'])->name('registrations.index');
+Route::get('/registrations/{id}/details', [AdminRegistrationController::class, 'showDetails'])->name('registrations.details');
+Route::put('/registrations/{id}/status', [AdminRegistrationController::class, 'updateStatus'])->name('registrations.updateStatus');
+Route::post('/registrations/bulk-action', [AdminRegistrationController::class, 'bulkAction'])->name('registrations.bulkAction');
             // Events Management
             Route::get('/events', [AdminEventController::class, 'index'])->name('events.index');
             Route::post('/events', [AdminEventController::class, 'store'])->name('events.store');
@@ -111,29 +118,27 @@ Route::get('/home', [HomeController::class, 'home'])->name('home');
             Route::get('/dashboard', [StaffDashboardController::class, 'dashboard'])->name('dashboard');
 
             // UKM Management
-            Route::get('/ukms', [StaffUkmController::class, 'index'])->name('ukms.index');
-            Route::get('/ukms/{id}/edit', [StaffUkmController::class, 'edit'])->name('ukms.edit');
-            Route::put('/ukms/{id}', [StaffUkmController::class, 'update'])->name('ukms.update');
-
+   Route::get('/ukms', [StaffUkmController::class, 'index'])->name('ukms.index');
+    Route::get('/ukms/{id}', [StaffUkmController::class, 'show'])->name('ukms.show');
+    Route::get('/ukms/{id}/edit', [StaffUkmController::class, 'edit'])->name('ukms.edit');
+    Route::put('/ukms/{id}', [StaffUkmController::class, 'update'])->name('ukms.update');
             // Events Management
-            Route::get('/events', [StaffEventController::class, 'index'])->name('events.index');
-            Route::get('/events/create', [StaffEventController::class, 'create'])->name('events.create');
-            Route::post('/events', [StaffEventController::class, 'store'])->name('events.store');
-            Route::get('/events/{id}/edit', [StaffEventController::class, 'edit'])->name('events.edit');
-            Route::put('/events/{id}', [StaffEventController::class, 'update'])->name('events.update');
-            Route::delete('/events/{id}', [StaffEventController::class, 'destroy'])->name('events.destroy');
+    Route::get('/events', [StaffEventController::class, 'index'])->name('events.index');
+    Route::post('/events', [StaffEventController::class, 'store'])->name('events.store');
+    Route::put('/events/{id}', [StaffEventController::class, 'update'])->name('events.update');
+    Route::delete('/events/{id}', [StaffEventController::class, 'destroy'])->name('events.destroy');
+    Route::patch('/events/{id}/toggle-visibility', [StaffEventController::class, 'toggleVisibility'])->name('events.toggle-visibility');
 
             // Feeds Management
-            Route::get('/feeds', [StaffFeedController::class, 'index'])->name('feeds.index');
-            Route::get('/feeds/create', [StaffFeedController::class, 'create'])->name('feeds.create');
-            Route::post('/feeds', [StaffFeedController::class, 'store'])->name('feeds.store');
-            Route::get('/feeds/{id}/edit', [StaffFeedController::class, 'edit'])->name('feeds.edit');
-            Route::put('/feeds/{id}', [StaffFeedController::class, 'update'])->name('feeds.update');
-            Route::delete('/feeds/{id}', [StaffFeedController::class, 'destroy'])->name('feeds.destroy');
+    Route::get('/feeds', [StaffFeedController::class, 'index'])->name('feeds.index');
+    Route::post('/feeds', [StaffFeedController::class, 'store'])->name('feeds.store');
+    Route::put('/feeds/{id}', [StaffFeedController::class, 'update'])->name('feeds.update');
+    Route::delete('/feeds/{id}', [StaffFeedController::class, 'destroy'])->name('feeds.destroy');
 
-            // Registrations Management
-            Route::get('/registrations', [StaffRegistrationController::class, 'index'])->name('registrations.index');
-            Route::put('/registrations/{id}/approve', [StaffRegistrationController::class, 'approve'])->name('registrations.approve');
-            Route::put('/registrations/{id}/reject', [StaffRegistrationController::class, 'reject'])->name('registrations.reject');
-        });
+// Registration routes
+Route::get('/registrations', [StaffRegistrationController::class, 'index'])->name('registrations.index');
+Route::get('/registrations/{id}/details', [StaffRegistrationController::class, 'showDetails'])->name('registrations.details');
+Route::put('/registrations/{id}/status', [StaffRegistrationController::class, 'updateStatus'])->name('registrations.updateStatus');
+Route::post('/registrations/bulk-action', [StaffRegistrationController::class, 'bulkAction'])->name('registrations.bulkAction');
+             });
     });

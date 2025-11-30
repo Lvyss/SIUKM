@@ -18,7 +18,6 @@ return new class extends Migration
             $table->text('mission')->nullable();
             $table->string('contact_person')->nullable();
             $table->string('instagram')->nullable();
-            $table->string('email_ukm')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->foreignId('created_by')->constrained('users');
             $table->timestamps();

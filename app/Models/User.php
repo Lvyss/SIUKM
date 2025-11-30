@@ -38,7 +38,8 @@ class User extends Authenticatable
         return $this->hasMany(Ukm::class, 'created_by');
     }
 
-    public function staffPositions()
+    // ✅ STANDARDIZE - PAKAI ukmStaff() SAJA
+    public function ukmStaff()
     {
         return $this->hasMany(UkmStaff::class);
     }

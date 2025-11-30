@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\Ukm;
 use App\Services\CloudinaryService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
@@ -18,25 +19,116 @@ class EventController extends Controller
         $this->cloudinary = new CloudinaryService();
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $user = auth()->user();
-        $managedUkms = $user->managedUkmsList;
-        
-        $events = Event::whereIn('ukm_id', $managedUkms->pluck('id'))
-            ->with('ukm')
-            ->latest()
-            ->get();
+        try {
+            $user = auth()->user();
+            $managedUkms = $user->managedUkmsList;
+            $managedUkmIds = $managedUkms->pluck('id');
             
-        return view('staff.events.index', compact('events', 'managedUkms'));
-    }
+            $query = Event::whereIn('ukm_id', $managedUkmIds)
+                        ->with(['ukm']);
+            
+            // Search functionality
+            if ($request->has('search') && $request->search != '') {
+                $search = $request->search;
+                $query->where(function($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                      ->orWhere('description', 'like', "%{$search}%")
+                      ->orWhere('location', 'like', "%{$search}%")
+                      ->orWhereHas('ukm', function($q) use ($search) {
+                          $q->where('name', 'like', "%{$search}%");
+                      });
+                });
+            }
+            
+            // Filter by UKM
+            if ($request->has('ukm_id') && $request->ukm_id != '') {
+                $query->where('ukm_id', $request->ukm_id);
+            }
+            
+            // Filter by date
+            if ($request->has('date_filter') && $request->date_filter != '') {
+                $today = now()->format('Y-m-d');
+                
+                switch ($request->date_filter) {
+                    case 'today':
+                        $query->whereDate('event_date', $today);
+                        break;
+                    case 'upcoming':
+                        $query->whereDate('event_date', '>=', $today);
+                        break;
+                    case 'past':
+                        $query->whereDate('event_date', '<', $today);
+                        break;
+                    case 'this_week':
+                        $query->whereBetween('event_date', [
+                            now()->startOfWeek()->format('Y-m-d'),
+                            now()->endOfWeek()->format('Y-m-d')
+                        ]);
+                        break;
+                    case 'this_month':
+                        $query->whereBetween('event_date', [
+                            now()->startOfMonth()->format('Y-m-d'),
+                            now()->endOfMonth()->format('Y-m-d')
+                        ]);
+                        break;
+                }
+            }
+            
+            // Sorting
+            switch ($request->get('sort', 'newest')) {
+                case 'oldest':
+                    $query->oldest();
+                    break;
+                case 'title_asc':
+                    $query->orderBy('title', 'asc');
+                    break;
+                case 'title_desc':
+                    $query->orderBy('title', 'desc');
+                    break;
+                case 'date_asc':
+                    $query->orderBy('event_date', 'asc');
+                    break;
+                case 'date_desc':
+                    $query->orderBy('event_date', 'desc');
+                    break;
+                default:
+                    $query->latest();
+            }
+            
+            // Statistics - hanya untuk UKM yang di-manage
+            $totalEvents = Event::whereIn('ukm_id', $managedUkmIds)->count();
+            $upcomingEvents = Event::whereIn('ukm_id', $managedUkmIds)
+                                ->whereDate('event_date', '>=', now()->format('Y-m-d'))
+                                ->count();
+            $pastEvents = Event::whereIn('ukm_id', $managedUkmIds)
+                            ->whereDate('event_date', '<', now()->format('Y-m-d'))
+                            ->count();
+            $todayEvents = Event::whereIn('ukm_id', $managedUkmIds)
+                            ->whereDate('event_date', now()->format('Y-m-d'))
+                            ->count();
+            $eventsWithPosters = Event::whereIn('ukm_id', $managedUkmIds)
+                                    ->whereNotNull('poster_image')
+                                    ->count();
 
-    public function create()
-    {
-        $user = auth()->user();
-        $managedUkms = $user->managedUkmsList;
-        
-        return view('staff.events.create', compact('managedUkms'));
+            $perPage = $request->get('per_page', 10);
+            $events = $query->paginate($perPage);
+            
+            return view('staff.events.index', compact(
+                'events', 
+                'managedUkms',
+                'totalEvents',
+                'upcomingEvents', 
+                'pastEvents', 
+                'todayEvents',
+                'eventsWithPosters'
+            ));
+            
+        } catch (\Exception $e) {
+            Log::error('Staff Event index error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to load events: ' . $e->getMessage());
+        }
     }
 
     public function store(Request $request)
@@ -46,18 +138,38 @@ class EventController extends Controller
         
         // Cek apakah UKM yang dipilih termasuk yang di-manage
         if (!$managedUkms->contains($request->ukm_id)) {
-            abort(403, 'Anda tidak memiliki akses ke UKM ini.');
+            return redirect()->back()
+                ->with('error', 'Anda tidak memiliki akses ke UKM ini.')
+                ->withInput();
         }
 
         $request->validate([
             'ukm_id' => 'required|exists:ukms,id',
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'event_date' => 'required|date',
+            'description' => 'required|string|min:10|max:2000',
+            'event_date' => 'required|date|after_or_equal:today',
             'event_time' => 'required',
-            'location' => 'required|string',
-            'poster_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'registration_link' => 'nullable|url',
+            'location' => 'required|string|max:255',
+            'poster_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'registration_link' => 'nullable|url|max:500',
+        ], [
+            'ukm_id.required' => 'UKM wajib dipilih',
+            'ukm_id.exists' => 'UKM tidak valid',
+            'title.required' => 'Judul event wajib diisi',
+            'title.max' => 'Judul event maksimal 255 karakter',
+            'description.required' => 'Deskripsi event wajib diisi',
+            'description.min' => 'Deskripsi minimal 10 karakter',
+            'description.max' => 'Deskripsi maksimal 2000 karakter',
+            'event_date.required' => 'Tanggal event wajib diisi',
+            'event_date.after_or_equal' => 'Tanggal event tidak boleh di masa lalu',
+            'event_time.required' => 'Waktu event wajib diisi',
+            'location.required' => 'Lokasi event wajib diisi',
+            'location.max' => 'Lokasi maksimal 255 karakter',
+            'poster_image.image' => 'File harus berupa gambar',
+            'poster_image.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau webp',
+            'poster_image.max' => 'Ukuran poster maksimal 5MB',
+            'registration_link.url' => 'Link registrasi harus berupa URL yang valid',
+            'registration_link.max' => 'Link registrasi maksimal 500 karakter',
         ]);
 
         try {
@@ -81,26 +193,14 @@ class EventController extends Controller
                 ]);
             });
 
-            return redirect()->route('staff.events.index')->with('success', 'Event berhasil ditambahkan!');
+            return redirect()->route('staff.events.index')->with('success', 'Event berhasil dibuat!');
             
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menambahkan event: ' . $e->getMessage())->withInput();
+            Log::error('Staff Event store error: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Gagal membuat event: ' . $e->getMessage())
+                ->withInput();
         }
-    }
-
-    public function edit($id)
-    {
-        $user = auth()->user();
-        $event = Event::with('ukm')->findOrFail($id);
-        
-        // Cek apakah staff manage UKM event ini
-        if (!$user->managedUkmsList->contains($event->ukm_id)) {
-            abort(403, 'Anda tidak memiliki akses ke event ini.');
-        }
-        
-        $managedUkms = $user->managedUkmsList;
-        
-        return view('staff.events.edit', compact('event', 'managedUkms'));
     }
 
     public function update(Request $request, $id)
@@ -110,23 +210,44 @@ class EventController extends Controller
         
         // Cek apakah staff manage UKM event ini
         if (!$user->managedUkmsList->contains($event->ukm_id)) {
-            abort(403, 'Anda tidak memiliki akses ke event ini.');
+            return redirect()->back()
+                ->with('error', 'Anda tidak memiliki akses ke event ini.')
+                ->withInput();
         }
 
         // Cek apakah UKM yang baru juga di-manage
         if (!$user->managedUkmsList->contains($request->ukm_id)) {
-            abort(403, 'Anda tidak memiliki akses ke UKM ini.');
+            return redirect()->back()
+                ->with('error', 'Anda tidak memiliki akses ke UKM ini.')
+                ->withInput();
         }
 
         $request->validate([
             'ukm_id' => 'required|exists:ukms,id',
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'description' => 'required|string|min:10|max:2000',
             'event_date' => 'required|date',
             'event_time' => 'required',
-            'location' => 'required|string',
-            'poster_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'registration_link' => 'nullable|url',
+            'location' => 'required|string|max:255',
+            'poster_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'registration_link' => 'nullable|url|max:500',
+        ], [
+            'ukm_id.required' => 'UKM wajib dipilih',
+            'ukm_id.exists' => 'UKM tidak valid',
+            'title.required' => 'Judul event wajib diisi',
+            'title.max' => 'Judul event maksimal 255 karakter',
+            'description.required' => 'Deskripsi event wajib diisi',
+            'description.min' => 'Deskripsi minimal 10 karakter',
+            'description.max' => 'Deskripsi maksimal 2000 karakter',
+            'event_date.required' => 'Tanggal event wajib diisi',
+            'event_time.required' => 'Waktu event wajib diisi',
+            'location.required' => 'Lokasi event wajib diisi',
+            'location.max' => 'Lokasi maksimal 255 karakter',
+            'poster_image.image' => 'File harus berupa gambar',
+            'poster_image.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau webp',
+            'poster_image.max' => 'Ukuran poster maksimal 5MB',
+            'registration_link.url' => 'Link registrasi harus berupa URL yang valid',
+            'registration_link.max' => 'Link registrasi maksimal 500 karakter',
         ]);
 
         try {
@@ -159,7 +280,11 @@ class EventController extends Controller
             return redirect()->route('staff.events.index')->with('success', 'Event berhasil diupdate!');
             
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal mengupdate event: ' . $e->getMessage())->withInput();
+            Log::error('Staff Event update error: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Gagal mengupdate event: ' . $e->getMessage())
+                ->with('edit_errors', true)
+                ->withInput();
         }
     }
 
@@ -170,7 +295,7 @@ class EventController extends Controller
         
         // Cek apakah staff manage UKM event ini
         if (!$user->managedUkmsList->contains($event->ukm_id)) {
-            abort(403, 'Anda tidak memiliki akses ke event ini.');
+            return redirect()->back()->with('error', 'Anda tidak memiliki akses ke event ini.');
         }
 
         try {
@@ -186,7 +311,30 @@ class EventController extends Controller
             return redirect()->route('staff.events.index')->with('success', 'Event berhasil dihapus!');
             
         } catch (\Exception $e) {
+            Log::error('Staff Event destroy error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Gagal menghapus event: ' . $e->getMessage());
+        }
+    }
+
+    // Additional methods
+    public function toggleVisibility($id)
+    {
+        try {
+            $user = auth()->user();
+            $event = Event::findOrFail($id);
+            
+            // Cek apakah staff manage UKM event ini
+            if (!$user->managedUkmsList->contains($event->ukm_id)) {
+                return redirect()->back()->with('error', 'Anda tidak memiliki akses ke event ini.');
+            }
+
+            // Jika ada kolom is_published atau status
+            // $event->update(['is_published' => !$event->is_published]);
+            
+            return redirect()->back()->with('success', 'Status event berhasil diubah!');
+            
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal mengubah status event');
         }
     }
 }

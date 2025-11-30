@@ -20,7 +20,7 @@
             
             <div class="absolute bottom-6 right-6">
                 @if(!$isRegistered)
-                    <button id="openRegisterModalButton"
+                    <button id="openUkmRegisterModalButton"
                             class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-5 py-2.5 rounded-xl hover:shadow-lg hover:shadow-green-300 transition-all duration-300 font-semibold text-sm flex items-center group">
                         <i class="fas fa-user-plus mr-2 group-hover:scale-105 transition-transform"></i>
                         Join UKM
@@ -288,80 +288,96 @@
 </div>
 
 @if(!$isRegistered)
-<dialog id="registerModal" 
-    class="bg-white rounded-3xl shadow-2xl w-full max-w-lg mx-auto backdrop:bg-black/40 backdrop:backdrop-blur-sm 
-           transform transition-all duration-300 max-h-[90vh] flex flex-col overflow-hidden">
+<!-- GANTI DIALOG DENGAN DIV -->
+<div id="ukmRegisterModal" 
+    class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 hidden">
     
-    <div class="relative bg-gradient-to-br from-green-500 to-emerald-600 rounded-t-3xl p-6 text-white flex-shrink-0">
-        <div class="flex items-start justify-between">
-            <div class="flex items-center">
-                <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mr-4 shadow-md">
-                    <i class="fas fa-user-plus text-xl text-white"></i>
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg mx-4 max-h-[90vh] flex flex-col overflow-hidden">
+        <!-- HEADER -->
+        <div class="relative bg-gradient-to-br from-green-500 to-emerald-600 rounded-t-3xl p-6 text-white flex-shrink-0">
+            <div class="flex items-start justify-between">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mr-4 shadow-md">
+                        <i class="fas fa-user-plus text-xl text-white"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold leading-tight">Daftar Anggota UKM</h3>
+                        <p class="text-sm opacity-90">{{ $ukm->name }}</p>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="text-xl font-bold leading-tight">Daftar Anggota UKM</h3>
-                    <p class="text-sm opacity-90">{{ $ukm->name }}</p>
-                </div>
+                <button type="button" id="closeModalHeader" 
+                        class="w-8 h-8 rounded-full hover:bg-white/20 flex items-center justify-center transition-colors flex-shrink-0 -mt-1">
+                    <i class="fas fa-times text-white"></i>
+                </button>
             </div>
-            <button id="closeModalHeader" 
-                    class="w-8 h-8 rounded-full hover:bg-white/20 flex items-center justify-center transition-colors flex-shrink-0 -mt-1">
-                <i class="fas fa-times text-white"></i>
+        </div>
+        
+        <!-- FORM -->
+        <form id="ukmRegisterForm" action="{{ route('user.ukm.register', $ukm->id) }}" method="POST" 
+              class="p-8 space-y-6 overflow-y-auto flex-1">
+            @csrf
+            
+            <div style="display: none;" id="debugInfo">
+                CSRF: {{ csrf_token() }}<br>
+                Route: {{ route('user.ukm.register', $ukm->id) }}<br>
+                UKM ID: {{ $ukm->id }}
+            </div>
+                
+            <p class="text-gray-600 text-sm italic border-l-4 border-emerald-400 pl-3 py-1 bg-emerald-50 rounded-md">
+                Lengkapi formulir di bawah untuk mengirimkan permohonan pendaftaran.
+            </p>
+
+            <div>
+                <label for="motivation" class="block text-sm font-semibold text-gray-800 mb-2 flex items-center">
+                    <i class="fas fa-lightbulb text-orange-500 mr-2"></i> Motivasi *
+                </label>
+                <textarea name="motivation" id="motivation" required 
+                          class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none placeholder:text-gray-400"
+                          rows="4" 
+                          placeholder="Ceritakan mengapa Anda ingin bergabung dengan UKM ini dan harapan Anda..."></textarea>
+                <span id="motivationError" class="error-message"></span>
+                <p class="text-xs text-gray-500 mt-1">Minimal 20 karakter, maksimal 1000 karakter</p>
+            </div>
+            
+            <div>
+                <label for="experience" class="block text-sm font-semibold text-gray-800 mb-2 flex items-center">
+                    <i class="fas fa-history text-blue-500 mr-2"></i> Pengalaman (Opsional)
+                </label>
+                <textarea name="experience" id="experience"
+                          class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none placeholder:text-gray-400"
+                          rows="2" 
+                          placeholder="Pengalaman relevan di bidang ini (misalnya, organisasi, lomba, proyek)..."></textarea>
+                <span id="experienceError" class="error-message"></span>
+                <p class="text-xs text-gray-500 mt-1">Maksimal 500 karakter</p>
+            </div>
+            
+            <div>
+                <label for="skills" class="block text-sm font-semibold text-gray-800 mb-2 flex items-center">
+                    <i class="fas fa-tools text-purple-500 mr-2"></i> Keahlian (Opsional)
+                </label>
+                <textarea name="skills" id="skills"
+                          class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none placeholder:text-gray-400"
+                          rows="2" 
+                          placeholder="Sebutkan keahlian khusus yang dapat Anda kontribusikan (dipisahkan koma)..."></textarea>
+                <span id="skillsError" class="error-message"></span>
+                <p class="text-xs text-gray-500 mt-1">Maksimal 500 karakter</p>
+            </div>
+            
+        </form>
+        
+        <!-- FOOTER -->
+        <div class="flex justify-end space-x-3 p-6 border-t border-gray-100 bg-white sticky bottom-0 z-10 flex-shrink-0">
+            <button type="button" data-close-modal 
+                    class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 font-medium transition-colors duration-200 shadow-sm">
+                Batal
+            </button>
+            <button type="submit" form="ukmRegisterForm" id="ukmRegisterSubmit"
+                    class="px-6 py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:shadow-lg hover:shadow-green-300/50 font-semibold transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+                <i class="fas fa-paper-plane mr-2"></i> Kirim Pendaftaran
             </button>
         </div>
     </div>
-    
-    <form id="registerForm" action="/user/ukm/{{ $ukm->id }}/register" method="POST" 
-          class="p-8 space-y-6 overflow-y-auto flex-1">
-        @csrf
-        
-        <p class="text-gray-600 text-sm italic border-l-4 border-emerald-400 pl-3 py-1 bg-emerald-50 rounded-md">
-            Lengkapi formulir di bawah untuk mengirimkan permohonan pendaftaran.
-        </p>
-
-        <div>
-            <label for="motivation" class="block text-sm font-semibold text-gray-800 mb-2 flex items-center">
-                <i class="fas fa-lightbulb text-orange-500 mr-2"></i> Motivasi *
-            </label>
-            <textarea name="motivation" id="motivation" required 
-                      class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none placeholder:text-gray-400"
-                      rows="4" 
-                      placeholder="Ceritakan mengapa Anda ingin bergabung dengan UKM ini dan harapan Anda..."></textarea>
-        </div>
-        
-        <div>
-            <label for="experience" class="block text-sm font-semibold text-gray-800 mb-2 flex items-center">
-                <i class="fas fa-history text-blue-500 mr-2"></i> Pengalaman (Opsional)
-            </label>
-            <textarea name="experience" id="experience"
-                      class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none placeholder:text-gray-400"
-                      rows="2" 
-                      placeholder="Pengalaman relevan di bidang ini (misalnya, organisasi, lomba, proyek)..."></textarea>
-        </div>
-        
-        <div>
-            <label for="skills" class="block text-sm font-semibold text-gray-800 mb-2 flex items-center">
-                <i class="fas fa-tools text-purple-500 mr-2"></i> Keahlian (Opsional)
-            </label>
-            <textarea name="skills" id="skills"
-                      class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none placeholder:text-gray-400"
-                      rows="2" 
-                      placeholder="Sebutkan keahlian khusus yang dapat Anda kontribusikan (dipisahkan koma)..."></textarea>
-        </div>
-        
-    </form>
-    
-    <div class="flex justify-end space-x-3 p-6 pt-0 border-t border-gray-100 flex-shrink-0">
-        <button type="button" data-close-modal 
-                class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 font-medium transition-colors duration-200 shadow-sm">
-            Batal
-        </button>
-        <button type="submit" form="registerForm" 
-                class="px-6 py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:shadow-lg hover:shadow-green-300/50 font-semibold transition-all duration-300 transform hover:scale-[1.02]">
-            <i class="fas fa-paper-plane mr-2"></i> Kirim Pendaftaran
-        </button>
-    </div>
-    
-</dialog>
+</div>
 @endif
 
 <style>
@@ -378,73 +394,123 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
 }
+
+/* Error Styles */
+.error-input {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2;
+}
+
+.error-message {
+    color: #ef4444;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.success-input {
+    border-color: #10b981 !important;
+    background-color: #f0fdf4;
+}
+
 </style>
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('registerModal');
-    
-    if (modal) {
-        const transitionDuration = 300;
+// SIMPLE DIV MODAL SCRIPT - NO CONFLICT
+(function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        const ukmModal = document.getElementById('ukmRegisterModal');
+        const openButton = document.getElementById('openUkmRegisterModalButton');
+        
+        if (!ukmModal || !openButton) {
+            console.log('Modal elements not found');
+            return;
+        }
+
+        console.log('UKM Modal initialized');
 
         function openModal() {
-            modal.showModal();
-            setTimeout(() => {
-                modal.classList.add('opacity-100', 'scale-100');
-                modal.classList.remove('opacity-0', 'scale-95');
-            }, 10);
+            ukmModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            console.log('Modal opened');
         }
 
         function closeModal() {
-            modal.classList.remove('opacity-100', 'scale-100');
-            modal.classList.add('opacity-0', 'scale-95');
-            setTimeout(() => {
-                modal.close();
-            }, transitionDuration);
+            ukmModal.classList.add('hidden');
+            document.body.style.overflow = '';
+            console.log('Modal closed');
         }
 
-        // --- 1. Tombol Pembuka Modal ---
-        const openButton = document.getElementById('openRegisterModalButton');
-        if (openButton) {
-            openButton.addEventListener('click', openModal);
+        // Open modal
+        openButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            openModal();
+        });
+
+        // Close buttons - langsung attach event listeners
+        const closeModalHeader = document.getElementById('closeModalHeader');
+        const batalButton = document.querySelector('[data-close-modal]');
+        
+        if (closeModalHeader) {
+            closeModalHeader.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeModal();
+            });
+        }
+        
+        if (batalButton) {
+            batalButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeModal();
+            });
         }
 
-        // --- 2. Menutup Modal saat Klik Backdrop (DIPERBAIKI) ---
-        modal.addEventListener('click', function(e) {
-            // Hanya tutup jika klik tepat di backdrop (bukan di konten modal)
-            if (e.target === modal) {
+        // Backdrop click
+        ukmModal.addEventListener('click', function(e) {
+            if (e.target === ukmModal) {
                 closeModal();
             }
         });
 
-        // --- 3. Tombol Tutup di Header ---
-        const closeModalHeader = document.getElementById('closeModalHeader');
-        if (closeModalHeader) {
-            closeModalHeader.addEventListener('click', closeModal);
-        }
-
-        // --- 4. Tombol Batal/Tutup lainnya ---
-        const closeButtons = document.querySelectorAll('[data-close-modal]');
-        closeButtons.forEach(button => {
-            button.addEventListener('click', closeModal);
+        // Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !ukmModal.classList.contains('hidden')) {
+                closeModal();
+            }
         });
 
-        // --- PERBAIKAN: Mencegah event bubbling dari form ---
-        const form = document.getElementById('registerForm');
-        if (form) {
-            form.addEventListener('click', function(e) {
-                // Hentikan event bubbling agar tidak sampai ke modal
-                e.stopPropagation();
+        // Validation
+        const form = document.getElementById('ukmRegisterForm');
+        const submitBtn = document.getElementById('ukmRegisterSubmit');
+        
+        if (form && submitBtn) {
+            function validateForm() {
+                const motivation = document.getElementById('motivation');
+                return motivation && motivation.value.trim().length >= 20;
+            }
+            
+            function updateButton() {
+                submitBtn.disabled = !validateForm();
+            }
+            
+            const motivationField = document.getElementById('motivation');
+            if (motivationField) {
+                motivationField.addEventListener('input', updateButton);
+            }
+            
+            updateButton(); // Initial check
+            
+            form.addEventListener('submit', function() {
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mengirim...';
+                }
             });
         }
-
-        // --- PERBAIKAN TAMBAHAN: Mencegah event bubbling dari semua input di dalam modal ---
-        const modalContent = modal.querySelector('.bg-white');
-        if (modalContent) {
-            modalContent.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        }
-    }
-});
+    });
+})();
 </script>
 @endsection

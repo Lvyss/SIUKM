@@ -1,214 +1,142 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - SI-UKM</title>
-    
-    <!-- TAILWIND CSS dari CDN yang reliable -->
+    <title>Admin - SI-UKM Exclusive</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        // Fallback jika CDN gagal load
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1e40af',
-                        secondary: '#64748b',
-                    }
-                }
-            }
-        }
-        
-        // Backup CSS jika Tailwind gagal
-        const loadBackupCSS = () => {
-            const backupCSS = `
-                .flex { display: flex; }
-                .hidden { display: none; }
-                .bg-blue-800 { background: #1e40af; }
-                .text-white { color: white; }
-                .p-4 { padding: 1rem; }
-                .min-h-screen { min-height: 100vh; }
-                .w-64 { width: 16rem; }
-            `;
-            const style = document.createElement('style');
-            style.textContent = backupCSS;
-            document.head.appendChild(style);
-        };
-        
-        // Cek apakah Tailwind loaded
-        setTimeout(() => {
-            if (!document.styleSheets[0] || !document.styleSheets[0].cssRules.length) {
-                console.log('Tailwind failed, loading backup CSS');
-                loadBackupCSS();
-            }
-        }, 1000);
-    </script>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Color: Soft Cream */
+        .lux-bg {
+            background-color: #f3f4f6;
+            /* gray-100 - Background Konten */
+        }
+
+        /* Deep Gold/Cognac Accent */
+        .lux-gold-dark-bg {
+            background-color: #b45309;
+            /* Amber-700 - Warna Sidebar */
+        }
+
+        .lux-gold-light-text {
+            color: #fcd34d;
+            /* Amber-300 - Text di Sidebar */
+        }
+
+        /* Neumorphism Shadow Mix (Hanya untuk konten/card) */
+        .lux-neumorphic {
+            border-radius: 12px;
+            background: #f3f4f6;
+            box-shadow:
+                6px 6px 12px #d1d2d5,
+                -6px -6px 12px #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .lux-neumorphic-card:hover {
+            box-shadow:
+                8px 8px 16px #c4c5c9,
+                -8px -8px 16px #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* Sidebar Link Active Style (Putih terang di Cognac) */
+        .lux-sidebar-link-active {
+            background-color: #92400e;
+            /* Sedikit lebih gelap dari Amber-700 */
+            border-left: 4px solid #fcd34d;
+            /* Garis terang sebagai highlight */
+            font-weight: 700;
+            color: #ffffff;
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
-    <div class="flex">
-        <!-- Sidebar -->
-        <div class="w-64 bg-blue-800 text-white min-h-screen">
-            <div class="p-4 border-b border-blue-700">
-                <h1 class="text-xl font-bold">SI-UKM Admin</h1>
-                <p class="text-sm text-blue-200 mt-1">Welcome, {{ auth()->user()->name }}</p>
+
+<body class="lux-bg text-gray-800 antialiased">
+    <div class="flex min-h-screen">
+        <div class="w-64 lux-gold-dark-bg text-white shadow-xl flex flex-col sticky top-0 h-screen z-20">
+
+            <div class="p-5 border-b border-amber-800">
+                <h1 class="text-2xl font-black tracking-widest text-white">SI-UKM</h1>
+                <p class="text-sm lux-gold-light-text mt-1">Exclusive Console</p>
             </div>
-            
-            <nav class="mt-4">
+
+            <nav class="mt-4 flex-grow overflow-y-auto">
                 @php
                     $currentRoute = request()->route()->getName();
-                @endphp
-                
-                <a href="{{ route('admin.dashboard') }}" 
-                   class="block py-3 px-4 hover:bg-blue-700 transition duration-200 {{ str_contains($currentRoute, 'admin.dashboard') ? 'bg-blue-700 border-r-4 border-yellow-400' : '' }}">
-                    <i class="fas fa-tachometer-alt w-5 mr-3"></i>Dashboard
-                </a>
-                
-                <a href="{{ route('admin.categories.index') }}" 
-                   class="block py-3 px-4 hover:bg-blue-700 transition duration-200 {{ str_contains($currentRoute, 'admin.categories') ? 'bg-blue-700 border-r-4 border-yellow-400' : '' }}">
-                    <i class="fas fa-tags w-5 mr-3"></i>Kategori
-                </a>
-                
-                <a href="{{ route('admin.ukms.index') }}" 
-                   class="block py-3 px-4 hover:bg-blue-700 transition duration-200 {{ str_contains($currentRoute, 'admin.ukms') ? 'bg-blue-700 border-r-4 border-yellow-400' : '' }}">
-                    <i class="fas fa-users w-5 mr-3"></i>UKM
-                </a>
-                
-                <a href="{{ route('admin.users.index') }}" 
-                   class="block py-3 px-4 hover:bg-blue-700 transition duration-200 {{ str_contains($currentRoute, 'admin.users') ? 'bg-blue-700 border-r-4 border-yellow-400' : '' }}">
-                    <i class="fas fa-user-friends w-5 mr-3"></i>Users
-                </a>
-                
-                <a href="{{ route('admin.staff.index') }}" 
-                   class="block py-3 px-4 hover:bg-blue-700 transition duration-200 {{ str_contains($currentRoute, 'admin.staff') ? 'bg-blue-700 border-r-4 border-yellow-400' : '' }}">
-                    <i class="fas fa-user-tie w-5 mr-3"></i>Staff
-                </a>
-                
-                <a href="{{ route('admin.registrations.index') }}" 
-                   class="block py-3 px-4 hover:bg-blue-700 transition duration-200 {{ str_contains($currentRoute, 'admin.registrations') ? 'bg-blue-700 border-r-4 border-yellow-400' : '' }}">
-                    <i class="fas fa-clipboard-list w-5 mr-3"></i>Pendaftaran
-                </a>
-                
-{{-- Ganti link Content dengan Events & Feeds terpisah --}}
-<a href="{{ route('admin.events.index') }}" class="block py-2 px-4 hover:bg-blue-700 {{ request()->routeIs('admin.events.*') ? 'bg-blue-700' : '' }}">
-    <i class="fas fa-calendar mr-2"></i>Events
-</a>
+                    $navLinks = [
+                        ['route' => 'admin.dashboard', 'icon' => 'fas fa-shield-alt', 'label' => 'Dashboard'],
+                        ['route' => 'admin.users.index', 'icon' => 'fas fa-user-circle', 'label' => 'User'],
+                        ['route' => 'admin.staff.index', 'icon' => 'fas fa-sitemap', 'label' => 'Staff'],
 
-<a href="{{ route('admin.feeds.index') }}" class="block py-2 px-4 hover:bg-blue-700 {{ request()->routeIs('admin.feeds.*') ? 'bg-blue-700' : '' }}">
-    <i class="fas fa-newspaper mr-2"></i>Feeds
-</a>
-                
-                <div class="mt-8 pt-4 border-t border-blue-700">
-                    <a href="{{ route('dashboard') }}" 
-                       class="block py-3 px-4 hover:bg-blue-700 transition duration-200 text-blue-200">
-                        <i class="fas fa-arrow-left w-5 mr-3"></i>Back to Main
+                        ['route' => 'admin.categories.index', 'icon' => 'fas fa-boxes', 'label' => 'Category'],
+                        ['route' => 'admin.ukms.index', 'icon' => 'fas fa-award', 'label' => 'UKM'],
+
+                        ['route' => 'admin.events.index', 'icon' => 'fas fa-calendar-check', 'label' => 'Event'],
+                        ['route' => 'admin.feeds.index', 'icon' => 'fas fa-paper-plane', 'label' => 'Feeds'],
+                        [
+                            'route' => 'admin.registrations.index',
+                            'icon' => 'fas fa-file-invoice',
+                            'label' => 'Regristation',
+                        ],
+                    ];
+                @endphp
+
+                @foreach ($navLinks as $link)
+                    @php
+                        $isActive = str_contains($currentRoute, $link['route']) && !str_contains($currentRoute, 'edit');
+                    @endphp
+                    <a href="{{ route($link['route']) }}"
+                        class="flex items-center py-3 px-5 text-amber-200 hover:bg-amber-800 transition duration-200 
+                              {{ $isActive ? 'lux-sidebar-link-active' : '' }}">
+                        <i class="{{ $link['icon'] }} w-5 mr-3"></i>{{ $link['label'] }}
                     </a>
-                    
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" 
-                                class="w-full text-left py-3 px-4 hover:bg-red-600 transition duration-200 text-red-200">
-                            <i class="fas fa-sign-out-alt w-5 mr-3"></i>Logout
-                        </button>
-                    </form>
-                </div>
+                @endforeach
             </nav>
+
+            <div class="mt-auto pt-4 border-t border-amber-800 p-4">
+                <form action="{{ route('logout') }}" method="POST" class="mt-2">
+                    @csrf
+                    <button type="submit"
+                        class="w-full text-left py-2 px-3 bg-red-600 hover:bg-red-700 transition duration-200 text-white rounded-lg font-semibold text-sm shadow-md">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </form>
+            </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="flex-1">
-            <div class="p-6">
-                @yield('content')
-            </div>
+        <div class="flex-1 p-8">
+            @yield('content')
         </div>
     </div>
 
-    <!-- Flash Messages -->
-    @if(session('success'))
-        <div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in">
-            <div class="flex items-center">
-                <i class="fas fa-check-circle mr-3"></i>
-                <span>{{ session('success') }}</span>
-            </div>
+    @if (session('success'))
+        <div id="flash-message"
+            class="fixed top-6 right-6 p-3 rounded-lg z-50 text-sm transition-all duration-300 lux-neumorphic border-l-4 border-green-500">
+            <i class="fas fa-check-circle mr-2 text-green-500"></i> <span
+                class="font-semibold">{{ session('success') }}</span>
         </div>
     @endif
 
-    @if(session('error'))
-        <div class="fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in">
-            <div class="flex items-center">
-                <i class="fas fa-exclamation-circle mr-3"></i>
-                <span>{{ session('error') }}</span>
-            </div>
+    @if (session('error'))
+        <div id="flash-message"
+            class="fixed top-6 right-6 p-3 rounded-lg z-50 text-sm transition-all duration-300 lux-neumorphic border-l-4 border-red-500">
+            <i class="fas fa-exclamation-triangle mr-2 text-red-500"></i> <span
+                class="font-semibold">{{ session('error') }}</span>
         </div>
     @endif
 
     <script>
-        // Auto hide flash messages
         setTimeout(() => {
-            const flashMessages = document.querySelectorAll('[class*="bg-green-500"], [class*="bg-red-500"]');
-            flashMessages.forEach(msg => {
-                msg.style.opacity = '0';
-                msg.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => msg.remove(), 500);
-            });
+            const flashMessage = document.getElementById('flash-message');
+            if (flashMessage) {
+                flashMessage.style.opacity = '0';
+                setTimeout(() => flashMessage.remove(), 300);
+            }
         }, 5000);
-
-        // Simple modal functions
-        window.showModal = (modalId) => {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            }
-        };
-
-        window.hideModal = (modalId) => {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }
-        };
-
-        // Close modal when clicking outside
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal-overlay')) {
-                e.target.classList.add('hidden');
-            }
-        });
-
-        // Ping untuk keep session alive
-        setInterval(() => {
-            fetch('{{ route('admin.dashboard') }}', { 
-                method: 'HEAD',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            }).catch(err => console.log('Keep-alive ping'));
-        }, 300000); // 5 menit
-
-        console.log('Admin layout loaded successfully');
     </script>
-
-    <style>
-        /* Custom animations */
-        .animate-fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Modal styles */
-        .modal-overlay {
-            background: rgba(0, 0, 0, 0.5);
-        }
-    </style>
-
-    @yield('scripts')
 </body>
+
 </html>
