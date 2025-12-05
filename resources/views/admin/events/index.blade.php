@@ -41,6 +41,9 @@
         border: none;
         padding: 0;
         border-radius: 12px;
+        width: 95vw;
+        max-width: 28rem;
+        margin: 1rem auto;
     }
     @keyframes fadeIn {
         from { opacity: 0; transform: scale(0.95); }
@@ -52,71 +55,71 @@
     }
 </style>
 
-<div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Event Matrix & Management</h1>
-    <div class="text-sm font-semibold lux-gold-text px-3 py-1 rounded-full border border-gray-300 bg-amber-50">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">Event Matrix & Management</h1>
+    <div class="text-sm font-semibold lux-gold-text px-3 py-1 rounded-full border border-gray-300 bg-amber-50 whitespace-nowrap">
         <i class="fas fa-calendar-alt mr-1 lux-gold-text"></i> Total: **{{ $events->total() }} events**
     </div>
 </div>
 
 <!-- Statistics Cards -->
-<div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-    <div class="floating-card p-4">
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-6">
+    <div class="floating-card p-3 sm:p-4">
         <div class="flex items-center">
-            <div class="p-2 rounded-full bg-blue-100">
+            <div class="p-2 rounded-full bg-blue-100 flex-shrink-0">
                 <i class="fas fa-calendar-alt text-blue-600 text-sm"></i>
             </div>
-            <div class="ml-3">
-                <p class="text-sm font-medium text-gray-600">Total Events</p>
-                <p class="text-xl font-bold text-gray-900">{{ $totalEvents }}</p>
+            <div class="ml-3 min-w-0">
+                <p class="text-xs sm:text-sm font-medium text-gray-600 truncate">Total</p>
+                <p class="text-lg sm:text-xl font-bold text-gray-900">{{ $totalEvents }}</p>
             </div>
         </div>
     </div>
     
-    <div class="floating-card p-4">
+    <div class="floating-card p-3 sm:p-4">
         <div class="flex items-center">
-            <div class="p-2 rounded-full bg-green-100">
+            <div class="p-2 rounded-full bg-green-100 flex-shrink-0">
                 <i class="fas fa-rocket text-green-600 text-sm"></i>
             </div>
-            <div class="ml-3">
-                <p class="text-sm font-medium text-gray-600">Upcoming</p>
-                <p class="text-xl font-bold text-gray-900">{{ $upcomingEvents }}</p>
+            <div class="ml-3 min-w-0">
+                <p class="text-xs sm:text-sm font-medium text-gray-600 truncate">Upcoming</p>
+                <p class="text-lg sm:text-xl font-bold text-gray-900">{{ $upcomingEvents }}</p>
             </div>
         </div>
     </div>
     
-    <div class="floating-card p-4">
+    <div class="floating-card p-3 sm:p-4">
         <div class="flex items-center">
-            <div class="p-2 rounded-full bg-gray-100">
+            <div class="p-2 rounded-full bg-gray-100 flex-shrink-0">
                 <i class="fas fa-history text-gray-600 text-sm"></i>
             </div>
-            <div class="ml-3">
-                <p class="text-sm font-medium text-gray-600">Past Events</p>
-                <p class="text-xl font-bold text-gray-900">{{ $pastEvents }}</p>
+            <div class="ml-3 min-w-0">
+                <p class="text-xs sm:text-sm font-medium text-gray-600 truncate">Past</p>
+                <p class="text-lg sm:text-xl font-bold text-gray-900">{{ $pastEvents }}</p>
             </div>
         </div>
     </div>
     
-    <div class="floating-card p-4">
+    <div class="floating-card p-3 sm:p-4">
         <div class="flex items-center">
-            <div class="p-2 rounded-full bg-purple-100">
+            <div class="p-2 rounded-full bg-purple-100 flex-shrink-0">
                 <i class="fas fa-star text-purple-600 text-sm"></i>
             </div>
-            <div class="ml-3">
-                <p class="text-sm font-medium text-gray-600">Today</p>
-                <p class="text-xl font-bold text-gray-900">{{ $todayEvents }}</p>
+            <div class="ml-3 min-w-0">
+                <p class="text-xs sm:text-sm font-medium text-gray-600 truncate">Today</p>
+                <p class="text-lg sm:text-xl font-bold text-gray-900">{{ $todayEvents }}</p>
             </div>
         </div>
     </div>
     
-    <div class="floating-card p-4">
+    <div class="floating-card p-3 sm:p-4">
         <div class="flex items-center">
-            <div class="p-2 rounded-full bg-orange-100">
+            <div class="p-2 rounded-full bg-orange-100 flex-shrink-0">
                 <i class="fas fa-image text-orange-600 text-sm"></i>
             </div>
-            <div class="ml-3">
-                <p class="text-sm font-medium text-gray-600">With Posters</p>
-                <p class="text-xl font-bold text-gray-900">{{ $eventsWithPosters }}</p>
+            <div class="ml-3 min-w-0">
+                <p class="text-xs sm:text-sm font-medium text-gray-600 truncate">With Posters</p>
+                <p class="text-lg sm:text-xl font-bold text-gray-900">{{ $eventsWithPosters }}</p>
             </div>
         </div>
     </div>
@@ -124,23 +127,23 @@
 
 <!-- Filters & Search -->
 <div class="floating-card mb-6">
-    <div class="p-5 border-b border-gray-100">
+    <div class="p-4 sm:p-5 border-b border-gray-100">
         <h2 class="text-lg font-bold text-gray-800 flex items-center">
             <i class="fas fa-filter mr-2 lux-gold-text"></i> Search & Filters
         </h2>
     </div>
-    <div class="p-5">
-        <form action="{{ route('admin.events.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
-            <div class="md:col-span-2">
+    <div class="p-4 sm:p-5">
+        <form action="{{ route('admin.events.index') }}" method="GET" class="space-y-4 sm:space-y-0 sm:flex sm:flex-row sm:items-end sm:gap-3">
+            <div class="flex-1 sm:flex-[2]">
                 <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Search Events</label>
                 <input type="text" name="search" value="{{ request('search') }}" 
-                       placeholder="Title, description, location, or UKM..."
-                       class="w-full border border-gray-300 rounded-lg px-4 py-2 input-lux:focus transition duration-150">
+                       placeholder="Title, description, location..."
+                       class="w-full border border-gray-300 rounded-lg px-4 py-2 input-lux:focus transition duration-150 text-sm sm:text-base">
             </div>
             
-            <div>
+            <div class="sm:min-w-[140px]">
                 <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">UKM</label>
-                <select name="ukm_id" class="w-full border border-gray-300 rounded-lg px-4 py-2 input-lux:focus transition duration-150">
+                <select name="ukm_id" class="w-full border border-gray-300 rounded-lg px-4 py-2 input-lux:focus transition duration-150 text-sm sm:text-base">
                     <option value="">All UKM</option>
                     @foreach($ukms as $ukm)
                         <option value="{{ $ukm->id }}" {{ request('ukm_id') == $ukm->id ? 'selected' : '' }}>
@@ -150,25 +153,25 @@
                 </select>
             </div>
             
-            <div>
+            <div class="sm:min-w-[140px]">
                 <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Date Filter</label>
-                <select name="date_filter" class="w-full border border-gray-300 rounded-lg px-4 py-2 input-lux:focus transition duration-150">
+                <select name="date_filter" class="w-full border border-gray-300 rounded-lg px-4 py-2 input-lux:focus transition duration-150 text-sm sm:text-base">
                     <option value="">All Dates</option>
                     <option value="today" {{ request('date_filter') == 'today' ? 'selected' : '' }}>Today</option>
                     <option value="upcoming" {{ request('date_filter') == 'upcoming' ? 'selected' : '' }}>Upcoming</option>
-                    <option value="past" {{ request('date_filter') == 'past' ? 'selected' : '' }}>Past Events</option>
+                    <option value="past" {{ request('date_filter') == 'past' ? 'selected' : '' }}>Past</option>
                     <option value="this_week" {{ request('date_filter') == 'this_week' ? 'selected' : '' }}>This Week</option>
                     <option value="this_month" {{ request('date_filter') == 'this_month' ? 'selected' : '' }}>This Month</option>
                 </select>
             </div>
             
-            <div class="flex space-x-3">
+            <div class="flex flex-col sm:flex-row sm:items-end sm:space-x-2 space-y-2 sm:space-y-0 pt-2 sm:pt-0">
                 <button type="submit" 
-                        class="lux-button px-4 py-2 rounded-lg hover:bg-amber-700 transition duration-200 flex items-center font-semibold text-sm">
+                        class="lux-button px-4 py-2 rounded-lg hover:bg-amber-700 transition duration-200 flex items-center justify-center text-sm sm:text-base h-[42px] sm:h-auto">
                     <i class="fas fa-search mr-2"></i> Search
                 </button>
                 <a href="{{ route('admin.events.index') }}" 
-                   class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition duration-200 flex items-center font-semibold text-sm">
+                   class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition duration-200 flex items-center justify-center text-sm sm:text-base h-[42px] sm:h-auto">
                     <i class="fas fa-refresh mr-2"></i> Reset
                 </a>
             </div>
@@ -178,7 +181,7 @@
 
 <!-- Events Table -->
 <div class="floating-card overflow-hidden">
-    <div class="flex justify-between items-center p-5 border-b bg-gray-50/50">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border-b bg-gray-50/50 gap-4">
         <h2 class="text-lg font-bold text-gray-800 flex items-center">
             <i class="fas fa-database mr-2 lux-gold-text"></i>
             @if(request('ukm_id'))
@@ -193,29 +196,31 @@
             @endif
         </h2>
         
-        <div class="flex items-center space-x-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
             <button onclick="openAddModal()" 
-                    class="lux-button px-4 py-2 rounded-lg hover:bg-amber-700 transition duration-200 flex items-center">
+                    class="w-full sm:w-auto lux-button px-4 py-2 rounded-lg hover:bg-amber-700 transition duration-200 flex items-center justify-center text-sm sm:text-base">
                 <i class="fas fa-plus mr-2"></i>Add Event
             </button>
             
-            <span class="text-sm text-gray-600">Show:</span>
-            <select onchange="window.location.href = this.value" 
-                    class="border border-gray-300 rounded px-3 py-1 text-sm input-lux:focus">
-                <option value="{{ request()->fullUrlWithQuery(['per_page' => 10]) }}" 
-                        {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
-                <option value="{{ request()->fullUrlWithQuery(['per_page' => 25]) }}" 
-                        {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
-                <option value="{{ request()->fullUrlWithQuery(['per_page' => 50]) }}" 
-                        {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
-            </select>
+            <div class="flex items-center space-x-2 w-full sm:w-auto">
+                <span class="text-sm text-gray-600 whitespace-nowrap">Show:</span>
+                <select onchange="window.location.href = this.value" 
+                        class="border border-gray-300 rounded px-3 py-1 text-sm w-full sm:w-auto">
+                    <option value="{{ request()->fullUrlWithQuery(['per_page' => 10]) }}" 
+                            {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                    <option value="{{ request()->fullUrlWithQuery(['per_page' => 25]) }}" 
+                            {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
+                    <option value="{{ request()->fullUrlWithQuery(['per_page' => 50]) }}" 
+                            {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
+                </select>
+            </div>
         </div>
     </div>
     
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto px-4 sm:px-0">
         @if($events->count() > 0)
             <table class="w-full min-w-full">
-                <thead>
+                <thead class="hidden sm:table-header-group">
                     <tr class="bg-gray-100/70 border-b border-gray-200">
                         <th class="p-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Poster</th>
                         <th class="p-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Event Details</th>
@@ -232,8 +237,93 @@
                         $isPast = $event->event_date->isPast();
                         $isToday = $event->event_date->isToday();
                     @endphp
-                    <tr class="hover-row-table transition duration-150 {{ $isPast ? 'bg-gray-50' : '' }}">
-                        <td class="p-4">
+                    <!-- Mobile View -->
+                    <tr class="hover-row-table transition duration-150 block sm:table-row border-b sm:border-b-0">
+                        <td class="block sm:hidden p-4 mx-2 sm:mx-0 my-2 sm:my-0 bg-white rounded-lg shadow-sm">
+                            <div class="space-y-4">
+                                <!-- Header with Poster -->
+                                <div class="flex items-start space-x-3">
+                                    @if($event->poster_image)
+                                        <img src="{{ $event->poster_image }}" alt="{{ $event->title }}" 
+                                             class="w-16 h-16 rounded-lg object-cover shadow-sm border flex-shrink-0">
+                                    @else
+                                        <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center border flex-shrink-0">
+                                            <i class="fas fa-calendar-alt text-gray-400 text-xl"></i>
+                                        </div>
+                                    @endif
+                                    <div class="flex-1 min-w-0">
+                                        <div class="font-semibold text-gray-900 text-lg">{{ $event->title }}</div>
+                                        <div class="flex flex-wrap items-center gap-2 mt-2">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                                                {{ $event->ukm->name }}
+                                            </span>
+                                            @if($isPast)
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                    <i class="fas fa-clock mr-1"></i> Past
+                                                </span>
+                                            @elseif($isToday)
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                    <i class="fas fa-star mr-1"></i> Today
+                                                </span>
+                                            @else
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                    <i class="fas fa-calendar-check mr-1"></i> Upcoming
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Description -->
+                                @if($event->description)
+                                <div class="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                    <p class="line-clamp-2">{{ $event->description }}</p>
+                                </div>
+                                @endif
+
+                                <!-- Date & Location -->
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-700">Date & Time</div>
+                                        <div class="text-sm text-gray-900">{{ $event->event_date->format('d M Y') }}</div>
+                                        <div class="text-xs text-gray-600">{{ date('H:i', strtotime($event->event_time)) }}</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-700">Location</div>
+                                        <div class="text-sm text-gray-900 truncate">{{ $event->location }}</div>
+                                    </div>
+                                </div>
+
+                                <!-- Registration Link -->
+                                @if($event->registration_link)
+                                <div class="text-xs">
+                                    <a href="{{ $event->registration_link }}" target="_blank" 
+                                       class="text-amber-600 hover:text-amber-800 font-medium inline-flex items-center">
+                                        <i class="fas fa-link mr-2"></i> Registration Link
+                                    </a>
+                                </div>
+                                @endif
+
+                                <!-- Actions -->
+                                <div class="flex flex-col space-y-2 pt-4 border-t border-gray-200">
+                                    <button onclick="editEvent({{ $event }})" 
+                                            class="w-full lux-button px-4 py-2.5 rounded-lg text-sm hover:bg-amber-700 transition duration-200 flex items-center justify-center gap-2 font-medium">
+                                        <i class="fas fa-edit"></i> Edit Event
+                                    </button>
+                                    <form action="{{ route('admin.events.destroy', $event->id) }}" method="POST" 
+                                          class="w-full" onsubmit="return confirmDeleteEvent('{{ $event->title }}')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" 
+                                                class="w-full bg-red-500 text-white px-4 py-2.5 rounded-lg text-sm hover:bg-red-600 transition duration-200 flex items-center justify-center gap-2 font-medium">
+                                            <i class="fas fa-trash"></i> Delete Event
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Desktop View -->
+                        <td class="hidden sm:table-cell p-4">
                             @if($event->poster_image)
                                 <img src="{{ $event->poster_image }}" alt="{{ $event->title }}" 
                                      class="w-16 h-16 rounded-lg object-cover shadow-sm border">
@@ -243,7 +333,7 @@
                                 </div>
                             @endif
                         </td>
-                        <td class="p-4">
+                        <td class="hidden sm:table-cell p-4">
                             <div class="font-semibold text-gray-900">{{ $event->title }}</div>
                             <div class="text-sm text-gray-600 mt-1">{{ Str::limit($event->description, 80) }}</div>
                             @if($event->registration_link)
@@ -253,22 +343,22 @@
                                 </a>
                             @endif
                         </td>
-                        <td class="p-4">
+                        <td class="hidden sm:table-cell p-4">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
                                 {{ $event->ukm->name }}
                             </span>
                         </td>
-                        <td class="p-4">
+                        <td class="hidden sm:table-cell p-4">
                             <div class="font-medium text-gray-900">{{ $event->event_date->format('d M Y') }}</div>
                             <div class="text-sm text-gray-600">{{ date('H:i', strtotime($event->event_time)) }}</div>
                             <div class="text-xs text-gray-400 mt-1">
                                 {{ $event->created_at->diffForHumans() }}
                             </div>
                         </td>
-                        <td class="p-4 text-gray-700 max-w-xs">
+                        <td class="hidden sm:table-cell p-4 text-gray-700 max-w-xs">
                             <div class="text-sm">{{ Str::limit($event->location, 30) }}</div>
                         </td>
-                        <td class="p-4">
+                        <td class="hidden sm:table-cell p-4">
                             @if($isPast)
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                     <i class="fas fa-clock mr-1"></i> Past
@@ -283,7 +373,7 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="p-4">
+                        <td class="hidden sm:table-cell p-4">
                             <div class="flex space-x-2">
                                 <button onclick="editEvent({{ $event }})" 
                                         class="lux-button px-3 py-1.5 rounded-lg text-sm hover:bg-amber-700 transition duration-200 flex items-center font-medium shadow-md shadow-amber-500/20">
@@ -304,8 +394,8 @@
                 </tbody>
             </table>
         @else
-            <div class="text-center py-12">
-                <i class="fas fa-calendar-times text-5xl text-gray-300 mb-4"></i>
+            <div class="text-center py-12 px-4">
+                <i class="fas fa-calendar-times text-4xl text-gray-300 mb-4"></i>
                 <p class="text-gray-600 text-lg mb-2 font-semibold">No events match the criteria</p>
                 <p class="text-gray-500 text-sm">
                     @if(request()->hasAny(['search', 'ukm_id', 'date_filter']))
@@ -315,7 +405,7 @@
                     @endif
                 </p>
                 <button onclick="openAddModal()" 
-                        class="mt-4 lux-button px-4 py-2 rounded-lg hover:bg-amber-700 transition duration-200">
+                        class="mt-4 lux-button px-4 py-2 rounded-lg hover:bg-amber-700 transition duration-200 text-sm sm:text-base">
                     <i class="fas fa-plus mr-2"></i>Create First Event
                 </button>
             </div>
@@ -323,12 +413,12 @@
     </div>
     
     @if($events->hasPages())
-    <div class="px-5 py-4 border-t border-gray-100 bg-gray-50/50 rounded-b-lg">
-        <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-            <div class="text-sm text-gray-700 font-medium">
+    <div class="px-4 sm:px-5 py-4 border-t border-gray-100 bg-gray-50/50">
+        <div class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+            <div class="text-sm text-gray-700 text-center sm:text-left font-medium">
                 Showing **{{ $events->firstItem() }}** to **{{ $events->lastItem() }}** of **{{ $events->total() }}** results
             </div>
-            <div class="flex space-x-1.5">
+            <div class="flex flex-wrap justify-center gap-2">
                 @if($events->onFirstPage())
                     <span class="px-3 py-1 rounded-lg border border-gray-300 text-gray-400 cursor-not-allowed text-sm">
                         <i class="fas fa-angle-left"></i> Previous
@@ -384,9 +474,9 @@
 </div>
 
 <!-- Add Event Modal -->
-<dialog id="addEventModal" class="modal-lux bg-white w-full max-w-2xl">
-    <div class="flex justify-between items-center p-6 border-b border-gray-200 bg-gray-50 rounded-t-xl">
-        <h3 class="text-xl font-bold text-gray-800 flex items-center">
+<dialog id="addEventModal" class="modal-lux bg-white">
+    <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-200 bg-gray-50 rounded-t-xl">
+        <h3 class="text-lg sm:text-xl font-bold text-gray-800 flex items-center">
             <i class="fas fa-plus-circle mr-2 lux-gold-text"></i> Create New Event
         </h3>
         <button onclick="closeAddModal()" class="text-gray-400 hover:text-gray-700 transition duration-200">
@@ -396,7 +486,7 @@
     
     <form id="addEventForm" action="{{ route('admin.events.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        <div class="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
+        <div class="p-4 sm:p-6 space-y-5 max-h-[70vh] overflow-y-auto">
             @if($errors->any() && !session('edit_errors'))
                 <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                     <strong class="font-medium">Please fix the following errors:</strong>
@@ -408,11 +498,11 @@
                 </div>
             @endif
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">UKM *</label>
                     <select name="ukm_id" required 
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base
                                    {{ $errors->has('ukm_id') && !session('edit_errors') ? 'border-red-500' : '' }}">
                         <option value="">Select UKM</option>
                         @foreach($ukms as $ukm)
@@ -429,7 +519,7 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Event Title *</label>
                     <input type="text" name="title" required 
-                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200
+                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base
                                   {{ $errors->has('title') && !session('edit_errors') ? 'border-red-500' : '' }}"
                            value="{{ old('title') }}"
                            placeholder="Enter event title">
@@ -442,7 +532,7 @@
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Description *</label>
                 <textarea name="description" required 
-                          class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200
+                          class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base
                                  {{ $errors->has('description') && !session('edit_errors') ? 'border-red-500' : '' }}"
                           rows="4" 
                           placeholder="Describe your event...">{{ old('description') }}</textarea>
@@ -452,11 +542,11 @@
                 <p class="text-gray-500 text-xs mt-2">Minimal 10 karakter, maksimal 2000 karakter</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Event Date *</label>
                     <input type="date" name="event_date" required 
-                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200
+                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base
                                   {{ $errors->has('event_date') && !session('edit_errors') ? 'border-red-500' : '' }}"
                            value="{{ old('event_date') }}"
                            min="{{ date('Y-m-d') }}">
@@ -468,7 +558,7 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Event Time *</label>
                     <input type="time" name="event_time" required 
-                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200
+                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base
                                   {{ $errors->has('event_time') && !session('edit_errors') ? 'border-red-500' : '' }}"
                            value="{{ old('event_time') }}">
                     @if($errors->has('event_time') && !session('edit_errors'))
@@ -480,7 +570,7 @@
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Location *</label>
                 <input type="text" name="location" required 
-                       class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200
+                       class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base
                               {{ $errors->has('location') && !session('edit_errors') ? 'border-red-500' : '' }}"
                        value="{{ old('location') }}"
                        placeholder="Enter event location">
@@ -489,11 +579,11 @@
                 @endif
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Poster Image</label>
                     <input type="file" name="poster_image" accept="image/*"
-                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200
+                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base
                                   file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0
                                   file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700
                                   hover:file:bg-amber-100
@@ -507,7 +597,7 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Registration Link</label>
                     <input type="url" name="registration_link" 
-                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200
+                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base
                                   {{ $errors->has('registration_link') && !session('edit_errors') ? 'border-red-500' : '' }}"
                            value="{{ old('registration_link') }}"
                            placeholder="https://example.com/register">
@@ -518,13 +608,13 @@
             </div>
         </div>
         
-        <div class="flex justify-end space-x-3 p-6 border-t border-gray-100 bg-gray-50 rounded-b-xl">
+        <div class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 p-4 sm:p-6 border-t border-gray-100 bg-gray-50 rounded-b-xl">
             <button type="button" onclick="closeAddModal()" 
-                    class="px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition duration-200 font-medium">
+                    class="px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition duration-200 font-medium text-sm sm:text-base">
                 Cancel
             </button>
             <button type="submit" 
-                    class="lux-button px-4 py-2.5 rounded-lg hover:bg-amber-700 transition duration-200 font-medium flex items-center">
+                    class="lux-button px-4 py-2.5 rounded-lg hover:bg-amber-700 transition duration-200 font-medium flex items-center justify-center text-sm sm:text-base">
                 <i class="fas fa-save mr-2"></i> Save Event
             </button>
         </div>
@@ -532,9 +622,9 @@
 </dialog>
 
 <!-- Edit Event Modal -->
-<dialog id="editEventModal" class="modal-lux bg-white w-full max-w-2xl">
-    <div class="flex justify-between items-center p-6 border-b border-gray-200 bg-gray-50 rounded-t-xl">
-        <h3 class="text-xl font-bold text-gray-800 flex items-center">
+<dialog id="editEventModal" class="modal-lux bg-white">
+    <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-200 bg-gray-50 rounded-t-xl">
+        <h3 class="text-lg sm:text-xl font-bold text-gray-800 flex items-center">
             <i class="fas fa-edit mr-2 lux-gold-text"></i> Edit Event
         </h3>
         <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-700 transition duration-200">
@@ -544,7 +634,7 @@
     
     <form id="editEventForm" method="POST" enctype="multipart/form-data">
         @csrf @method('PUT')
-        <div class="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
+        <div class="p-4 sm:p-6 space-y-5 max-h-[70vh] overflow-y-auto">
             @if($errors->any() && session('edit_errors'))
                 <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                     <strong class="font-medium">Please fix the following errors:</strong>
@@ -556,11 +646,11 @@
                 </div>
             @endif
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">UKM *</label>
                     <select name="ukm_id" required 
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base
                                    {{ $errors->has('ukm_id') && session('edit_errors') ? 'border-red-500' : '' }}"
                             id="editUkmId">
                         @foreach($ukms as $ukm)
@@ -575,7 +665,7 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Event Title *</label>
                     <input type="text" name="title" required 
-                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200
+                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base
                                   {{ $errors->has('title') && session('edit_errors') ? 'border-red-500' : '' }}"
                            id="editTitle">
                     @if($errors->has('title') && session('edit_errors'))
@@ -587,7 +677,7 @@
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Description *</label>
                 <textarea name="description" required 
-                          class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200
+                          class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base
                                  {{ $errors->has('description') && session('edit_errors') ? 'border-red-500' : '' }}"
                           rows="4" 
                           id="editDescription"></textarea>
@@ -597,11 +687,11 @@
                 <p class="text-gray-500 text-xs mt-2">Minimal 10 karakter, maksimal 2000 karakter</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Event Date *</label>
                     <input type="date" name="event_date" required 
-                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200
+                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base
                                   {{ $errors->has('event_date') && session('edit_errors') ? 'border-red-500' : '' }}"
                            id="editEventDate">
                     @if($errors->has('event_date') && session('edit_errors'))
@@ -612,7 +702,7 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Event Time *</label>
                     <input type="time" name="event_time" required 
-                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200
+                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base
                                   {{ $errors->has('event_time') && session('edit_errors') ? 'border-red-500' : '' }}"
                            id="editEventTime">
                     @if($errors->has('event_time') && session('edit_errors'))
@@ -624,7 +714,7 @@
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Location *</label>
                 <input type="text" name="location" required 
-                       class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200
+                       class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base
                               {{ $errors->has('location') && session('edit_errors') ? 'border-red-500' : '' }}"
                        id="editLocation">
                 @if($errors->has('location') && session('edit_errors'))
@@ -632,11 +722,11 @@
                 @endif
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Poster Image</label>
                     <input type="file" name="poster_image" accept="image/*"
-                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200
+                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base
                                   file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0
                                   file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700
                                   hover:file:bg-amber-100
@@ -653,7 +743,7 @@
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Registration Link</label>
                     <input type="url" name="registration_link" 
-                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200
+                           class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base
                                   {{ $errors->has('registration_link') && session('edit_errors') ? 'border-red-500' : '' }}"
                            id="editRegistrationLink">
                     @if($errors->has('registration_link') && session('edit_errors'))
@@ -663,13 +753,13 @@
             </div>
         </div>
         
-        <div class="flex justify-end space-x-3 p-6 border-t border-gray-100 bg-gray-50 rounded-b-xl">
+        <div class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 p-4 sm:p-6 border-t border-gray-100 bg-gray-50 rounded-b-xl">
             <button type="button" onclick="closeEditModal()" 
-                    class="px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition duration-200 font-medium">
+                    class="px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition duration-200 font-medium text-sm sm:text-base">
                 Cancel
             </button>
             <button type="submit" 
-                    class="lux-button px-4 py-2.5 rounded-lg hover:bg-amber-700 transition duration-200 font-medium flex items-center">
+                    class="lux-button px-4 py-2.5 rounded-lg hover:bg-amber-700 transition duration-200 font-medium flex items-center justify-center text-sm sm:text-base">
                 <i class="fas fa-save mr-2"></i> Update Event
             </button>
         </div>
@@ -683,7 +773,8 @@ function confirmDeleteEvent(title) {
 
 // Modal Functions
 function openAddModal() {
-    document.getElementById('addEventModal').showModal();
+    const modal = document.getElementById('addEventModal');
+    modal.showModal();
     document.getElementById('addEventForm').reset();
     
     const errorInputs = document.querySelectorAll('#addEventForm .border-red-500');
@@ -691,6 +782,13 @@ function openAddModal() {
     
     const errorMessages = document.querySelectorAll('#addEventForm .text-red-500');
     errorMessages.forEach(msg => msg.remove());
+    
+    // Mobile positioning
+    if (window.innerWidth < 640) {
+        modal.style.margin = '1rem auto';
+        modal.style.maxHeight = '90vh';
+        modal.style.overflowY = 'auto';
+    }
 }
 
 function closeAddModal() {
@@ -722,19 +820,35 @@ function editEvent(event) {
         currentPoster.style.display = 'none';
     }
     
-    document.getElementById('editEventModal').showModal();
+    const modal = document.getElementById('editEventModal');
+    modal.showModal();
+    
+    // Mobile positioning
+    if (window.innerWidth < 640) {
+        modal.style.margin = '1rem auto';
+        modal.style.maxHeight = '90vh';
+        modal.style.overflowY = 'auto';
+    }
 }
 
 // Real-time validation
 document.addEventListener('DOMContentLoaded', function() {
     const hasAddErrors = {{ $errors->any() && !session('edit_errors') ? 'true' : 'false' }};
     if (hasAddErrors) {
-        document.getElementById('addEventModal').showModal();
+        setTimeout(() => openAddModal(), 300);
     }
 
     const hasEditErrors = {{ $errors->any() && session('edit_errors') ? 'true' : 'false' }};
     if (hasEditErrors) {
-        document.getElementById('editEventModal').showModal();
+        setTimeout(() => {
+            const modal = document.getElementById('editEventModal');
+            modal.showModal();
+            if (window.innerWidth < 640) {
+                modal.style.margin = '1rem auto';
+                modal.style.maxHeight = '90vh';
+                modal.style.overflowY = 'auto';
+            }
+        }, 300);
     }
 
     // Close modals on backdrop click
@@ -763,9 +877,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-setTimeout(() => {
-    const flashMessages = document.querySelectorAll('.fixed');
-    flashMessages.forEach(msg => msg.remove());
-}, 5000);
 </script>
 @endsection

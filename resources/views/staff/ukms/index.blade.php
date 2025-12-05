@@ -83,111 +83,146 @@
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        .mobile-scroll-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 8px;
+        }
+        
+        .mobile-stack {
+            flex-direction: column;
+        }
+        
+        .mobile-full-width {
+            width: 100% !important;
+        }
+        
+        dialog {
+            max-width: 95vw !important;
+            margin: 10px !important;
+            padding: 16px !important;
+        }
+    }
 </style>
 
-<div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">My Managed UKM</h1>
+<!-- Header Section -->
+<div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+    <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">My Managed UKM</h1>
+        <p class="text-gray-600 text-sm sm:text-base mt-1">Manage and update your assigned UKM information</p>
+    </div>
     
-    <div class="text-sm font-semibold lux-purple-text px-4 py-2 rounded-full border border-violet-300 bg-violet-50 shadow-sm">
-        <i class="fas fa-users-cog mr-1 lux-purple-text"></i> Total: {{ $managedUkms->count() }} UKM
+    <div class="text-sm font-semibold lux-purple-text px-4 py-2 rounded-full border border-violet-300 bg-violet-50 shadow-sm inline-flex items-center self-start sm:self-auto">
+        <i class="fas fa-users-cog mr-1 lux-purple-text"></i> 
+        <span>Total: {{ $managedUkms->count() }} UKM</span>
     </div>
 </div>
 
-
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<!-- Stats Cards - Mobile: full width, Desktop: 3 per row -->
+<!-- Stats Cards - Mobile: 2 per row, Desktop: 3 per row -->
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
     
-    <div class="floating-card p-5 border-l-4 border-violet-500">
+    <!-- Total UKM Card -->
+    <div class="floating-card p-4 sm:p-5 border-l-4 border-violet-500">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-violet-100/70">
-                <i class="fas fa-users lux-purple-text text-xl"></i>
+            <div class="p-2 sm:p-3 rounded-full bg-violet-100/70">
+                <i class="fas fa-users lux-purple-text text-lg sm:text-xl"></i>
             </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-gray-500">Total UKM</p>
-                <p class="text-2xl font-bold text-gray-900">{{ $managedUkms->count() }}</p>
+            <div class="ml-3 sm:ml-4">
+                <p class="text-xs sm:text-sm font-medium text-gray-500">Total UKM</p>
+                <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ $managedUkms->count() }}</p>
             </div>
         </div>
     </div>
     
-    <div class="floating-card p-5 border-l-4 border-blue-500">
+    <!-- Total Events Card -->
+    <div class="floating-card p-4 sm:p-5 border-l-4 border-blue-500">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-blue-100/70">
-                <i class="fas fa-calendar text-blue-600 text-xl"></i>
+            <div class="p-2 sm:p-3 rounded-full bg-blue-100/70">
+                <i class="fas fa-calendar text-blue-600 text-lg sm:text-xl"></i>
             </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-gray-500">Total Events</p>
-                <p class="text-2xl font-bold text-gray-900">{{ $managedUkms->sum('events_count') }}</p>
+            <div class="ml-3 sm:ml-4">
+                <p class="text-xs sm:text-sm font-medium text-gray-500">Total Events</p>
+                <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ $managedUkms->sum('events_count') }}</p>
             </div>
         </div>
     </div>
     
-    <div class="floating-card p-5 border-l-4 border-green-500">
+    <!-- Total Feeds Card -->
+    <div class="floating-card p-4 sm:p-5 border-l-4 border-green-500">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-green-100/70">
-                <i class="fas fa-newspaper text-green-600 text-xl"></i>
+            <div class="p-2 sm:p-3 rounded-full bg-green-100/70">
+                <i class="fas fa-newspaper text-green-600 text-lg sm:text-xl"></i>
             </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-gray-500">Total Feeds</p>
-                <p class="text-2xl font-bold text-gray-900">{{ $managedUkms->sum('feeds_count') }}</p>
+            <div class="ml-3 sm:ml-4">
+                <p class="text-xs sm:text-sm font-medium text-gray-500">Total Feeds</p>
+                <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ $managedUkms->sum('feeds_count') }}</p>
             </div>
         </div>
     </div>
 </div>
 
-
+<!-- UKM Data Overview -->
 <div class="floating-card overflow-hidden">
-    <div class="flex justify-between items-center p-5 border-b bg-violet-50/50">
-        <h2 class="text-lg font-bold text-gray-800 flex items-center">
+    <div class="flex justify-between items-center p-4 sm:p-5 border-b bg-violet-50/50">
+        <h2 class="text-base sm:text-lg font-bold text-gray-800 flex items-center">
             <i class="fas fa-database mr-2 lux-purple-text"></i>
             UKM Data Overview
         </h2>
+        <span class="text-xs sm:text-sm text-gray-500 hidden sm:block">
+            Click on a UKM to view details
+        </span>
     </div>
     
-    <div class="p-6">
+    <div class="p-4 sm:p-6">
         @if($managedUkms->count() > 0)
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                 @foreach($managedUkms as $ukm)
-                <div class="floating-card p-5 hover:shadow-xl transition cursor-pointer" 
+                <div class="floating-card p-4 sm:p-5 hover:shadow-xl transition cursor-pointer" 
                      onclick="openDetailModal({{ $ukm->id }})">
-                    <div class="flex items-start mb-4">
+                    <div class="flex items-start mb-3 sm:mb-4">
                         @if($ukm->logo)
                             <img src="{{ $ukm->logo }}" alt="{{ $ukm->name }}" 
-                                 class="w-12 h-12 rounded-full object-cover mr-3 border-2 border-violet-300 shadow-inner">
+                                 class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover mr-3 border-2 border-violet-300 shadow-inner flex-shrink-0">
                         @else
-                            <div class="w-12 h-12 bg-violet-100 rounded-full flex items-center justify-center mr-3 border-2 border-violet-300">
-                                <i class="fas fa-users lux-purple-text text-xl"></i>
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-violet-100 rounded-full flex items-center justify-center mr-3 border-2 border-violet-300 flex-shrink-0">
+                                <i class="fas fa-users lux-purple-text text-lg sm:text-xl"></i>
                             </div>
                         @endif
                         
-                        <div>
-                            <h3 class="text-lg font-bold text-gray-900 leading-tight">{{ $ukm->name }}</h3>
+                        <div class="min-w-0 flex-1">
+                            <h3 class="text-base sm:text-lg font-bold text-gray-900 leading-tight truncate">{{ $ukm->name }}</h3>
                             <span class="inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-800">
                                 {{ $ukm->category->name }}
                             </span>
                         </div>
                     </div>
                     
-                    <div class="mb-4 text-sm text-gray-600 italic border-l-2 border-violet-300 pl-3">
-                        {{ Str::limit($ukm->description, 70) }}
+                    <div class="mb-3 sm:mb-4 text-xs sm:text-sm text-gray-600 italic border-l-2 border-violet-300 pl-2 sm:pl-3">
+                        {{ Str::limit($ukm->description, 60) }}
                     </div>
                     
-                    <div class="flex flex-wrap gap-2 mb-4">
+                    <div class="flex flex-wrap gap-1 sm:gap-2 mb-3 sm:mb-4">
                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800"
                               title="{{ $ukm->staff_count }} Staff Members">
-                            <i class="fas fa-user-friends mr-1"></i> Staff: {{ $ukm->staff_count }}
+                            <i class="fas fa-user-friends mr-1 text-xs"></i> Staff: {{ $ukm->staff_count }}
                         </span>
                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-fuchsia-100 text-fuchsia-800"
                               title="{{ $ukm->events_count }} Total Events">
-                            <i class="fas fa-calendar mr-1"></i> Events: {{ $ukm->events_count }}
+                            <i class="fas fa-calendar mr-1 text-xs"></i> Events: {{ $ukm->events_count }}
                         </span>
                     </div>
                     
-                    <div class="flex space-x-2 pt-3 border-t border-gray-100">
+                    <div class="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0 pt-3 border-t border-gray-100">
                         <button onclick="event.stopPropagation(); openEditModal({{ $ukm->id }})" 
-                                class="flex-1 lux-button px-4 py-2 rounded-lg hover:bg-violet-700 transition duration-200 flex items-center justify-center font-semibold text-sm">
+                                class="w-full sm:flex-1 lux-button px-3 sm:px-4 py-2 rounded-lg hover:bg-violet-700 transition duration-200 flex items-center justify-center font-semibold text-sm">
                             <i class="fas fa-edit mr-2"></i>Edit
                         </button>
                         <button onclick="event.stopPropagation(); openDetailModal({{ $ukm->id }})" 
-                                class="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition duration-200 flex items-center justify-center font-semibold text-sm">
+                                class="w-full sm:flex-1 bg-gray-200 text-gray-700 px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-300 transition duration-200 flex items-center justify-center font-semibold text-sm">
                             <i class="fas fa-eye mr-2"></i>View
                         </button>
                     </div>
@@ -195,56 +230,60 @@
                 @endforeach
             </div>
         @else
-            <div class="text-center py-12 lux-purple-bg-light rounded-lg border border-violet-200">
-                <i class="fas fa-users-slash text-5xl text-violet-500 mb-4"></i>
-                <p class="text-gray-700 text-lg mb-2 font-semibold">No UKM Assigned</p>
-                <p class="text-gray-500 text-sm mb-4">You are not assigned to manage any UKM yet.</p>
+            <div class="text-center py-8 sm:py-12 lux-purple-bg-light rounded-lg border border-violet-200">
+                <i class="fas fa-users-slash text-4xl sm:text-5xl text-violet-500 mb-4"></i>
+                <p class="text-gray-700 text-base sm:text-lg mb-2 font-semibold">No UKM Assigned</p>
+                <p class="text-gray-500 text-sm sm:text-sm mb-4">You are not assigned to manage any UKM yet.</p>
             </div>
         @endif
     </div>
 </div>
 
-<dialog id="detailModal" class="bg-white rounded-xl shadow-2xl w-full max-w-2xl backdrop:bg-black/50">
-    <div class="p-6">
+<!-- Detail Modal -->
+<dialog id="detailModal" class="bg-white rounded-xl shadow-2xl w-full max-w-2xl sm:max-w-2xl backdrop:bg-black/50">
+    <div class="p-4 sm:p-6 max-h-[80vh] overflow-y-auto">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="text-2xl font-bold text-gray-900 flex items-center lux-purple-text">
+            <h3 class="text-lg sm:text-2xl font-bold text-gray-900 flex items-center lux-purple-text">
                 <i class="fas fa-info-circle mr-2"></i> UKM Details
             </h3>
-            <button onclick="closeDetailModal()" class="text-gray-400 hover:text-red-500 transition">
+            <button onclick="closeDetailModal()" class="text-gray-400 hover:text-red-500 transition p-1">
                 <i class="fas fa-times text-xl"></i>
             </button>
         </div>
-        <div id="detailContent" class="space-y-6">
-            </div>
+        <div id="detailContent" class="space-y-4 sm:space-y-6">
+            <!-- Content will be loaded here -->
+        </div>
     </div>
 </dialog>
 
-<dialog id="editModal" class="bg-white rounded-xl shadow-2xl w-full max-w-4xl backdrop:bg-black/50">
-    <div class="p-8 max-h-[90vh] overflow-y-auto">
-        <div class="flex justify-between items-center mb-6 border-b pb-3">
-            <h3 class="text-2xl font-bold text-gray-900 flex items-center lux-purple-text">
-                <i class="fas fa-edit mr-2"></i> Edit UKM Information
+<!-- Edit Modal -->
+<dialog id="editModal" class="bg-white rounded-xl shadow-2xl w-full max-w-4xl sm:max-w-4xl backdrop:bg-black/50">
+    <div class="p-4 sm:p-8 max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4 sm:mb-6 border-b pb-3">
+            <h3 class="text-lg sm:text-2xl font-bold text-gray-900 flex items-center lux-purple-text">
+                <i class="fas fa-edit mr-2"></i> Edit UKM
             </h3>
-            <button onclick="closeEditModal()" class="text-gray-400 hover:text-red-500 transition">
+            <button onclick="closeEditModal()" class="text-gray-400 hover:text-red-500 transition p-1">
                 <i class="fas fa-times text-xl"></i>
             </button>
         </div>
         
-        <form id="editUkmForm" enctype="multipart/form-data" class="space-y-6">
+        <form id="editUkmForm" enctype="multipart/form-data" class="space-y-4 sm:space-y-6">
             @csrf
             @method('PUT')
             
-            <div id="currentLogoContainer" class="text-center p-5 lux-purple-bg-light rounded-xl border border-violet-200">
-                <label class="block text-sm font-bold text-gray-700 mb-3">Current Logo</label>
-                <div id="currentLogoPreview" class="flex justify-center mb-3">
-                    </div>
+            <div id="currentLogoContainer" class="text-center p-4 sm:p-5 lux-purple-bg-light rounded-xl border border-violet-200">
+                <label class="block text-sm font-bold text-gray-700 mb-2">Current Logo</label>
+                <div id="currentLogoPreview" class="flex justify-center mb-2">
+                    <!-- Logo preview will be loaded here -->
+                </div>
                 <p class="text-xs text-gray-600 italic">Upload new logo below to replace current one</p>
             </div>
 
             <div>
                 <label for="editLogo" class="block text-sm font-bold text-gray-700 mb-2">Upload New Logo</label>
                 <input type="file" id="editLogo" name="logo" accept="image/*" 
-                        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-0 input-lux"
+                        class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 focus:ring-0 input-lux text-sm"
                         onchange="validateFileSize(this, 2)">
                 <p class="text-xs text-gray-500 mt-1">Format: JPEG, PNG, JPG, GIF | Max: 2MB</p>
                 <div id="logoError" class="text-error"></div>
@@ -255,7 +294,7 @@
                     Description <span class="text-red-500">*</span>
                 </label>
                 <textarea id="editDescription" name="description" required rows="4" maxlength="1000"
-                              class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-0 input-lux resize-none"
+                              class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 focus:ring-0 input-lux resize-none text-sm"
                               placeholder="Enter UKM description..."></textarea>
                 <div class="flex justify-between items-center mt-1">
                     <div id="descriptionError" class="text-error"></div>
@@ -265,11 +304,11 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                     <label for="editVision" class="block text-sm font-bold text-gray-700 mb-2">Vision</label>
                     <textarea id="editVision" name="vision" rows="3" maxlength="500"
-                              class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-0 input-lux resize-none"
+                              class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 focus:ring-0 input-lux resize-none text-sm"
                               placeholder="Enter UKM vision..."></textarea>
                     <div class="flex justify-between items-center mt-1">
                         <div id="visionError" class="text-error"></div>
@@ -282,7 +321,7 @@
                 <div>
                     <label for="editMission" class="block text-sm font-bold text-gray-700 mb-2">Mission</label>
                     <textarea id="editMission" name="mission" rows="3" maxlength="500"
-                              class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-0 input-lux resize-none"
+                              class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 focus:ring-0 input-lux resize-none text-sm"
                               placeholder="Enter UKM mission..."></textarea>
                     <div class="flex justify-between items-center mt-1">
                         <div id="missionError" class="text-error"></div>
@@ -293,11 +332,11 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                     <label for="editContactPerson" class="block text-sm font-bold text-gray-700 mb-2">Contact Person</label>
                     <input type="text" id="editContactPerson" name="contact_person"
-                           class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-0 input-lux"
+                           class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 focus:ring-0 input-lux text-sm"
                            placeholder="Enter contact person name...">
                     <div id="contactPersonError" class="text-error"></div>
                 </div>
@@ -305,19 +344,19 @@
                 <div>
                     <label for="editInstagram" class="block text-sm font-bold text-gray-700 mb-2">Instagram</label>
                     <input type="text" id="editInstagram" name="instagram"
-                           class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-0 input-lux"
+                           class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 sm:py-3 focus:ring-0 input-lux text-sm"
                            placeholder="@username">
                     <div id="instagramError" class="text-error"></div>
                 </div>
             </div>
 
-            <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+            <div class="flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-4 sm:pt-6 border-t border-gray-200">
                 <button type="button" onclick="closeEditModal()" 
-                        class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition duration-200 font-semibold">
+                        class="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition duration-200 font-semibold text-sm sm:text-base">
                     Cancel
                 </button>
                 <button type="submit" id="submitEditBtn"
-                        class="lux-button px-6 py-3 rounded-lg hover:bg-violet-700 transition duration-200 flex items-center">
+                        class="w-full sm:w-auto lux-button px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-violet-700 transition duration-200 flex items-center justify-center text-sm sm:text-base">
                     <i class="fas fa-save mr-2"></i>
                     <span>Update UKM</span>
                 </button>
@@ -335,7 +374,7 @@ function showFlashMessage(type, message) {
     // Implementasi ini harus ada di layout induk (layouts/staff.blade.php)
     // Untuk saat ini, kita buat implementasi sederhana agar berfungsi:
     const flashDiv = document.createElement('div');
-    flashDiv.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg text-white font-semibold ${
+    flashDiv.className = `fixed top-4 right-4 z-50 px-4 sm:px-6 py-3 sm:py-4 rounded-lg shadow-lg text-white font-semibold text-sm sm:text-base ${
         type === 'success' ? 'bg-green-500' : 'bg-red-500'
     } animate-in slide-in-from-top duration-500`;
     flashDiv.innerHTML = `
@@ -380,7 +419,6 @@ function openDetailModal(ukmId) {
     const detailContent = document.getElementById('detailContent');
     detailContent.innerHTML = `<div class="text-center py-8"><div class="loading-spinner"></div> <p class="mt-2 text-gray-600">Loading details...</p></div>`; // Loading State
 
-    // Menggunakan route yang didefinisikan di Laravel (asumsi route 'staff.ukms.show' mengembalikan JSON)
     fetch(`/staff/ukms/${ukmId}`) 
         .then(response => {
             if (!response.ok) throw new Error('Network response was not ok');
@@ -390,50 +428,50 @@ function openDetailModal(ukmId) {
             if (data.success) {
                 const ukm = data.data;
                 
-                // Gunakan template string untuk mengisi detail konten
+                // Mobile-friendly detail view
                 detailContent.innerHTML = `
-                    <div class="flex items-center space-x-4 pb-4 border-b">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 pb-4 border-b">
                         ${ukm.logo ? 
-                            `<img src="${ukm.logo}" alt="${ukm.name}" class="w-20 h-20 rounded-xl object-cover border shadow-sm">` :
-                            `<div class="w-20 h-20 bg-violet-50 rounded-xl flex items-center justify-center border border-violet-300">
-                                <i class="fas fa-users lux-purple-text text-3xl"></i>
+                            `<img src="${ukm.logo}" alt="${ukm.name}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border shadow-sm mb-3 sm:mb-0">` :
+                            `<div class="w-16 h-16 sm:w-20 sm:h-20 bg-violet-50 rounded-xl flex items-center justify-center border border-violet-300 mb-3 sm:mb-0">
+                                <i class="fas fa-users lux-purple-text text-2xl sm:text-3xl"></i>
                             </div>`
                         }
-                        <div>
-                            <h4 class="text-2xl font-extrabold text-gray-900">${ukm.name}</h4>
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-violet-100 text-violet-800">
+                        <div class="flex-1">
+                            <h4 class="text-lg sm:text-2xl font-extrabold text-gray-900 mb-1">${ukm.name}</h4>
+                            <span class="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-violet-100 text-violet-800">
                                 ${ukm.category.name}
                             </span>
                         </div>
                     </div>
                     
-                    <div class="space-y-4">
-                        <div class="bg-gray-50 p-4 rounded-lg">
+                    <div class="space-y-3 sm:space-y-4">
+                        <div class="bg-gray-50 p-3 sm:p-4 rounded-lg">
                             <label class="block text-sm font-bold text-gray-700 mb-1">Description</label>
-                            <p class="text-gray-600">${ukm.description}</p>
+                            <p class="text-gray-600 text-sm">${ukm.description}</p>
                         </div>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             ${ukm.vision ? `
-                            <div class="p-4 rounded-lg border">
+                            <div class="p-3 sm:p-4 rounded-lg border">
                                 <label class="block text-sm font-bold text-gray-700 mb-1 lux-purple-text">Vision</label>
-                                <p class="text-gray-600 text-sm">${ukm.vision}</p>
+                                <p class="text-gray-600 text-xs sm:text-sm">${ukm.vision}</p>
                             </div>
                             ` : ''}
                             
                             ${ukm.mission ? `
-                            <div class="p-4 rounded-lg border">
+                            <div class="p-3 sm:p-4 rounded-lg border">
                                 <label class="block text-sm font-bold text-gray-700 mb-1 lux-purple-text">Mission</label>
-                                <p class="text-gray-600 text-sm">${ukm.mission}</p>
+                                <p class="text-gray-600 text-xs sm:text-sm">${ukm.mission}</p>
                             </div>
                             ` : ''}
                         </div>
                         
-                        <div class="grid grid-cols-2 gap-4 pt-2 border-t">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-2 border-t">
                             ${ukm.contact_person ? `
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Contact Person</label>
-                                <p class="text-gray-600 flex items-center text-sm">
+                                <p class="text-gray-600 flex items-center text-xs sm:text-sm">
                                     <i class="fas fa-user mr-2 text-violet-600"></i>${ukm.contact_person}
                                 </p>
                             </div>
@@ -442,23 +480,23 @@ function openDetailModal(ukmId) {
                             ${ukm.instagram ? `
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Instagram</label>
-                                <p class="text-gray-600 flex items-center text-sm">
+                                <p class="text-gray-600 flex items-center text-xs sm:text-sm">
                                     <i class="fab fa-instagram mr-2 text-violet-600"></i>${ukm.instagram}
                                 </p>
                             </div>
                             ` : ''}
                         </div>
                         
-                        <div class="border-t pt-4">
+                        <div class="border-t pt-3 sm:pt-4">
                             <label class="block text-sm font-bold text-gray-700 mb-2">Statistics</label>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-violet-100 text-violet-800">
+                            <div class="flex flex-wrap gap-1 sm:gap-2">
+                                <span class="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium bg-violet-100 text-violet-800">
                                     <i class="fas fa-users mr-1"></i>${ukm.staff_count} Staff
                                 </span>
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-fuchsia-100 text-fuchsia-800">
+                                <span class="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium bg-fuchsia-100 text-fuchsia-800">
                                     <i class="fas fa-calendar mr-1"></i>${ukm.events_count} Events
                                 </span>
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                                <span class="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                                     <i class="fas fa-newspaper mr-1"></i>${ukm.feeds_count} Feeds
                                 </span>
                             </div>
@@ -514,12 +552,12 @@ function openEditModal(ukmId) {
                 if (ukm.logo) {
                     logoPreview.innerHTML = `
                         <img src="${ukm.logo}" alt="${ukm.name}" 
-                             class="w-32 h-32 rounded-xl object-cover border-2 border-violet-400 shadow-md">
+                             class="w-24 h-24 sm:w-32 sm:h-32 rounded-xl object-cover border-2 border-violet-400 shadow-md">
                     `;
                 } else {
                     logoPreview.innerHTML = `
-                        <div class="w-32 h-32 bg-violet-100 rounded-xl flex items-center justify-center border border-violet-300">
-                            <i class="fas fa-users lux-purple-text text-4xl"></i>
+                        <div class="w-24 h-24 sm:w-32 sm:h-32 bg-violet-100 rounded-xl flex items-center justify-center border border-violet-300">
+                            <i class="fas fa-users lux-purple-text text-3xl sm:text-4xl"></i>
                         </div>
                     `;
                 }
@@ -617,23 +655,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Perbaikan untuk mengirimkan method PUT/PATCH via form data
             const formData = new FormData(this);
-            formData.append('_method', 'PUT'); // Tambahkan _method=PUT secara manual
+            formData.append('_method', 'PUT');
             
             resetErrors();
             
             // Show loading state
             const submitBtn = document.getElementById('submitEditBtn');
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<div class="loading-spinner mr-2"></div> <span>Updating...</span>';
+            submitBtn.innerHTML = '<div class="loading-spinner mr-2"></div> <span class="hidden sm:inline">Updating...</span><span class="sm:hidden">Updating</span>';
             submitBtn.disabled = true;
             
             fetch(`/staff/ukms/${currentEditingUkmId}`, {
-                method: 'POST', // Kirim sebagai POST karena HTML Form tidak mendukung PUT/PATCH
+                method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').content : '',
-                    // Penting: Jangan sertakan 'Content-Type': 'application/json' saat mengirim FormData dengan file upload
                     'X-Requested-With': 'XMLHttpRequest'
                 },
                 body: formData
@@ -676,6 +712,46 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('editModal').addEventListener('click', function(e) {
         if (e.target === this) closeEditModal();
     });
+
+    // Close modals on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (document.getElementById('detailModal').open) closeDetailModal();
+            if (document.getElementById('editModal').open) closeEditModal();
+        }
+    });
 });
+
+// Handle mobile view better
+function handleMobileView() {
+    const isMobile = window.innerWidth < 768;
+    
+    if (isMobile) {
+        // Adjust modal positioning
+        const modals = document.querySelectorAll('dialog');
+        modals.forEach(modal => {
+            if (modal.open) {
+                modal.style.marginTop = '20px';
+            }
+        });
+    }
+}
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        // Hanya hapus flash messages dengan class slide-in-from-top
+        const flashMessages = document.querySelectorAll('.slide-in-from-top');
+        flashMessages.forEach(msg => {
+            msg.style.opacity = '0';
+            msg.style.transition = 'opacity 0.5s ease-out';
+            setTimeout(() => {
+                if (msg.parentNode) {
+                    msg.remove();
+                }
+            }, 500);
+        });
+    }, 4500);
+});
+window.addEventListener('resize', handleMobileView);
+window.addEventListener('load', handleMobileView);
 </script>
 @endsection

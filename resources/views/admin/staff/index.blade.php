@@ -57,25 +57,26 @@
     }
 </style>
 
-<div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Staff Assignment Management</h1>
-    <div class="text-sm font-semibold lux-gold-text px-3 py-1 rounded-full border border-gray-300 bg-amber-50">
+{{-- Bagian Title dan Counter --}}
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">Staff Assignment Management</h1>
+    <div class="text-sm font-semibold lux-gold-text px-3 py-1 rounded-full border border-gray-300 bg-amber-50 whitespace-nowrap">
         <i class="fas fa-link mr-1 lux-gold-text"></i> **{{ $ukmStaff->count() }}** Active Assignments
     </div>
 </div>
 
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    
+{{-- Bagian Stats Cards - 2 kolom di mobile --}}
+<div class="grid grid-cols-2 gap-3 sm:gap-4 mb-6 sm:grid-cols-2 lg:grid-cols-4">
     {{-- Total Staff Users (Warna Gold) --}}
     <div class="floating-card p-4">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-amber-100 lux-gold-text mr-4">
+            <div class="p-3 rounded-full bg-amber-100 lux-gold-text mr-4 flex-shrink-0">
                 <i class="fas fa-users text-lg"></i>
             </div>
-            <div>
-                <p class="text-sm font-medium text-gray-600">Total Staff Users</p>
-                <p class="text-2xl font-bold text-gray-900">{{ $staffUsers->count() }}</p>
+            <div class="min-w-0 flex-1">
+                <p class="text-sm font-medium text-gray-600 truncate">Total Staff</p>
+                <p class="text-xl sm:text-2xl font-bold text-gray-900 truncate">{{ $staffUsers->count() }}</p>
             </div>
         </div>
     </div>
@@ -83,12 +84,12 @@
     {{-- Active Assignments (Warna Gold) --}}
     <div class="floating-card p-4">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-amber-100 lux-gold-text mr-4">
+            <div class="p-3 rounded-full bg-amber-100 lux-gold-text mr-4 flex-shrink-0">
                 <i class="fas fa-link text-lg"></i>
             </div>
-            <div>
-                <p class="text-sm font-medium text-gray-600">Active Assignments</p>
-                <p class="text-2xl font-bold text-gray-900">{{ $ukmStaff->count() }}</p>
+            <div class="min-w-0 flex-1">
+                <p class="text-sm font-medium text-gray-600 truncate">Assignments</p>
+                <p class="text-xl sm:text-2xl font-bold text-gray-900 truncate">{{ $ukmStaff->count() }}</p>
             </div>
         </div>
     </div>
@@ -96,12 +97,12 @@
     {{-- UKM with Staff (Warna Gold) --}}
     <div class="floating-card p-4">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-amber-100 lux-gold-text mr-4">
+            <div class="p-3 rounded-full bg-amber-100 lux-gold-text mr-4 flex-shrink-0">
                 <i class="fas fa-building text-lg"></i>
             </div>
-            <div>
-                <p class="text-sm font-medium text-gray-600">UKM with Staff</p>
-                <p class="text-2xl font-bold text-gray-900">{{ $ukmStaff->unique('ukm_id')->count() }}</p>
+            <div class="min-w-0 flex-1">
+                <p class="text-sm font-medium text-gray-600 truncate">UKM Staff</p>
+                <p class="text-xl sm:text-2xl font-bold text-gray-900 truncate">{{ $ukmStaff->unique('ukm_id')->count() }}</p>
             </div>
         </div>
     </div>
@@ -109,35 +110,34 @@
     {{-- Available UKM (Warna Gold) --}}
     <div class="floating-card p-4">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-amber-100 lux-gold-text mr-4">
+            <div class="p-3 rounded-full bg-amber-100 lux-gold-text mr-4 flex-shrink-0">
                 <i class="fas fa-clipboard-list text-lg"></i>
             </div>
-            <div>
-                <p class="text-sm font-medium text-gray-600">Available UKM</p>
-                <p class="text-2xl font-bold text-gray-900">{{ $ukms->count() }}</p>
+            <div class="min-w-0 flex-1">
+                <p class="text-sm font-medium text-gray-600 truncate">UKM Available</p>
+                <p class="text-xl sm:text-2xl font-bold text-gray-900 truncate">{{ $ukms->count() }}</p>
             </div>
         </div>
     </div>
 </div>
 
 
-
+{{-- Bagian Form Assign Staff --}}
 <div class="floating-card mb-6">
-    <div class="p-5 border-b border-gray-100 bg-gray-50/50">
+    <div class="p-4 sm:p-5 border-b border-gray-100 bg-gray-50/50">
         <h2 class="text-lg font-bold text-gray-800 flex items-center">
             <i class="fas fa-user-plus mr-2 lux-gold-text"></i>
             Assign Staff to UKM
         </h2>
     </div>
-    <div class="p-5">
+    <div class="p-4 sm:p-5">
         <form id="assignStaffForm" action="{{ route('admin.staff.assign') }}" method="POST">
             @csrf
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-1 md:grid-cols-2 sm:gap-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Staff User *</label>
-                    {{-- Menerapkan input-lux:focus --}}
                     <select name="user_id" required 
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200">
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base">
                         <option value="">Select Staff User</option>
                         @foreach($staffUsers as $user)
                             <option value="{{ $user->id }}" 
@@ -151,10 +151,10 @@
                             </option>
                         @endforeach
                     </select>
-                    {{-- Detail Card diselaraskan ke Gold/Amber --}}
+ {{-- Detail Card --}}
                     <div id="staffDetails" class="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg hidden">
                         <div class="text-sm text-gray-700 space-y-1">
-                            <div><strong class="lux-gold-text">Email:</strong> <span id="staffEmail">-</span></div>
+                            <div><strong class="lux-gold-text">Email:</strong> <span id="staffEmail" class="break-words">-</span></div>
                             <div><strong class="lux-gold-text">NIM:</strong> <span id="staffNim">-</span></div>
                             <div><strong class="lux-gold-text">Current Assignments:</strong> <span id="staffAssignments">0</span></div>
                         </div>
@@ -163,9 +163,8 @@
                 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">UKM *</label>
-                    {{-- Menerapkan input-lux:focus --}}
                     <select name="ukm_id" required 
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200">
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 input-lux:focus transition duration-200 text-sm sm:text-base">
                         <option value="">Select UKM</option>
                         @foreach($ukms as $ukm)
                             <option value="{{ $ukm->id }}"
@@ -178,24 +177,23 @@
                             </option>
                         @endforeach
                     </select>
-                    {{-- Detail Card diselaraskan ke Gold/Amber --}}
+ {{-- Detail Card --}}
                     <div id="ukmDetails" class="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg hidden">
                         <div class="text-sm text-gray-700 space-y-1">
                             <div><strong class="lux-gold-text">Current Staff:</strong> <span id="ukmStaffCount">0</span></div>
-                            <div><strong class="lux-gold-text">Status:</strong> <span id="ukmStatus" class="px-2 py-1 rounded text-xs"></span></div>
+                            <div><strong class="lux-gold-text">Status:</strong> <span id="ukmStatus" class="px-2 py-1 rounded text-xs inline-block mt-1"></span></div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="mt-6 flex justify-end space-x-3">
+            <div class="mt-6 flex flex-col sm:flex-row sm:justify-end space-y-3 sm:space-y-0 sm:space-x-3">
                 <button type="button" onclick="resetForm()" 
-                        class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition duration-200 font-medium text-sm">
+                        class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition duration-200 font-medium text-sm order-2 sm:order-1 ">
                     <i class="fas fa-refresh mr-2"></i>Reset
                 </button>
-                {{-- Tombol Submit menggunakan lux-button (Gold) --}}
                 <button type="submit" 
-                        class="lux-button px-6 py-2.5 rounded-lg hover:bg-amber-700 transition duration-200 font-medium flex items-center text-sm">
+                        class="lux-button px-6 py-2.5 rounded-lg hover:bg-amber-700 transition duration-200 font-medium flex items-center justify-center text-sm order-1 sm:order-2 mb-3 sm:mb-0">
                     <i class="fas fa-link mr-2"></i>Assign Staff
                 </button>
             </div>
@@ -205,26 +203,26 @@
 
 
 
+{{-- Bagian Table Header --}}
 <div class="floating-card overflow-hidden">
-    <div class="flex justify-between items-center p-5 border-b border-gray-100 bg-gray-50/50">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 sm:p-5 border-b border-gray-100 bg-gray-50/50 gap-4">
         <h2 class="text-lg font-bold text-gray-800 flex items-center">
             <i class="fas fa-list-check mr-2 lux-gold-text"></i>
             Staff Assignments
         </h2>
         
-        <div class="flex items-center space-x-4">
+        <div class="w-full sm:w-auto">
             <div class="relative">
                 <input type="text" id="searchAssignments" placeholder="Search assignments..." 
-                       {{-- Menerapkan input-lux:focus --}}
-                       class="border border-gray-300 rounded-lg px-4 py-2 pl-10 input-lux:focus w-64 text-sm">
+                       class="border border-gray-300 rounded-lg px-4 py-2 pl-10 input-lux:focus w-full sm:w-64 text-sm">
                 <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
             </div>
         </div>
     </div>
     
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto -mx-2 sm:mx-0">
         <table class="w-full min-w-full">
-            <thead>
+            <thead class="hidden sm:table-header-group">
                 <tr class="bg-gray-100/70 border-b border-gray-200">
                     <th class="p-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Staff Member</th>
                     <th class="p-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Contact Info</th>
@@ -235,10 +233,81 @@
             </thead>
             <tbody class="divide-y divide-gray-100" id="assignmentsTableBody">
                 @foreach($ukmStaff as $assignment)
-                <tr class="hover-row-table transition duration-150 assignment-row">
-                    <td class="p-4">
+                <tr class="hover-row-table transition duration-150 assignment-row block sm:table-row border-b sm:border-b-0 last:border-b-0">
+                    {{-- Mobile Card View --}}
+                    <td class="block sm:hidden p-4">
+                        <div class="bg-gray-50 rounded-lg p-4 mb-2">
+                            {{-- Staff Info Mobile --}}
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3 shadow-md">
+                                    {{ strtoupper(substr($assignment->user->name, 0, 2)) }}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="font-medium text-gray-900 truncate">{{ $assignment->user->name }}</div>
+                                    <div class="text-sm text-gray-500">Staff Member</div>
+                                </div>
+                            </div>
+                            
+                            {{-- Contact Info Mobile --}}
+                            <div class="mb-3">
+                                <div class="text-sm text-gray-900 font-medium truncate">{{ $assignment->user->email }}</div>
+                                <div class="text-xs text-gray-600"><i class="fas fa-id-card mr-1"></i>{{ $assignment->user->nim ?? 'No NIM' }}</div>
+                                <div class="text-xs text-gray-500 mt-1">
+                                    <i class="fas fa-phone mr-1"></i>{{ $assignment->user->phone ?? 'No phone' }}
+                                </div>
+                            </div>
+                            
+                            {{-- UKM Details Mobile --}}
+                            <div class="flex items-center mb-3">
+                                @if($assignment->ukm->logo)
+                                    <img src="{{ $assignment->ukm->logo }}" alt="{{ $assignment->ukm->name }}" 
+                                         class="w-8 h-8 rounded-lg object-cover mr-3 border border-gray-200">
+                                @else
+                                    <div class="w-8 h-8 bg-amber-50 rounded-lg flex items-center justify-center mr-3 border border-amber-200">
+                                        <i class="fas fa-users lux-gold-text text-sm"></i>
+                                    </div>
+                                @endif
+                                <div class="flex-1 min-w-0">
+                                    <div class="font-medium text-gray-900 truncate">{{ $assignment->ukm->name }}</div>
+                                    <div class="flex flex-wrap gap-1 mt-1">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800">
+                                            {{ $assignment->ukm->category->name }}
+                                        </span>
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium 
+                                            {{ $assignment->ukm->status == 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                            {{ $assignment->ukm->status }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {{-- Assignment Date Mobile --}}
+                            <div class="mb-3">
+                                <div class="text-sm text-gray-900">{{ $assignment->created_at->format('d M Y') }}</div>
+                                <div class="text-xs text-gray-500">{{ $assignment->created_at->diffForHumans() }}</div>
+                            </div>
+                            
+                            {{-- Actions Mobile --}}
+                            <div class="flex space-x-2 pt-3 border-t border-gray-200">
+                                <button onclick="viewAssignmentDetails({{ $assignment }})" 
+                                        class="flex-1 bg-amber-500 text-white px-3 py-2 rounded-lg text-sm hover:bg-amber-600 transition duration-200 flex items-center justify-center font-medium">
+                                    <i class="fas fa-eye mr-2"></i> View
+                                </button>
+                                <form action="{{ route('admin.staff.remove', $assignment->id) }}" method="POST" 
+                                      onsubmit="return confirmRemoveAssignment('{{ $assignment->user->name }}', '{{ $assignment->ukm->name }}')" class="flex-1">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" 
+                                            class="w-full bg-red-500 text-white px-3 py-2 rounded-lg text-sm hover:bg-red-600 transition duration-200 flex items-center justify-center font-medium">
+                                        <i class="fas fa-unlink mr-2"></i> Remove
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
+                    
+                    {{-- Desktop Table View --}}
+                    <td class="hidden sm:table-cell p-4">
                         <div class="flex items-center">
-                            {{-- Avatar diselaraskan ke Gold/Amber gradient --}}
                             <div class="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3 shadow-md">
                                 {{ strtoupper(substr($assignment->user->name, 0, 2)) }}
                             </div>
@@ -248,27 +317,27 @@
                             </div>
                         </div>
                     </td>
-                    <td class="p-4">
+                    
+                    <td class="hidden sm:table-cell p-4">
                         <div class="text-sm text-gray-900 font-medium">{{ $assignment->user->email }}</div>
                         <div class="text-xs text-gray-600"><i class="fas fa-id-card mr-1"></i>{{ $assignment->user->nim ?? 'No NIM' }}</div>
                         <div class="text-xs text-gray-500 mt-1">
                             <i class="fas fa-phone mr-1"></i>{{ $assignment->user->phone ?? 'No phone' }}
                         </div>
                     </td>
-                    <td class="p-4">
+                    
+                    <td class="hidden sm:table-cell p-4">
                         <div class="flex items-center">
                             @if($assignment->ukm->logo)
                                 <img src="{{ $assignment->ukm->logo }}" alt="{{ $assignment->ukm->name }}" 
                                      class="w-8 h-8 rounded-lg object-cover mr-3 border border-gray-200">
                             @else
-                                {{-- Default UKM logo diselaraskan ke Gold/Amber --}}
                                 <div class="w-8 h-8 bg-amber-50 rounded-lg flex items-center justify-center mr-3 border border-amber-200">
                                     <i class="fas fa-users lux-gold-text text-sm"></i>
                                 </div>
                             @endif
                             <div>
                                 <div class="font-medium text-gray-900">{{ $assignment->ukm->name }}</div>
-                                {{-- Badge kategori diselaraskan ke Gold/Amber --}}
                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800">
                                     {{ $assignment->ukm->category->name }}
                                 </span>
@@ -281,13 +350,14 @@
                             </div>
                         </div>
                     </td>
-                    <td class="p-4">
+                    
+                    <td class="hidden sm:table-cell p-4">
                         <div class="text-sm text-gray-900">{{ $assignment->created_at->format('d M Y') }}</div>
                         <div class="text-xs text-gray-500">{{ $assignment->created_at->diffForHumans() }}</div>
                     </td>
-                    <td class="p-4">
+                    
+                    <td class="hidden sm:table-cell p-4">
                         <div class="flex space-x-2">
-                            {{-- Tombol View diselaraskan ke Gold/Amber --}}
                             <button onclick="viewAssignmentDetails({{ $assignment }})" 
                                     class="bg-amber-500 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-amber-600 transition duration-200 flex items-center font-medium shadow-md shadow-amber-500/20">
                                 <i class="fas fa-eye mr-1"></i> View
@@ -308,23 +378,24 @@
         </table>
     </div>
     
-    @if($ukmStaff->count() == 0)
+   @if($ukmStaff->count() == 0)
     <div class="text-center py-12">
-        <i class="fas fa-user-tie text-5xl text-gray-300 mb-4 lux-gold-text"></i>
-        <p class="text-gray-600 text-lg mb-2 font-semibold">No staff assignments yet</p>
-        <p class="text-gray-500 text-sm mb-4">Assign staff members to UKM to get started</p>
-        {{-- Tombol Assign First Staff menggunakan lux-button (Gold) --}}
+        <i class="fas fa-user-tie text-4xl sm:text-5xl text-gray-300 mb-4 lux-gold-text"></i>
+        <p class="text-gray-600 text-base sm:text-lg mb-2 font-semibold">No staff assignments yet</p>
+        <p class="text-gray-500 text-xs sm:text-sm mb-4 px-4">Assign staff members to UKM to get started</p>
         <button onclick="scrollToAssignForm()" 
-                class="lux-button px-4 py-2 rounded-lg hover:bg-amber-700 transition duration-200 font-semibold mx-auto">
+                class="lux-button px-4 py-2 rounded-lg hover:bg-amber-700 transition duration-200 font-semibold mx-auto text-sm sm:text-base">
             <i class="fas fa-user-plus mr-2"></i>Assign First Staff
         </button>
     </div>
     @endif
 </div>
 
-<dialog id="assignmentDetailsModal" class="bg-white rounded-lg shadow-xl w-full max-w-lg backdrop:bg-black/50">
-    <div class="flex justify-between items-center p-6 border-b border-gray-100">
-        <h3 class="text-xl font-bold text-gray-900 flex items-center">
+
+{{-- Modal Responsive --}}
+<dialog id="assignmentDetailsModal" class="bg-white rounded-lg shadow-xl w-[95vw] sm:w-full max-w-lg max-h-[90vh] overflow-y-auto backdrop:bg-black/50 mx-auto sm:mx-0">
+    <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100">
+        <h3 class="text-lg sm:text-xl font-bold text-gray-900 flex items-center">
             <i class="fas fa-info-circle mr-2 lux-gold-text"></i> Assignment Details
         </h3>
         <button onclick="closeAssignmentModal()" class="text-gray-400 hover:text-gray-600 transition duration-200">
@@ -332,7 +403,7 @@
         </button>
     </div>
     
-    <div class="p-6 space-y-6">
+        <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
         <div>
             <h4 class="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide border-b pb-1">Staff Information</h4>
             {{-- Background card diselaraskan ke Gold/Amber --}}
@@ -398,9 +469,9 @@
         </div>
     </div>
     
-    <div class="flex justify-end space-x-3 p-5 border-t border-gray-100 bg-gray-50/50 rounded-b-lg">
+     <div class="flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3 p-4 sm:p-5 border-t border-gray-100 bg-gray-50/50 rounded-b-lg">
         <button onclick="closeAssignmentModal()" 
-                class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition duration-200 font-medium text-sm">
+                class="w-full sm:w-auto px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition duration-200 font-medium text-sm">
             <i class="fas fa-times mr-1"></i> Close
         </button>
     </div>
@@ -535,32 +606,50 @@ function viewAssignmentDetails(assignment) {
     document.getElementById('assignmentTotalStaff').textContent = assignment.ukm.staff_count + ' staff members';
     
     document.getElementById('assignmentDetailsModal').showModal();
+
+
+const modal = document.getElementById('assignmentDetailsModal');
+    modal.showModal();
+    
+    // Untuk mobile, pastikan modal bisa di-scroll
+    if (window.innerWidth < 640) {
+        modal.classList.add('fixed', 'inset-0', 'z-50', 'm-0');
+    }
 }
 
 function closeAssignmentModal() {
-    document.getElementById('assignmentDetailsModal').close();
+    const modal = document.getElementById('assignmentDetailsModal');
+    modal.close();
+    
+    if (window.innerWidth < 640) {
+        modal.classList.remove('fixed', 'inset-0', 'z-50', 'm-0');
+    }
 }
 
 function confirmRemoveAssignment(staffName, ukmName) {
     return confirm(`Are you sure you want to remove ${staffName} from ${ukmName}? This action cannot be undone.`);
 }
 
-// Close modal when clicking outside
+// Responsive table search
 document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('assignmentDetailsModal');
-    if (modal) {
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                closeAssignmentModal();
-            }
+    const searchInput = document.getElementById('searchAssignments');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.assignment-row');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
         });
     }
 });
 
-// Auto-close flash messages
-setTimeout(() => {
-    const flashMessages = document.querySelectorAll('.fixed');
-    flashMessages.forEach(msg => msg.remove());
-}, 5000);
+
 </script>
 @endsection

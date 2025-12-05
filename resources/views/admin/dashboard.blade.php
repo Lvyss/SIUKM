@@ -34,39 +34,39 @@
 </div>
 
 
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-    
-    <div class="soft-card p-6 border-l-4 border-amber-600">
-        <div class="flex items-center justify-between">
+<div class="grid grid-cols-3 gap-2 md:gap-6 mb-10">
+    <div class="soft-card p-4 md:p-6 border-l-4 border-amber-600">
+        <div class="flex flex-col md:flex-row md:items-center justify-between">
             <div>
-                <p class="text-sm font-bold lux-gold-text uppercase tracking-wider">Total Users</p>
-                <p class="text-4xl font-extrabold text-gray-900 mt-1">{{ $stats['total_users'] }}</p>
+                <p class="text-xs md:text-sm font-bold lux-gold-text uppercase tracking-wider">Total Users</p>
+                <p class="text-2xl md:text-4xl font-extrabold text-gray-900 mt-1">{{ $stats['total_users'] }}</p>
             </div>
-            <i class="fas fa-users text-amber-500/50 text-4xl"></i>
+            <i class="fas fa-users text-amber-500/50 text-2xl md:text-4xl mt-2 md:mt-0"></i>
         </div>
     </div>
     
-    <div class="soft-card p-6 border-l-4 border-blue-600">
-        <div class="flex items-center justify-between">
+    <div class="soft-card p-4 md:p-6 border-l-4 border-blue-600">
+        <div class="flex flex-col md:flex-row md:items-center justify-between">
             <div>
-                <p class="text-sm font-bold text-blue-600 uppercase tracking-wider">Total Staff</p>
-                <p class="text-4xl font-extrabold text-gray-900 mt-1">{{ $stats['total_staff'] }}</p>
+                <p class="text-xs md:text-sm font-bold text-blue-600 uppercase tracking-wider">Total Staff</p>
+                <p class="text-2xl md:text-4xl font-extrabold text-gray-900 mt-1">{{ $stats['total_staff'] }}</p>
             </div>
-            <i class="fas fa-user-tie text-blue-500/50 text-4xl"></i>
+            <i class="fas fa-user-tie text-blue-500/50 text-2xl md:text-4xl mt-2 md:mt-0"></i>
         </div>
     </div>
     
-    <div class="soft-card p-6 border-l-4 border-red-600">
-        <div class="flex items-center justify-between">
+    <div class="soft-card p-4 md:p-6 border-l-4 border-red-600">
+        <div class="flex flex-col md:flex-row md:items-center justify-between">
             <div>
-                <p class="text-sm font-bold text-red-600 uppercase tracking-wider">Pending Audit</p>
-                <p class="text-4xl font-extrabold text-red-600 mt-1">{{ $stats['pending_registrations'] }}</p>
+                <p class="text-xs md:text-sm font-bold text-red-600 uppercase tracking-wider">Pending Audit</p>
+                <p class="text-2xl md:text-4xl font-extrabold text-red-600 mt-1">{{ $stats['pending_registrations'] }}</p>
             </div>
-            <i class="fas fa-exclamation-circle text-red-500/50 text-4xl"></i>
+            <i class="fas fa-exclamation-circle text-red-500/50 text-2xl md:text-4xl mt-2 md:mt-0"></i>
         </div>
     </div>
 </div>
 
+{{-- KOREKSI: Mengubah lg:grid-cols-2 menjadi grid-cols-1 di mobile/tablet, dan lg:grid-cols-2 di desktop --}}
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
     <div class="soft-card p-6 h-full flex flex-col">

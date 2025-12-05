@@ -57,6 +57,17 @@
     .hover-row-table:hover {
         background-color: #fffaf0; /* Amber sangat muda */
     }
+    @media (max-width: 640px) {
+    dialog.modal-lux {
+        max-width: 95vw;
+        margin: 1rem auto;
+        width: calc(100% - 2rem);
+    }
+    
+    .floating-card {
+        border-radius: 8px;
+    }
+}
 </style>
 
 <div class="flex justify-between items-center mb-6">
@@ -67,77 +78,78 @@
     </div>
 </div>
 <!-- Statistics Cards -->
-<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-    <div class="floating-card p-4">
+<!-- Statistics Cards -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+    <div class="floating-card p-3 sm:p-4">
         <div class="flex items-center">
-            <div class="p-2 rounded-full bg-blue-100">
-                <i class="fas fa-users text-blue-600 text-sm"></i>
+            <div class="p-1.5 sm:p-2 rounded-full bg-blue-100">
+                <i class="fas fa-users text-blue-600 text-xs sm:text-sm"></i>
             </div>
-            <div class="ml-3">
-                <p class="text-sm font-medium text-gray-600">Total Users</p>
-                <p class="text-xl font-bold text-gray-900">{{ $totalUsers }}</p>
+            <div class="ml-2 sm:ml-3">
+                <p class="text-xs sm:text-sm font-medium text-gray-600">Total Users</p>
+                <p class="text-lg sm:text-xl font-bold text-gray-900">{{ $totalUsers }}</p>
             </div>
         </div>
     </div>
     
-    <div class="floating-card p-4">
+    <div class="floating-card p-3 sm:p-4">
         <div class="flex items-center">
-            <div class="p-2 rounded-full bg-red-100">
-                <i class="fas fa-crown text-red-600 text-sm"></i>
+            <div class="p-1.5 sm:p-2 rounded-full bg-red-100">
+                <i class="fas fa-crown text-red-600 text-xs sm:text-sm"></i>
             </div>
-            <div class="ml-3">
-                <p class="text-sm font-medium text-gray-600">Admins</p>
-                <p class="text-xl font-bold text-gray-900">{{ $adminUsers }}</p>
+            <div class="ml-2 sm:ml-3">
+                <p class="text-xs sm:text-sm font-medium text-gray-600">Admins</p>
+                <p class="text-lg sm:text-xl font-bold text-gray-900">{{ $adminUsers }}</p>
             </div>
         </div>
     </div>
     
-    <div class="floating-card p-4">
+    <div class="floating-card p-3 sm:p-4">
         <div class="flex items-center">
-            <div class="p-2 rounded-full bg-purple-100">
-                <i class="fas fa-user-tie text-purple-600 text-sm"></i>
+            <div class="p-1.5 sm:p-2 rounded-full bg-purple-100">
+                <i class="fas fa-user-tie text-purple-600 text-xs sm:text-sm"></i>
             </div>
-            <div class="ml-3">
-                <p class="text-sm font-medium text-gray-600">Staff</p>
-                <p class="text-xl font-bold text-gray-900">{{ $staffUsers }}</p>
+            <div class="ml-2 sm:ml-3">
+                <p class="text-xs sm:text-sm font-medium text-gray-600">Staff</p>
+                <p class="text-lg sm:text-xl font-bold text-gray-900">{{ $staffUsers }}</p>
             </div>
         </div>
     </div>
     
-    <div class="floating-card p-4">
+    <div class="floating-card p-3 sm:p-4">
         <div class="flex items-center">
-            <div class="p-2 rounded-full bg-gray-100">
-                <i class="fas fa-user text-gray-600 text-sm"></i>
+            <div class="p-1.5 sm:p-2 rounded-full bg-gray-100">
+                <i class="fas fa-user text-gray-600 text-xs sm:text-sm"></i>
             </div>
-            <div class="ml-3">
-                <p class="text-sm font-medium text-gray-600">Regular Users</p>
-                <p class="text-xl font-bold text-gray-900">{{ $regularUsers }}</p>
+            <div class="ml-2 sm:ml-3">
+                <p class="text-xs sm:text-sm font-medium text-gray-600">Regular Users</p>
+                <p class="text-lg sm:text-xl font-bold text-gray-900">{{ $regularUsers }}</p>
             </div>
         </div>
     </div>
 </div>
+
 {{-- Mengubah soft-card menjadi floating-card --}}
 <div class="floating-card mb-6">
-    <div class="p-5 border-b border-gray-100">
-        <h2 class="text-lg font-bold text-gray-800 flex items-center">
-            {{-- Mengubah ikon filter dari biru menjadi Gold --}}
-            <i class="fas fa-filter mr-2 lux-gold-text"></i> Search & Filters
+    <div class="p-4 sm:p-5 border-b border-gray-100">
+        <h2 class="text-base sm:text-lg font-bold text-gray-800 flex items-center">
+            <i class="fas fa-filter mr-2 lux-gold-text text-sm sm:text-base"></i> 
+            <span class="hidden sm:inline">Search & Filters</span>
+            <span class="sm:hidden">Filters</span>
         </h2>
     </div>
-    <div class="p-5">
-        <form action="{{ route('admin.users.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
-            <div class="md:col-span-2">
-                <label for="search" class="block text-xs font-semibold text-gray-600 uppercase mb-1">Search User</label>
-                {{-- Menerapkan input-lux:focus --}}
+    <div class="p-4 sm:p-5">
+        <form action="{{ route('admin.users.index') }}" method="GET" class="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 items-end">
+            <div class="sm:col-span-2">
+                <label for="search" class="block text-xs font-semibold text-gray-600 uppercase mb-1">Search</label>
                 <input type="text" name="search" id="search" value="{{ request('search') }}" 
                         placeholder="Name, email, or NIM..."
-                        class="w-full border border-gray-300 rounded-lg px-4 py-2 input-lux:focus transition duration-150">
+                        class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 input-lux:focus text-sm">
             </div>
             
             <div>
                 <label for="role" class="block text-xs font-semibold text-gray-600 uppercase mb-1">Role</label>
-                {{-- Menerapkan input-lux:focus --}}
-                <select name="role" id="role" class="w-full border border-gray-300 rounded-lg px-4 py-2 input-lux:focus transition duration-150">
+                <select name="role" id="role" class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 input-lux:focus text-sm">
                     <option value="">All Roles</option>
                     <option value="user" {{ request('role') == 'user' ? 'selected' : '' }}>User</option>
                     <option value="staff" {{ request('role') == 'staff' ? 'selected' : '' }}>Staff</option>
@@ -146,25 +158,26 @@
             </div>
             
             <div>
-                <label for="sort" class="block text-xs font-semibold text-gray-600 uppercase mb-1">Sort By</label>
-                {{-- Menerapkan input-lux:focus --}}
-                <select name="sort" id="sort" class="w-full border border-gray-300 rounded-lg px-4 py-2 input-lux:focus transition duration-150">
-                    <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest First</option>
-                    <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest First</option>
-                    <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name A-Z</option>
-                    <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name Z-A</option>
+                <label for="sort" class="block text-xs font-semibold text-gray-600 uppercase mb-1">Sort</label>
+                <select name="sort" id="sort" class="w-full border border-gray-300 rounded-lg px-3 sm:px-4 py-2 input-lux:focus text-sm">
+                    <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest</option>
+                    <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest</option>
+                    <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>A-Z</option>
+                    <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Z-A</option>
                 </select>
             </div>
             
-            <div class="flex space-x-3">
-                {{-- Mengubah tombol Search dari bg-blue-600 menjadi lux-button (Gold) --}}
+            <div class="flex space-x-2 sm:space-x-3 pt-1">
                 <button type="submit" 
-                            class="lux-button px-4 py-2 rounded-lg hover:bg-amber-700 transition duration-200 flex items-center font-semibold text-sm">
-                    <i class="fas fa-search mr-2"></i> Search
+                        class="lux-button px-3 sm:px-4 py-2 rounded-lg hover:bg-amber-700 transition duration-200 flex items-center font-semibold text-sm flex-1 justify-center">
+                    <i class="fas fa-search mr-1 sm:mr-2"></i> 
+                    <span class="hidden sm:inline">Search</span>
+                    <span class="sm:hidden">Go</span>
                 </button>
                 <a href="{{ route('admin.users.index') }}" 
-                   class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition duration-200 flex items-center font-semibold text-sm">
-                    <i class="fas fa-refresh mr-2"></i> Reset
+                   class="bg-gray-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-600 transition duration-200 flex items-center font-semibold text-sm justify-center">
+                    <i class="fas fa-refresh"></i>
+                    <span class="hidden sm:inline ml-2">Reset</span>
                 </a>
             </div>
         </form>
@@ -173,35 +186,35 @@
 
 {{-- Mengubah soft-card menjadi floating-card --}}
 <div class="floating-card overflow-hidden">
-    <div class="flex justify-between items-center p-5 border-b bg-gray-50/50">
-        <h2 class="text-lg font-bold text-gray-800 flex items-center">
-            {{-- Ikon diselaraskan dengan warna Gold --}}
-            <i class="fas fa-database mr-2 lux-gold-text"></i>
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 sm:p-5 border-b bg-gray-50/50">
+        <h2 class="text-base sm:text-lg font-bold text-gray-800 flex items-center mb-2 sm:mb-0">
+            <i class="fas fa-database mr-2 lux-gold-text text-sm sm:text-base"></i>
             @if(request('role'))
-                {{ ucfirst(request('role')) }} User List
+                <span class="hidden sm:inline">{{ ucfirst(request('role')) }} User List</span>
+                <span class="sm:hidden">{{ ucfirst(request('role')) }} Users</span>
             @else
-                All User List
+                <span class="hidden sm:inline">All User List</span>
+                <span class="sm:hidden">All Users</span>
             @endif
         </h2>
         
         <div class="flex items-center space-x-2">
-            <span class="text-xs font-medium text-gray-600 uppercase">Show:</span>
-            {{-- Menerapkan input-lux:focus --}}
+            <span class="text-xs font-medium text-gray-600 uppercase hidden sm:inline">Show:</span>
             <select onchange="window.location.href = this.value" 
-                    class="border border-gray-300 rounded-lg px-3 py-1 text-sm input-lux:focus">
+                    class="border border-gray-300 rounded-lg px-2 sm:px-3 py-1 text-xs sm:text-sm input-lux:focus">
                 <option value="{{ request()->fullUrlWithQuery(['per_page' => 10]) }}" 
                         {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
                 <option value="{{ request()->fullUrlWithQuery(['per_page' => 25]) }}" 
                         {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
                 <option value="{{ request()->fullUrlWithQuery(['per_page' => 50]) }}" 
                         {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
-                <option value="{{ request()->fullUrlWithQuery(['per_page' => 100]) }}" 
-                        {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
             </select>
         </div>
     </div>
     
-    <div class="overflow-x-auto">
+    {{-- DESKTOP VIEW (table) --}}
+    {{-- DESKTOP VIEW (table) --}}
+    <div class="hidden sm:block overflow-x-auto">
         @if($users->count() > 0)
         <table class="w-full min-w-full">
             <thead>
@@ -216,12 +229,10 @@
             </thead>
             <tbody class="divide-y divide-gray-100">
                 @foreach($users as $user)
-                {{-- Warna baris Anda disesuaikan dengan tema lux --}}
                 <tr class="hover-row-table transition duration-150 
                     {{ $user->id === auth()->id() ? 'bg-amber-50/70' : '' }}"> 
                     <td class="p-4">
                         <div class="flex items-center">
-                            {{-- Warna avatar diselaraskan dengan tema lux --}}
                             <div class="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3 flex-shrink-0">
                                 {{ strtoupper(substr($user->name, 0, 2)) }}
                             </div>
@@ -232,7 +243,7 @@
                                         <span class="ml-2 bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded-full font-bold">YOU</span>
                                     @endif
                                 </div>
-                                <div class="text-xs text-gray-500">NIM: **{{ $user->nim ?? '-' }}**</div>
+                                <div class="text-xs text-gray-500">NIM: {{ $user->nim ?? '-' }}</div>
                             </div>
                         </div>
                     </td>
@@ -243,7 +254,6 @@
                     <td class="p-4">
                         <form action="{{ route('admin.users.updateRole', $user->id) }}" method="POST" class="inline">
                             @csrf @method('PUT')
-                            {{-- Fokus input peran diselaraskan dengan tema lux --}}
                             <select name="role" onchange="this.form.submit()" 
                                     class="text-xs border rounded-lg px-2 py-1 font-bold input-lux:focus appearance-none transition duration-150
                                         {{ $user->role == 'admin' ? 'bg-red-500 text-white border-red-500' : '' }}
@@ -261,7 +271,6 @@
                         </form>
                     </td>
                     <td class="p-4">
-                        {{-- Badge registrasi diselaraskan dengan tema lux (Amber/Green) --}}
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold 
                             {{ $user->registrations_count > 0 ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-600' }}">
                             {{ $user->registrations_count }} reg
@@ -273,7 +282,6 @@
                     </td>
                     <td class="p-4">
                         <div class="flex space-x-2 items-center">
-                            {{-- Mengubah tombol View dari biru menjadi Gold --}}
                             <button onclick="viewUserDetails({{ json_encode($user->load('registrations')) }})" 
                                     class="lux-button px-3 py-1.5 rounded-lg text-sm hover:bg-amber-700 transition duration-200 flex items-center font-medium shadow-md shadow-amber-500/20">
                                 <i class="fas fa-eye mr-1"></i> View
@@ -303,6 +311,90 @@
         </table>
         @endif
     </div>
+    
+    
+    {{-- MOBILE VIEW (card) --}}
+    <div class="sm:hidden divide-y divide-gray-100">
+        @if($users->count() > 0)
+            @foreach($users as $user)
+            <div class="p-4 hover:bg-amber-50 transition duration-150 {{ $user->id === auth()->id() ? 'bg-amber-50/70' : '' }}">
+                <!-- Header Card -->
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-full flex items-center justify-center text-white font-semibold text-xs mr-2">
+                            {{ strtoupper(substr($user->name, 0, 2)) }}
+                        </div>
+                        <div>
+                            <div class="font-semibold text-gray-900 text-sm flex items-center">
+                                {{ Str::limit($user->name, 20) }}
+                                @if($user->id === auth()->id())
+                                    <span class="ml-2 bg-amber-100 text-amber-800 text-xs px-1.5 py-0.5 rounded-full font-bold">YOU</span>
+                                @endif
+                            </div>
+                            <div class="text-xs text-gray-500">NIM: {{ $user->nim ?? '-' }}</div>
+                        </div>
+                    </div>
+                    <form action="{{ route('admin.users.updateRole', $user->id) }}" method="POST" class="inline">
+                        @csrf @method('PUT')
+                        <select name="role" onchange="this.form.submit()" 
+                                class="text-xs border rounded px-1.5 py-0.5 font-bold input-lux:focus appearance-none
+                                    {{ $user->role == 'admin' ? 'bg-red-500 text-white border-red-500' : '' }}
+                                    {{ $user->role == 'staff' ? 'bg-blue-600 text-white border-blue-600' : '' }}
+                                    {{ $user->role == 'user' ? 'bg-gray-200 text-gray-800 border-gray-300' : '' }}
+                                    {{ $user->id === auth()->id() ? 'cursor-not-allowed opacity-75' : '' }}"
+                                {{ $user->id === auth()->id() ? 'disabled' : '' }}>
+                            <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>User</option>
+                            <option value="staff" {{ $user->role == 'staff' ? 'selected' : '' }}>Staff</option>
+                            <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                        </select>
+                    </form>
+                </div>
+                
+                <!-- Detail Info -->
+                <div class="text-sm space-y-1 mb-3">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Email:</span>
+                        <span class="text-gray-900 font-medium truncate ml-2">{{ $user->email }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Phone:</span>
+                        <span class="text-gray-900 font-medium">{{ $user->phone ?? '-' }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Registrations:</span>
+                        <span class="px-2 py-0.5 rounded-full text-xs font-bold {{ $user->registrations_count > 0 ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-600' }}">
+                            {{ $user->registrations_count }}
+                        </span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Joined:</span>
+                        <span class="text-gray-500 text-xs">{{ $user->created_at->format('d M Y') }}</span>
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="flex space-x-2 pt-2 border-t border-gray-100">
+                    <button onclick="viewUserDetails({{ json_encode($user->load('registrations')) }})" 
+                            class="lux-button px-3 py-1.5 rounded-lg text-xs hover:bg-amber-700 transition duration-200 flex items-center font-medium flex-1 justify-center">
+                        <i class="fas fa-eye mr-1"></i> View
+                    </button>
+                    
+                    @if($user->id !== auth()->id())
+                        <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" 
+                            onsubmit="return confirmDeleteUser('{{ $user->name }}')" class="flex-1">
+                            @csrf @method('DELETE')
+                            <button type="submit" 
+                                    class="bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-red-600 transition duration-200 flex items-center font-medium w-full justify-center">
+                                <i class="fas fa-trash mr-1"></i> Delete
+                            </button>
+                        </form>
+                    @endif
+                </div>
+            </div>
+            @endforeach
+        @endif
+    </div>
+
     
     @if($users->count() == 0)
     <div class="text-center py-12">

@@ -10,48 +10,76 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|max:255',
-            'password' => 'required|string|min:8|max:255',
-        ]);
+public function login(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email|max:255',
+        'password' => 'required|string|min:8|max:255',
+    ]);
 
-        if ($validator->fails()) {
-            return back()
-                ->withErrors($validator)
-                ->withInput()
-                ->with('error', 'Email atau password tidak valid.');
+    if ($validator->fails()) {
+        // Jika request dari AJAX (modal), kembalikan JSON
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email atau password tidak valid.',
+                'errors' => $validator->errors()->toArray()
+            ], 422);
         }
-
-        // Sanitize input
-        $credentials = [
-            'email' => strtolower(trim($request->email)),
-            'password' => $request->password
-        ];
-
-        $remember = $request->boolean('remember');
-
-        if (Auth::attempt($credentials, $remember)) {
-            $request->session()->regenerate();
-            
-            // Redirect berdasarkan role
-            $user = Auth::user();
-            if ($user->isAdmin()) {
-                return redirect()->route('admin.dashboard')->with('success', 'Welcome Admin!');
-            } elseif ($user->isStaff()) {
-                return redirect()->route('staff.dashboard')->with('success', 'Welcome Staff!');
-            } else {
-                return redirect()->route('user.dashboard')->with('success', 'Welcome!');
-            }
-        }
-
+        
         return back()
-            ->withErrors(['email' => 'Email atau password salah.'])
+            ->withErrors($validator)
             ->withInput()
-            ->with('error', 'Login gagal. Periksa kembali credentials Anda.');
+            ->with('error', 'Email atau password tidak valid.');
     }
 
+    // Sanitize input
+    $credentials = [
+        'email' => strtolower(trim($request->email)),
+        'password' => $request->password
+    ];
+
+    $remember = $request->boolean('remember');
+
+    if (Auth::attempt($credentials, $remember)) {
+        $request->session()->regenerate();
+        
+        // Redirect berdasarkan role
+        $user = Auth::user();
+        $redirectRoute = 'user.dashboard'; // default
+        
+        if ($user->isAdmin()) {
+            $redirectRoute = 'admin.dashboard';
+        } elseif ($user->isStaff()) {
+            $redirectRoute = 'staff.dashboard';
+        }
+        
+        // Jika request dari AJAX (modal), kembalikan JSON
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Login berhasil!',
+                'redirect' => route($redirectRoute)
+            ]);
+        }
+        
+        return redirect()->route($redirectRoute)->with('success', 'Welcome!');
+    }
+
+    // Jika login gagal
+    if ($request->expectsJson() || $request->ajax()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Login gagal. Periksa kembali email atau password Anda.',
+            'errors' => ['email' => ['Email atau password salah.']]
+        ], 401);
+    }
+    
+    return back()
+        ->withErrors(['email' => 'Email atau password salah.'])
+        ->withInput()
+        ->with('error', 'Login gagal. Periksa kembali email atau password Anda.');
+}
     public function register(Request $request)
     {
         $currentYear = date('Y');

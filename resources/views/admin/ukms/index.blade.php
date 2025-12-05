@@ -58,88 +58,85 @@
     }
 </style>
 
-<div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">UKM Matrix & Management</h1>
-    <div class="text-sm font-semibold lux-gold-text px-3 py-1 rounded-full border border-gray-300 bg-amber-50">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">UKM Matrix & Management</h1>
+    <div class="text-sm font-semibold lux-gold-text px-3 py-1 rounded-full border border-gray-300 bg-amber-50 whitespace-nowrap">
         <i class="fas fa-users-cog mr-1 lux-gold-text"></i> Total: **{{ $ukms->total() }} UKM**
     </div>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    
-    {{-- Total UKM (Ikon Gold) --}}
-    <div class="floating-card p-4">
+<!-- Statistics Cards -->
+<div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+    <div class="floating-card p-3 sm:p-4">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-amber-100">
-                <i class="fas fa-users lux-gold-text text-lg"></i>
+            <div class="p-2 sm:p-3 rounded-full bg-amber-100 flex-shrink-0">
+                <i class="fas fa-users lux-gold-text text-base sm:text-lg"></i>
             </div>
-            <div class="ml-3">
-                <p class="text-sm font-medium text-gray-600">Total UKM</p>
-                <p class="text-xl font-bold text-gray-900">{{ $totalUkms }}</p>
+            <div class="ml-3 min-w-0">
+                <p class="text-xs sm:text-sm font-medium text-gray-600 truncate">Total UKM</p>
+                <p class="text-lg sm:text-xl font-bold text-gray-900">{{ $totalUkms }}</p>
             </div>
         </div>
     </div>
     
-    {{-- Active (Ikon Green tetap Green) --}}
-    <div class="floating-card p-4">
+    <div class="floating-card p-3 sm:p-4">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-green-100">
-                <i class="fas fa-check-circle text-green-600 text-lg"></i>
+            <div class="p-2 sm:p-3 rounded-full bg-green-100 flex-shrink-0">
+                <i class="fas fa-check-circle text-green-600 text-base sm:text-lg"></i>
             </div>
-            <div class="ml-3">
-                <p class="text-sm font-medium text-gray-600">Active</p>
-                <p class="text-xl font-bold text-gray-900">{{ $activeUkms }}</p>
+            <div class="ml-3 min-w-0">
+                <p class="text-xs sm:text-sm font-medium text-gray-600 truncate">Active</p>
+                <p class="text-lg sm:text-xl font-bold text-gray-900">{{ $activeUkms }}</p>
             </div>
         </div>
     </div>
     
-    {{-- Inactive (Ikon Red tetap Red) --}}
-    <div class="floating-card p-4">
+    <div class="floating-card p-3 sm:p-4">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-red-100">
-                <i class="fas fa-pause-circle text-red-600 text-lg"></i>
+            <div class="p-2 sm:p-3 rounded-full bg-red-100 flex-shrink-0">
+                <i class="fas fa-pause-circle text-red-600 text-base sm:text-lg"></i>
             </div>
-            <div class="ml-3">
-                <p class="text-sm font-medium text-gray-600">Inactive</p>
-                <p class="text-xl font-bold text-gray-900">{{ $inactiveUkms }}</p>
+            <div class="ml-3 min-w-0">
+                <p class="text-xs sm:text-sm font-medium text-gray-600 truncate">Inactive</p>
+                <p class="text-lg sm:text-xl font-bold text-gray-900">{{ $inactiveUkms }}</p>
             </div>
         </div>
     </div>
     
-    {{-- With Staff (Ikon diselaraskan ke Gold/Amber) --}}
-    <div class="floating-card p-4">
+    <div class="floating-card p-3 sm:p-4">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-amber-100">
-                <i class="fas fa-user-tie lux-gold-text text-lg"></i>
+            <div class="p-2 sm:p-3 rounded-full bg-amber-100 flex-shrink-0">
+                <i class="fas fa-user-tie lux-gold-text text-base sm:text-lg"></i>
             </div>
-            <div class="ml-3">
-                <p class="text-sm font-medium text-gray-600">With Staff</p>
-                <p class="text-xl font-bold text-gray-900">{{ $ukmsWithStaff }}</p>
+            <div class="ml-3 min-w-0">
+                <p class="text-xs sm:text-sm font-medium text-gray-600 truncate">With Staff</p>
+                <p class="text-lg sm:text-xl font-bold text-gray-900">{{ $ukmsWithStaff }}</p>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Search & Filters -->
 <div class="floating-card mb-6">
-    <div class="p-5 border-b border-gray-100">
+    <div class="p-4 sm:p-5 border-b border-gray-100">
         <h2 class="text-lg font-bold text-gray-800 flex items-center">
             <i class="fas fa-filter mr-2 lux-gold-text"></i> Search & Filters
         </h2>
     </div>
-    <div class="p-5">
-        <form action="{{ route('admin.ukms.index') }}" method="GET" class="flex flex-col md:flex-row gap-4 items-end">
-            <div class="flex-1">
+    <div class="p-4 sm:p-5">
+        <form action="{{ route('admin.ukms.index') }}" method="GET" class="space-y-4 sm:space-y-0 sm:flex sm:flex-row sm:items-end sm:gap-3">
+            <!-- Search Input -->
+            <div class="flex-1 sm:flex-[2]">
                 <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Search UKM</label>
                 <input type="text" name="search" value="{{ request('search') }}" 
-                       placeholder="Search by name, description, contact person, or category..."
-                       {{-- Menerapkan input-lux:focus --}}
-                       class="w-full border border-gray-300 rounded-lg px-4 py-2 input-lux:focus">
+                       placeholder="Search UKM..."
+                       class="w-full border border-gray-300 rounded-lg px-4 py-2 input-lux:focus text-sm sm:text-base">
             </div>
             
-            <div>
+            <!-- Category Filter -->
+            <div class="sm:min-w-[140px]">
                 <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Category</label>
-                {{-- Menerapkan input-lux:focus --}}
-                <select name="category_id" class="border border-gray-300 rounded-lg px-4 py-2 input-lux:focus">
+                <select name="category_id" class="w-full border border-gray-300 rounded-lg px-4 py-2 input-lux:focus text-sm sm:text-base">
                     <option value="">All Categories</option>
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
@@ -149,48 +146,24 @@
                 </select>
             </div>
             
-            <div>
+            <!-- Status Filter -->
+            <div class="sm:min-w-[120px]">
                 <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Status</label>
-                {{-- Menerapkan input-lux:focus --}}
-                <select name="status" class="border border-gray-300 rounded-lg px-4 py-2 input-lux:focus">
+                <select name="status" class="w-full border border-gray-300 rounded-lg px-4 py-2 input-lux:focus text-sm sm:text-base">
                     <option value="">All Status</option>
                     <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
                     <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
                 </select>
             </div>
             
-            <div>
-                <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Staff</label>
-                {{-- Menerapkan input-lux:focus --}}
-                <select name="staff_filter" class="border border-gray-300 rounded-lg px-4 py-2 input-lux:focus">
-                    <option value="">All Staff</option>
-                    <option value="with_staff" {{ request('staff_filter') == 'with_staff' ? 'selected' : '' }}>With Staff</option>
-                    <option value="without_staff" {{ request('staff_filter') == 'without_staff' ? 'selected' : '' }}>Without Staff</option>
-                    <option value="multiple_staff" {{ request('staff_filter') == 'multiple_staff' ? 'selected' : '' }}>Multiple Staff</option>
-                </select>
-            </div>
-            
-            <div>
-                <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Sort By</label>
-                {{-- Menerapkan input-lux:focus --}}
-                <select name="sort" class="border border-gray-300 rounded-lg px-4 py-2 input-lux:focus">
-                    <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest First</option>
-                    <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest First</option>
-                    <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name A-Z</option>
-                    <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name Z-A</option>
-                    <option value="category_asc" {{ request('sort') == 'category_asc' ? 'selected' : '' }}>Category A-Z</option>
-                    <option value="staff_count_desc" {{ request('sort') == 'staff_count_desc' ? 'selected' : '' }}>Most Staff</option>
-                </select>
-            </div>
-            
-            <div class="flex space-x-2">
-                {{-- Tombol Search menggunakan lux-button (Gold) --}}
+            <!-- Buttons -->
+            <div class="flex flex-col sm:flex-row sm:items-end sm:space-x-2 space-y-2 sm:space-y-0 pt-2 sm:pt-0">
                 <button type="submit" 
-                        class="lux-button px-4 py-2 rounded-lg hover:bg-amber-700 transition duration-200 flex items-center font-semibold text-sm">
+                        class="lux-button px-4 py-2 rounded-lg hover:bg-amber-700 transition duration-200 flex items-center justify-center text-sm sm:text-base h-[42px] sm:h-auto">
                     <i class="fas fa-search mr-2"></i> Search
                 </button>
                 <a href="{{ route('admin.ukms.index') }}" 
-                   class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition duration-200 flex items-center font-semibold text-sm">
+                   class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition duration-200 flex items-center justify-center text-sm sm:text-base h-[42px] sm:h-auto">
                     <i class="fas fa-refresh mr-2"></i> Reset
                 </a>
             </div>
@@ -198,8 +171,9 @@
     </div>
 </div>
 
+<!-- UKM Table -->
 <div class="floating-card overflow-hidden">
-    <div class="flex justify-between items-center p-5 border-b bg-gray-50/50">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 border-b bg-gray-50/50 gap-4">
         <h2 class="text-lg font-bold text-gray-800 flex items-center">
             <i class="fas fa-database mr-2 lux-gold-text"></i>
             @if(request('category_id'))
@@ -214,31 +188,31 @@
             @endif
         </h2>
         
-        <div class="flex items-center space-x-4">
-            {{-- Tombol Add UKM menggunakan lux-button (Gold) --}}
+        <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
             <button onclick="openAddModal()" 
-                    class="lux-button px-4 py-2 rounded-lg hover:bg-amber-700 transition duration-200 flex items-center font-semibold text-sm">
+                    class="w-full sm:w-auto lux-button px-4 py-2 rounded-lg hover:bg-amber-700 transition duration-200 flex items-center justify-center text-sm sm:text-base">
                 <i class="fas fa-plus mr-2"></i>Add UKM
             </button>
             
-            <span class="text-sm text-gray-600">Show:</span>
-            {{-- Menerapkan input-lux:focus --}}
-            <select onchange="window.location.href = this.value" 
-                    class="border border-gray-300 rounded px-3 py-1 text-sm input-lux:focus">
-                <option value="{{ request()->fullUrlWithQuery(['per_page' => 10]) }}" 
-                        {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
-                <option value="{{ request()->fullUrlWithQuery(['per_page' => 25]) }}" 
-                        {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
-                <option value="{{ request()->fullUrlWithQuery(['per_page' => 50]) }}" 
-                        {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
-            </select>
+            <div class="flex items-center space-x-2 w-full sm:w-auto">
+                <span class="text-sm text-gray-600 whitespace-nowrap">Show:</span>
+                <select onchange="window.location.href = this.value" 
+                        class="border border-gray-300 rounded px-3 py-1 text-sm w-full sm:w-auto">
+                    <option value="{{ request()->fullUrlWithQuery(['per_page' => 10]) }}" 
+                            {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                    <option value="{{ request()->fullUrlWithQuery(['per_page' => 25]) }}" 
+                            {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
+                    <option value="{{ request()->fullUrlWithQuery(['per_page' => 50]) }}" 
+                            {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
+                </select>
+            </div>
         </div>
     </div>
     
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto px-4 sm:px-0">
         @if($ukms->count() > 0)
         <table class="w-full min-w-full">
-            <thead>
+            <thead class="hidden sm:table-header-group">
                 <tr class="bg-gray-100/70 border-b border-gray-200">
                     <th class="p-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Logo</th>
                     <th class="p-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">UKM Details</th>
@@ -250,20 +224,102 @@
             </thead>
             <tbody class="divide-y divide-gray-100">
                 @foreach($ukms as $ukm)
-                {{-- Menerapkan hover-row-table --}}
-                <tr class="hover-row-table transition duration-150 {{ $ukm->status == 'inactive' ? 'bg-gray-50' : '' }}">
-                    <td class="p-3">
+                <!-- Mobile View -->
+                <tr class="hover-row-table transition duration-150 block sm:table-row border-b sm:border-b-0">
+                    <td class="block sm:hidden p-4 mx-2 sm:mx-0 my-2 sm:my-0 bg-white rounded-lg shadow-sm">
+                        <div class="space-y-4">
+                            <!-- Header with Logo -->
+                            <div class="flex items-start space-x-3">
+                                @if($ukm->logo)
+                                    <img src="{{ $ukm->logo }}" alt="{{ $ukm->name }}" 
+                                         class="w-16 h-16 rounded-lg object-cover border flex-shrink-0">
+                                @else
+                                    <div class="w-16 h-16 bg-amber-50 rounded-lg flex items-center justify-center border border-amber-200 flex-shrink-0">
+                                        <i class="fas fa-users lux-gold-text text-xl"></i>
+                                    </div>
+                                @endif
+                                <div class="flex-1 min-w-0">
+                                    <div class="font-semibold text-gray-900 text-lg">{{ $ukm->name }}</div>
+                                    <div class="flex flex-wrap items-center gap-2 mt-2">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                                            {{ $ukm->category->name }}
+                                        </span>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                            {{ $ukm->status == 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                            {{ ucfirst($ukm->status) }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            @if($ukm->description)
+                            <div class="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                <p class="line-clamp-2">{{ $ukm->description }}</p>
+                            </div>
+                            @endif
+
+                            <!-- Contact Info -->
+                            @if($ukm->contact_person || $ukm->instagram)
+                            <div class="text-xs text-gray-500 space-y-1">
+                                @if($ukm->contact_person)
+                                    <div class="flex items-center">
+                                        <i class="fas fa-user mr-2 w-4"></i>
+                                        <span>{{ $ukm->contact_person }}</span>
+                                    </div>
+                                @endif
+                                @if($ukm->instagram)
+                                    <div class="flex items-center">
+                                        <i class="fab fa-instagram mr-2 w-4"></i>
+                                        <span>{{ $ukm->instagram }}</span>
+                                    </div>
+                                @endif
+                            </div>
+                            @endif
+
+                            <!-- Stats -->
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800">
+                                    <i class="fas fa-users mr-1"></i>{{ $ukm->staff_count }} Staff
+                                </span>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                                    <i class="fas fa-calendar mr-1"></i>{{ $ukm->events_count }} Events
+                                </span>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800">
+                                    <i class="fas fa-newspaper mr-1"></i>{{ $ukm->feeds_count }} Feeds
+                                </span>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="flex flex-col space-y-2 pt-4 border-t border-gray-200">
+                                <button onclick="editUkm({{ $ukm }})" 
+                                        class="w-full bg-amber-500 text-white px-4 py-2.5 rounded-lg text-sm hover:bg-amber-600 transition duration-200 flex items-center justify-center gap-2 font-medium">
+                                    <i class="fas fa-edit"></i> Edit UKM
+                                </button>
+                                <form action="{{ route('admin.ukms.destroy', $ukm->id) }}" method="POST" 
+                                      class="w-full" onsubmit="return confirmDelete()">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" 
+                                            class="w-full bg-red-500 text-white px-4 py-2.5 rounded-lg text-sm hover:bg-red-600 transition duration-200 flex items-center justify-center gap-2 font-medium">
+                                        <i class="fas fa-trash"></i> Delete UKM
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
+
+                    <!-- Desktop View -->
+                    <td class="hidden sm:table-cell p-3">
                         @if($ukm->logo)
                             <img src="{{ $ukm->logo }}" alt="{{ $ukm->name }}" 
                                  class="w-12 h-12 rounded-lg object-cover border">
                         @else
-                            {{-- Warna default UKM logo diselaraskan dengan Gold/Amber --}}
                             <div class="w-12 h-12 bg-amber-50 rounded-lg flex items-center justify-center border border-amber-200">
                                 <i class="fas fa-users lux-gold-text text-lg"></i>
                             </div>
                         @endif
                     </td>
-                    <td class="p-3">
+                    <td class="hidden sm:table-cell p-3">
                         <div class="font-semibold text-gray-900">{{ $ukm->name }}</div>
                         <div class="text-xs text-gray-500 mt-1">{{ Str::limit($ukm->description, 60) }}</div>
                         <div class="text-xs text-gray-500 mt-1 flex flex-wrap gap-x-3">
@@ -275,40 +331,35 @@
                             @endif
                         </div>
                     </td>
-                    <td class="p-3">
-                        {{-- Badge kategori diselaraskan dengan Gold/Amber --}}
+                    <td class="hidden sm:table-cell p-3">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
                             {{ $ukm->category->name }}
                         </span>
                     </td>
-                    <td class="p-3">
+                    <td class="hidden sm:table-cell p-3">
                         <div class="flex flex-wrap gap-1">
-                            {{-- Stats Staff diselaraskan ke Gold/Amber --}}
                             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800"
                                   title="{{ $ukm->staff_count }} staff members">
                                 <i class="fas fa-users mr-1"></i>{{ $ukm->staff_count }}
                             </span>
-                            {{-- Stats Events (ungu) --}}
                             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800"
                                   title="{{ $ukm->events_count }} events">
                                 <i class="fas fa-calendar mr-1"></i>{{ $ukm->events_count }}
                             </span>
-                            {{-- Stats Feeds (Oranye) --}}
                             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800"
                                   title="{{ $ukm->feeds_count }} feeds">
                                 <i class="fas fa-newspaper mr-1"></i>{{ $ukm->feeds_count }}
                             </span>
                         </div>
                     </td>
-                    <td class="p-3">
+                    <td class="hidden sm:table-cell p-3">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                             {{ $ukm->status == 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                             {{ ucfirst($ukm->status) }}
                         </span>
                     </td>
-                    <td class="p-3">
+                    <td class="hidden sm:table-cell p-3">
                         <div class="flex space-x-2">
-                            {{-- Tombol Edit menggunakan Gold/Amber --}}
                             <button onclick="editUkm({{ $ukm }})" 
                                     class="bg-amber-500 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-amber-600 transition duration-200 flex items-center font-medium shadow-md shadow-amber-500/20">
                                 <i class="fas fa-edit mr-1"></i> Edit
@@ -329,9 +380,10 @@
         @endif
     </div>
     
+    <!-- Empty State -->
     @if($ukms->count() == 0)
-    <div class="text-center py-12">
-        <i class="fas fa-users text-5xl text-gray-300 mb-4 lux-gold-text"></i>
+    <div class="text-center py-12 px-4">
+        <i class="fas fa-users text-4xl text-gray-300 mb-4 lux-gold-text"></i>
         <p class="text-gray-600 text-lg mb-2 font-semibold">No UKM found</p>
         <p class="text-gray-500 text-sm mb-4">
             @if(request()->hasAny(['search', 'category_id', 'status', 'staff_filter']))
@@ -340,29 +392,29 @@
                 No UKM have been created yet
             @endif
         </p>
-        {{-- Tombol Create First UKM menggunakan lux-button (Gold) --}}
-        <button onclick="openAddModal()" class="lux-button px-4 py-2 rounded-lg hover:bg-amber-700 transition duration-200 flex items-center mx-auto font-semibold">
+        <button onclick="openAddModal()" 
+                class="lux-button px-4 py-2 rounded-lg hover:bg-amber-700 transition duration-200 flex items-center mx-auto font-semibold text-sm sm:text-base">
             <i class="fas fa-plus mr-2"></i>Create First UKM
         </button>
     </div>
     @endif
     
+    <!-- Pagination -->
     @if($ukms->hasPages())
-    <div class="px-5 py-4 border-t border-gray-100 bg-gray-50/50 rounded-b-lg">
-        <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-            <div class="text-sm text-gray-700 font-medium">
+    <div class="px-4 sm:px-5 py-4 border-t border-gray-100 bg-gray-50/50">
+        <div class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+            <div class="text-sm text-gray-700 text-center sm:text-left font-medium">
                 Showing **{{ $ukms->firstItem() }}** to **{{ $ukms->lastItem() }}** of **{{ $ukms->total() }}** results
             </div>
-            <div class="flex space-x-2">
+            <div class="flex flex-wrap justify-center gap-2">
                 @if($ukms->onFirstPage())
                     <span class="px-3 py-1 rounded border border-gray-300 text-gray-400 cursor-not-allowed text-sm">Previous</span>
                 @else
                     <a href="{{ $ukms->previousPageUrl() }}" class="px-3 py-1 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 transition duration-200 text-sm font-medium">Previous</a>
                 @endif
 
-                @foreach($ukms->getUrlRange(1, $ukms->lastPage()) as $page => $url)
+                @foreach($ukms->getUrlRange(max(1, $ukms->currentPage() - 2), min($ukms->lastPage(), $ukms->currentPage() + 2)) as $page => $url)
                     @if($page == $ukms->currentPage())
-                        {{-- Warna aktif pagination menjadi Gold --}}
                         <span class="px-3 py-1 rounded border bg-amber-600 text-white text-sm font-medium">{{ $page }}</span>
                     @else
                         <a href="{{ $url }}" class="px-3 py-1 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 transition duration-200 text-sm font-medium">{{ $page }}</a>
@@ -381,22 +433,24 @@
 </div>
 
 <!-- MODAL ADD UKM -->
-<dialog id="addUkmModal" class="modal-backdrop w-full max-w-2xl mx-auto rounded-lg">
+<dialog id="addUkmModal" class="modal-backdrop w-[95vw] sm:w-full max-w-2xl mx-auto rounded-lg">
+    <!-- Modal content tetap sama, tambahkan class responsive di padding -->
     <div class="modal-content p-0">
-        <div class="flex justify-between items-center p-6 border-b border-gray-200">
-            <h3 class="text-xl font-bold text-gray-900 flex items-center">
+        <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-200">
+            <h3 class="text-lg sm:text-xl font-bold text-gray-900 flex items-center">
                 <i class="fas fa-plus-circle mr-2 lux-gold-text"></i>
                 Add New UKM
             </h3>
             <button onclick="closeAddModal()" class="text-gray-400 hover:text-gray-600 transition duration-200">
-                <i class="fas fa-times text-xl"></i>
+                <i class="fas fa-times text-lg sm:text-xl"></i>
             </button>
         </div>
         
-        <form id="addUkmForm" action="{{ route('admin.ukms.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-4">
+        <form id="addUkmForm" action="{{ route('admin.ukms.store') }}" method="POST" enctype="multipart/form-data" 
+              class="p-4 sm:p-6 space-y-4">
             @csrf
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">UKM Name *</label>
                     <input type="text" name="name" required 
@@ -500,20 +554,22 @@
     </div>
 </dialog>
 
-<!-- MODAL EDIT UKM -->
-<dialog id="editUkmModal" class="modal-backdrop w-full max-w-2xl mx-auto rounded-lg">
+<!-- EDIT MODAL Responsive -->
+<dialog id="editUkmModal" class="modal-backdrop w-[95vw] sm:w-full max-w-2xl mx-auto rounded-lg">
+    <!-- Modal content tetap sama, tambahkan class responsive -->
     <div class="modal-content p-0">
-        <div class="flex justify-between items-center p-6 border-b border-gray-200">
-            <h3 class="text-xl font-bold text-gray-900 flex items-center">
+        <div class="flex justify-between items-center p-4 sm:p-6 border-b border-gray-200">
+            <h3 class="text-lg sm:text-xl font-bold text-gray-900 flex items-center">
                 <i class="fas fa-edit mr-2 lux-gold-text"></i>
                 Edit UKM
             </h3>
             <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition duration-200">
-                <i class="fas fa-times text-xl"></i>
+                <i class="fas fa-times text-lg sm:text-xl"></i>
             </button>
         </div>
         
-        <form id="editUkmForm" action="" method="POST" enctype="multipart/form-data" class="p-6 space-y-4">
+        <form id="editUkmForm" action="" method="POST" enctype="multipart/form-data" 
+              class="p-4 sm:p-6 space-y-4">
             @csrf
             @method('PUT')
             
@@ -611,11 +667,18 @@
 </dialog>
 
 <script>
-// Modal Functions
+// Modal Functions untuk mobile
 function openAddModal() {
     const modal = document.getElementById('addUkmModal');
     modal.showModal();
     document.getElementById('addUkmForm').reset();
+    
+    // Mobile positioning
+    if (window.innerWidth < 640) {
+        modal.style.margin = '1rem auto';
+        modal.style.maxHeight = '90vh';
+        modal.style.overflowY = 'auto';
+    }
 }
 
 function closeAddModal() {
@@ -650,7 +713,15 @@ function editUkm(ukm) {
         currentLogoContainer.style.display = 'none';
     }
     
-    document.getElementById('editUkmModal').showModal();
+    const modal = document.getElementById('editUkmModal');
+    modal.showModal();
+    
+    // Mobile positioning
+    if (window.innerWidth < 640) {
+        modal.style.margin = '1rem auto';
+        modal.style.maxHeight = '90vh';
+        modal.style.overflowY = 'auto';
+    }
 }
 
 function confirmDelete() {
@@ -681,10 +752,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Auto-close flash messages after 5 seconds
-setTimeout(() => {
-    const flashMessages = document.querySelectorAll('.fixed');
-    flashMessages.forEach(msg => msg.remove());
-}, 5000);
 </script>
 @endsection
