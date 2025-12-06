@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @section('content')
-<div class="w-full bg-gradient-to-r from-white to-gray-50">
+<div class="md:mr-[-33px] md:ml-[-33px] md:pb-[80px] md:mb-[-90px]  bg-gradient-to-r from-white to-gray-50">
     
     {{-- Container Utama yang Menghitung Tinggi Tersisa --}}
     <div 
@@ -16,8 +16,8 @@
                 <h2 class="text-3xl md:text-4xl lg:text-4xl font-semibold text-gray-800 mb-6 leading-tight">
                     Sistem Informasi<br>Unit Kegiatan Mahasiswa
                 </h2>
-                <p class="text-xl md:text-sm text-gray-600 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                    Jelajahi beragam UKM yang sesuai dengan minat dan bakatmu, daftar dengan mudah, dan nikmati pengalaman kampus yang lebih bermakna.
+                <p class="text-xl md:text-sm  text-gray-600 mb-8 max-w-2xl mx-auto lg:mr-[-100px] leading-relaxed">
+                   Jelajahi beragam UKM yang sesuai dengan minat dan bakatmu, daftar dengan mudah, dan nikmati pengalaman kampus yang lebih bermakna. Semua informasi dan aktivitas UKM ada disini.
                 </p>
                 
                 @auth
@@ -25,11 +25,11 @@
                         <i class="fas fa-tachometer-alt mr-3"></i>Lihat Dashboard
                     </a>
                 @else
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <a href="{{ route('home') }}" class="px-10 py-4 bg-gray-800 text-white font-bold rounded-lg hover:bg-gray-700 transition duration-300 inline-flex items-center text-lg">
-                            <i class="fas fa-rocket mr-3"></i>Jelajahi UKM
-                        </a>
-                    </div>
+<div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+    <a href="{{ route('home') }}" class="px-8 sm:px-12 py-3 bg-gray-800 text-white rounded-full hover:bg-gray-700 transition duration-300 inline-flex items-center justify-center text-lg w-full sm:w-auto">
+        Masuk
+    </a>
+</div>
                 @endauth
             </div>
 

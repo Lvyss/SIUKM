@@ -58,21 +58,18 @@ Route::get('/home', [HomeController::class, 'home'])->name('home');
             // Profile Routes
             Route::get('/profile', [UserController::class, 'profile'])->name('profile');
             Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
+
         });
 
         // ==================== ADMIN ROUTES ====================
         Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
             // Dashboard
             Route::get('/dashboard', [AdminDashboardController::class, 'dashboard'])->name('dashboard');
-
-            // Categories Management
-// Category routes
-Route::prefix('admin')->group(function () {
     Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');
     Route::post('/categories', [AdminCategoryController::class, 'store'])->name('categories.store');
     Route::put('/categories/{id}', [AdminCategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{id}', [AdminCategoryController::class, 'destroy'])->name('categories.destroy');
-});
+
             // UKM Routes
             
                 Route::get('/ukms', [AdminUkmController::class, 'index'])->name('ukms.index');
@@ -111,6 +108,7 @@ Route::post('/registrations/bulk-action', [AdminRegistrationController::class, '
             Route::put('/feeds/{id}', [AdminFeedController::class, 'update'])->name('feeds.update');
             Route::delete('/feeds/{id}', [AdminFeedController::class, 'destroy'])->name('feeds.destroy');
         });
+   
 
         // ==================== STAFF ROUTES ====================
         Route::middleware(['role:staff'])->prefix('staff')->name('staff.')->group(function () {

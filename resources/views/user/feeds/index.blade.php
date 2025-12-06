@@ -21,10 +21,10 @@
         </div>
         
         {{-- TELAH DIKOREKSI: Mengubah grid-cols-1 sm:grid-cols-2 menjadi grid-cols-2 --}}
-        <div class="grid grid-cols-2 lg:grid-cols-3 gap-6" id="feeds-grid">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6" id="feeds-grid">
             @foreach($feeds as $feed)
-            <div class="bg-white rounded-xl shadow-md overflow-hidden transform hover:scale-[1.02] transition duration-300 feed-card" data-ukm="{{ $feed->ukm->id }}">
-                <div class="h-48 bg-gray-200 flex items-center justify-center text-gray-400 overflow-hidden relative">
+            <div class="bg-white rounded-md shadow-md overflow-hidden transform hover:scale-[1.02] transition duration-300 feed-card" data-ukm="{{ $feed->ukm->id }}">
+                <div class="md:h-60 h-44 bg-gray-200 flex items-center justify-center text-gray-400 overflow-hidden relative">
                     @if($feed->image)
                         <img src="{{ $feed->image }}" alt="{{ $feed->title }}" class="w-full h-full object-cover">
                     @else
@@ -63,7 +63,7 @@
                     <h3 class="text-lg font-semibold text-gray-800 mb-3 line-clamp-2">{{ $feed->title }}</h3>
                     <p class="text-sm text-gray-500 mb-4 line-clamp-3">{{ Str::limit($feed->content, 100) }}</p>
                     
-                    <button class="open-feed-modal w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 transition text-sm font-medium flex items-center justify-center group"
+                    <button class="open-feed-modal w-full bg-gray-600 text-white py-2.5 rounded-lg hover:bg-orange-700 transition text-sm font-medium flex items-center justify-center group"
                             data-feed-title="{{ $feed->title }}"
                             data-feed-content="{{ $feed->content }}"
                             data-feed-image="{{ $feed->image ?? '' }}"
@@ -95,7 +95,7 @@
             </div>
             <h3 class="text-xl font-semibold text-gray-600 mb-2">Tidak ada feed dari UKM ini</h3>
             <p class="text-gray-500">Tidak ditemukan feed untuk UKM yang dipilih.</p>
-            <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors category-filter" data-category="all">
+            <button class="mt-4 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors category-filter" data-category="all">
                 Tampilkan Semua Feed
             </button>
         </div>

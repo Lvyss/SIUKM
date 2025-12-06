@@ -3,7 +3,7 @@
 @section('content')
 
 {{-- 1. HERO SECTION (Banner Utama) - TIDAK ADA PERUBAHAN DARI RESPON SEBELUMNYA --}}
-<section class="md:ml-[-30px] md:mr-[-30px] py-10 md:py-16 px-4 md:px-0 flex flex-col md:flex-row justify-between items-center bg-white shadow-md">
+<section class="md:ml-[-34px] md:mr-[-34px] py-10 md:py-16 px-4 md:px-0 flex flex-col md:flex-row justify-between items-center bg-white shadow-md">
     <div class="max-w-7xl mx-auto w-full flex flex-col md:flex-row justify-between items-center md:px-24 lg:px-24">
         <div class="w-full md:w-2/3 mb-8 md:mb-0 text-center md:text-left">
             <h1 class="text-3xl sm:text-4xl md:text-4xl lg:text-4xl font-bold leading-tight text-gray-900 px-4">
@@ -23,8 +23,8 @@
             </p>
             
             @auth
-                <a href="{{ route('user.ukm.list') }}" class="inline-block px-10 py-3 bg-gray-800 text-white font-semibold rounded-full hover:bg-gray-700 transition duration-300">
-                    Gabung Sekarang!
+                <a href="{{ route('user.ukm.list') }}" class="inline-block px-12 py-2 bg-gray-800 text-white font-semibold rounded-full hover:bg-gray-700 transition duration-300">
+                    Disini!
                 </a>
             @else
                 <button onclick="showLoginModal()" class="inline-block px-10 py-3 bg-gray-800 text-white font-semibold rounded-full hover:bg-gray-700 transition duration-300">
@@ -42,8 +42,7 @@
     <section class="mb-12">
         <div class="flex justify-between items-center mb-6 px-4 sm:px-0">
             <h2 class="text-2xl sm:text-3xl font-bold">Trending Event</h2>
-            <a href="{{ route('user.events.index') }}" class="text-sm font-medium text-blue-600 hover:text-blue-700">Lihat Semua →</a>
-        </div>
+      </div>
 
         <div class="relative">
             <div class="overflow-hidden">
@@ -73,7 +72,7 @@
                                         @if($event->poster_image)
                                             <img src="{{ $event->poster_image }}" alt="{{ $event->title }}" class="w-full h-full object-cover">
                                         @else
-                                            <div class="w-full h-full bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center">
+                                            <div class="w-full h-full bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center">
                                                 <i class="fas fa-calendar-alt text-gray-400 text-2xl sm:text-3xl"></i>
                                             </div>
                                         @endif
@@ -88,19 +87,17 @@
                                         </div>
                                         
                                         {{-- Batasi deskripsi agar tidak pecah di mobile --}}
-                                        <p class="text-xs text-gray-600 line-clamp-3 sm:line-clamp-3">{{ Str::limit($event->description, 50) }}</p>
+                                        <p class="text-sm text-gray-600 line-clamp-3 sm:line-clamp-none">{{ Str::limit($event->description, 290) }}</p>
                                         
                                         <div class="mt-auto pt-1">
-                                            <p class="text-xs text-indigo-600 font-medium">{{ $event->ukm->name }}</p>
+                                                                     <div class="flex items-center text-gray-600/90 text-[10px] sm:text-xs">
+                                        <i class="fab fa-instagram mr-1 sm:mr-1 text-[15px]"></i>
+                                       <p class="text-xs text-gray-600 font-medium">{{ $event->ukm->instagram }}</p>
+                                    </div>
+                                            
                                             <div class="flex justify-between items-end mt-1">
                                                 <span class="text-xs text-gray-400 hidden sm:block">{{ $event->created_at->diffForHumans() }}</span>
-                                                <span class="text-blue-600 text-xs sm:text-sm font-medium hover:text-blue-800">
-                                                    @auth
-                                                        Detail →
-                                                    @else
-                                                        Login →
-                                                    @endauth
-                                                </span>
+    
                                             </div>
                                         </div>
                                     </div>
@@ -116,7 +113,7 @@
             
             <div class="flex justify-center mt-6 space-x-2">
                 @foreach($trendingEvents as $key => $event)
-                <div class="w-2 h-2 rounded-full bg-gray-300 transition-colors duration-300 cursor-pointer carousel-dot {{ $key === 0 ? 'active !bg-blue-600' : '' }}"></div>
+                <div class="w-2 h-2 rounded-full bg-gray-300 transition-colors duration-300 cursor-pointer carousel-dot {{ $key === 0 ? 'active !bg-gray-600' : '' }}"></div>
                 @endforeach
             </div>
         </div>
@@ -126,12 +123,12 @@
 {{-- MENJADI INI: --}}
 <section class="mb-12">
     {{-- Container dengan margin negatif lebih besar --}}
-        <div class="lg:mx-[-125px] mx-[-15px] bg-white pt-10 pb-16 shadow-inner md:shadow-none">
+        <div class="lg:mx-[-130px] mx-[-15px] bg-white pt-10 pb-16 shadow-inner md:shadow-none">
             
             {{-- Konten dengan padding normal --}}
             <div class="px-4 sm:px-6 lg:px-24">
                 <div class="flex justify-center items-center mb-10">
-                    <h2 class="text-2xl sm:text-3xl font-bold">Feed Terbaru</h2>
+                    <h2 class="text-2xl sm:text-3xl font-bold">Feed</h2>
                 </div>
             </div>
         
@@ -172,7 +169,7 @@
                         
                         {{-- Batasi content di mobile agar card tidak terlalu panjang --}}
                         <p class="text-xs sm:text-sm text-gray-600 line-clamp-2">
-                            {{ Str::limit($feed->content, 50) }}
+                            {{ Str::limit($feed->content, 65) }}
                         </p>
                         <span class="text-xs text-gray-400 block mt-2">{{ $feed->ukm->name }}</span>
                     </div>
@@ -195,11 +192,11 @@
                 </div>
                 <p class="text-gray-600 text-lg">Belum ada feed terbaru yang diposting.</p>
                 @auth
-                    <a href="{{ route('user.feeds.index') }}" class="text-blue-600 hover:text-blue-700 font-medium mt-2 inline-block">
+                    <a href="{{ route('user.feeds.index') }}" class="text-orange-600 hover:text-orange-700 font-medium mt-2 inline-block">
                         Jelajahi Feed Lainnya →
                     </a>
                 @else
-                    <button onclick="showLoginModal()" class="text-blue-600 hover:text-blue-700 font-medium mt-2">
+                    <button onclick="showLoginModal()" class="text-orange-600 hover:text-orange-700 font-medium mt-2">
                         Jelajahi Feed Lainnya →
                     </button>
                 @endauth
@@ -237,7 +234,7 @@
 
                         {{-- Category Badge --}}
                         <div class="absolute top-2 right-2 z-10 ukm-badge transition duration-300">
-                            <span class="px-2 py-1 bg-blue-600/90 text-white text-xs font-semibold rounded-full shadow-md">
+                            <span class="px-2 py-1 bg-orange-600/90 text-white text-xs font-semibold rounded-full shadow-md">
                                 {{ $ukm->category->name ?? 'Umum' }}
                             </span>
                         </div>
@@ -255,37 +252,24 @@
                         </div>
                     </div>
 
-                    {{-- Detail Content Section --}}
-                    {{-- Padding dan ukuran font disesuaikan --}}
-                    <div class="pt-10 sm:pt-14 lg:pt-16 pb-4 sm:pb-6 px-3 sm:px-4 text-center">
-                        <h3 class="text-base sm:text-lg font-bold text-gray-800 mb-1 line-clamp-1">{{ $ukm->name }}</h3>
-                        <p class="text-xs sm:text-sm text-gray-500 mb-2 sm:mb-4 h-8 overflow-hidden line-clamp-2">{{ Str::limit($ukm->description, 50) }}</p>
-                        
-                        <div class="flex flex-col items-center justify-center space-y-1 text-sm text-gray-500 mb-3 sm:mb-4 border-t pt-2 sm:pt-3 mt-2 sm:mt-3">
-                            @php
-                                $memberCount = $ukm->registrations()->where('status', 'approved')->count() ?? ($ukm->approved_members_count ?? $ukm->members_count ?? 0);
-                            @endphp
-                            
-                            {{-- Member Count --}}
-                            <div class="flex items-center text-gray-700 font-semibold">
-                                <i class="fas fa-user-friends mr-1 sm:mr-2 text-xs text-blue-500"></i>
-                                <span class="text-xs sm:text-sm">{{ $memberCount }} Anggota Aktif</span>
-                            </div>
-
-                            @if($ukm->contact_person)
-                                <div class="flex items-center text-blue-600/90 text-[10px] sm:text-xs">
-                                    <i class="fas fa-phone-alt mr-1 sm:mr-2 text-[10px]"></i>
-                                    <span>{{ $ukm->contact_person }}</span>
-                                </div>
-                            @endif
-                        </div>
-                        
-                        <div class="mt-2 sm:mt-4">
-                            <span class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors shadow-lg">
-                                <i class="fas fa-info-circle mr-1 sm:mr-2"></i> Lihat Detail
-                            </span>
-                        </div>
-                    </div>
+<div class="pt-10 sm:pt-14 lg:pt-16 pb-4 sm:pb-6 px-3 sm:px-4 text-center">
+    <h3 class="text-base sm:text-lg font-bold text-gray-800 mb-1 line-clamp-1">{{ $ukm->name }}</h3>
+    
+    {{-- Deskripsi dengan 2 baris untuk mobile, lebih untuk desktop --}}
+    <p class="text-xs sm:text-sm text-gray-500 mb-2 sm:mb-4 line-clamp-2 sm:line-clamp-3">
+        {{ Str::limit($ukm->description, 100) }}
+    </p>
+    
+    <div class="flex flex-col items-center justify-center space-y-1 text-sm text-gray-500 mb-3 sm:mb-4 border-t pt-2 sm:pt-3 mt-2 sm:mt-3">
+        @if($ukm->instagram)
+            <div class="flex items-center text-gray-600/90 text-[10px] sm:text-xs">
+                <i class="fab fa-instagram mr-1 sm:mr-1 text-[15px]"></i>
+                <span>{{ $ukm->instagram }}</span>
+            </div>
+        @endif
+        
+    </div>
+</div>
 
             @auth
                 </a>
@@ -302,11 +286,11 @@
                 </div>
                 <p class="text-gray-600 text-lg">Belum ada UKM terdaftar.</p>
                 @auth
-                    <a href="{{ route('user.ukm.list') }}" class="text-blue-600 hover:text-blue-700 font-medium mt-2 inline-block">
+                    <a href="{{ route('user.ukm.list') }}" class="text-orange-600 hover:text-orange-700 font-medium mt-2 inline-block">
                         Jelajahi UKM Lainnya →
                     </a>
                 @else
-                    <button onclick="showLoginModal()" class="text-blue-600 hover:text-blue-700 font-medium mt-2">
+                    <button onclick="showLoginModal()" class="text-orange-600 hover:text-orange-700 font-medium mt-2">
                         Jelajahi UKM Lainnya →
                     </button>
                 @endauth

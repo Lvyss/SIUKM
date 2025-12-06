@@ -102,7 +102,7 @@ input[type="password"] {
     </style>
 </head>
 
-<body class="bg-gray-50 font-sans text-gray-800">
+<body class="bg-[#ececec] font-sans text-gray-800">
     
     <nav class="bg-white border-b shadow-md fixed top-0 w-full z-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-24">
@@ -118,22 +118,22 @@ input[type="password"] {
                     <div class="flex items-center space-x-12">
                         @auth
                             <a href="{{ route('user.dashboard') }}"
-                                class="text-[13px] text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200">Home</a>
+                                class="text-[13px] text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200">Home</a>
                             <a href="{{ route('user.feeds.index') }}"
-                                class="text-[13px] text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200">Feed</a>
+                                class="text-[13px] text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200">Feed</a>
                             <a href="{{ route('user.events.index') }}"
-                                class="text-[13px] text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200">Event</a>
+                                class="text-[13px] text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200">Event</a>
                             <a href="{{ route('user.ukm.list') }}"
-                                class="text-[13px] text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200">UKM</a>
+                                class="text-[13px] text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200">UKM</a>
                         @else
                             <button onclick="showLoginModal()"
-                                class="text-[13px] text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200">Home</button>
+                                class="text-[13px] text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200">Home</button>
                             <button onclick="showLoginModal()"
-                                class="text-[13px] text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200">Feed</button>
+                                class="text-[13px] text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200">Feed</button>
                             <button onclick="showLoginModal()"
-                                class="text-[13px] text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200">Event</button>
+                                class="text-[13px] text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200">Event</button>
                             <button onclick="showLoginModal()"
-                                class="text-[13px] text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200">UKM</button>
+                                class="text-[13px] text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200">UKM</button>
                         @endauth
                     </div>
 
@@ -141,7 +141,7 @@ input[type="password"] {
                         @auth
                             <div class="relative" id="profile-menu-container-desktop">
                                 <button id="profile-menu-button-desktop"
-                                    class="text-gray-500 hover:text-blue-600 transition-colors duration-200 focus:outline-none">
+                                    class="text-gray-500 hover:text-orange-600 transition-colors duration-200 focus:outline-none">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -165,7 +165,10 @@ input[type="password"] {
                             </div>
                         @else
                             <button onclick="showLoginModal()"
-                                class="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200">Login</button>
+                                class="text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200">                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg></button>
                         @endauth
                     </div>
                 </div>
@@ -176,7 +179,7 @@ input[type="password"] {
                         @auth
                             <div class="relative" id="profile-menu-container-mobile">
                                 <button id="profile-menu-button-mobile"
-                                    class="text-gray-500 hover:text-blue-600 transition-colors duration-200 focus:outline-none">
+                                    class="text-gray-500 hover:text-orange-600 transition-colors duration-200 focus:outline-none">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -199,12 +202,12 @@ input[type="password"] {
                             </div>
                         @else
                             <button onclick="showLoginModal()"
-                                class="text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200 text-sm">Login</button>
+                                class="text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200 text-sm">Login</button>
                         @endauth
                     </div>
 
                     <button id="mobile-menu-button" type="button"
-                        class="p-2 rounded-md text-gray-500 hover:text-blue-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                        class="p-2 rounded-md text-gray-500 hover:text-orange-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-500"
                         aria-controls="mobile-menu" aria-expanded="false">
                         <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -222,22 +225,22 @@ input[type="password"] {
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t">
                 @auth
                     <a href="{{ route('user.dashboard') }}"
-                        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200">Home</a>
+                        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-700 transition-colors duration-200">Home</a>
                     <a href="{{ route('user.feeds.index') }}"
-                        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200">Feed</a>
+                        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-700 transition-colors duration-200">Feed</a>
                     <a href="{{ route('user.events.index') }}"
-                        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200">Event</a>
+                        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-700 transition-colors duration-200">Event</a>
                     <a href="{{ route('user.ukm.list') }}"
-                        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200">UKM</a>
+                        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-700 transition-colors duration-200">UKM</a>
                 @else
                     <button onclick="showLoginModal()"
-                        class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200">Home</button>
+                        class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-700 transition-colors duration-200">Home</button>
                     <button onclick="showLoginModal()"
-                        class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200">Feed</button>
+                        class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-700 transition-colors duration-200">Feed</button>
                     <button onclick="showLoginModal()"
-                        class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200">Event</button>
+                        class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-700 transition-colors duration-200">Event</button>
                     <button onclick="showLoginModal()"
-                        class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200">UKM</button>
+                        class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-700 transition-colors duration-200">UKM</button>
                 @endauth
             </div>
         </div>
