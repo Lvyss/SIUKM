@@ -7,13 +7,13 @@
             @if($ukm->logo)
                 <img src="{{ $ukm->logo }}" alt="Cover {{ $ukm->name }}" class="w-full h-full object-cover brightness-75 blur-[5px]">
             @else
-                <div class="w-full h-full bg-gradient-to-r from-blue-50 to-indigo-100 flex items-center justify-center">
+                <div class="w-full h-full bg-gradient-to-r from-orange-50 to-indigo-100 flex items-center justify-center">
                     <i class="fas fa-image text-5xl text-gray-400"></i>
                 </div>
             @endif
             
             <div class="absolute top-6 right-6">
-                <span class="px-4 py-2 bg-white/90 backdrop-blur-sm text-blue-600 text-sm font-medium rounded-full shadow-lg border border-blue-100">
+                <span class="px-4 py-2 bg-white/90 backdrop-blur-sm text-orange-600 text-sm font-medium rounded-full shadow-lg border border-orange-100">
                     {{ $ukm->category->name ?? 'No Category' }}
                 </span>
             </div>
@@ -21,13 +21,13 @@
             <div class="absolute bottom-6 right-6">
                 @if(!$isRegistered)
                     <button id="openUkmRegisterModalButton"
-                            class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-5 py-2.5 rounded-xl hover:shadow-lg hover:shadow-green-300 transition-all duration-300 font-semibold text-sm flex items-center group">
+                            class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-2.5 rounded-full hover:shadow-lg hover:shadow-green-300 transition-all duration-300 font-semibold text-sm flex items-center group">
                         <i class="fas fa-user-plus mr-2 group-hover:scale-105 transition-transform"></i>
                         Join UKM
                     </button>
                     @else
-                    <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center">
-                        <i class="fas fa-check-circle mr-2 text-emerald-500"></i>
+                    <div class="bg-orange-50 border border-orange-200 text-orange-700 px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center">
+                        <i class="fas fa-check-circle mr-2 text-orange-500"></i>
                         Sudah Terdaftar
                     </div>
                 @endif
@@ -110,22 +110,22 @@
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-2xl font-bold text-gray-900">Event Mendatang</h2>
-                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-calendar text-blue-600 text-lg"></i>
+                    <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-calendar text-orange-600 text-lg"></i>
                     </div>
                 </div>
                 
                 @if($ukm->events->where('event_date', '>=', now())->count() > 0)
                     <div class="space-y-4">
                         @foreach($ukm->events->where('event_date', '>=', now())->take(3) as $event)
-                        <div class="group p-4 border border-gray-200 rounded-xl hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 cursor-pointer flex items-start space-x-4">
-                            <div class="flex-shrink-0 w-16 h-16 bg-blue-600 text-white rounded-lg flex flex-col items-center justify-center">
+                        <div class="group p-4 border border-gray-200 rounded-xl hover:border-orange-400 hover:bg-orange-50 transition-all duration-300 cursor-pointer flex items-start space-x-4">
+                            <div class="flex-shrink-0 w-16 h-16 bg-orange-600 text-white rounded-lg flex flex-col items-center justify-center">
                                 <span class="text-lg font-bold leading-none">{{ $event->event_date->format('d') }}</span>
                                 <span class="text-xs uppercase leading-none">{{ $event->event_date->format('M') }}</span>
                             </div>
 
                             <div class="flex-1">
-                                <h3 class="font-semibold text-gray-900 mb-1 group-hover:text-blue-700 transition-colors">{{ $event->title }}</h3>
+                                <h3 class="font-semibold text-gray-900 mb-1 group-hover:text-orange-700 transition-colors">{{ $event->title }}</h3>
                                 <p class="text-gray-600 text-sm mb-2 line-clamp-2">{{ $event->description }}</p>
                                 <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
                                     <span class="flex items-center">
@@ -178,7 +178,7 @@
                                     <span class="text-xs text-gray-500 flex items-center">
                                         <i class="fas fa-clock mr-1"></i> {{ $feed->created_at->diffForHumans() }}
                                     </span>
-                                    <a href="#" class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
+                                    <a href="#" class="text-orange-600 hover:text-orange-700 text-sm font-medium flex items-center">
                                         Baca Selengkapnya
                                         <i class="fas fa-arrow-right ml-1 text-xs"></i>
                                     </a>
@@ -201,13 +201,13 @@
         <div class="space-y-8">
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
                 <h2 class="text-xl font-bold text-gray-900 border-b pb-3 mb-3 flex items-center">
-                    <i class="fas fa-address-card mr-2 text-blue-500"></i> Informasi Kontak
+                    <i class="fas fa-address-card mr-2 text-orange-500"></i> Informasi Kontak
                 </h2>
                 
                 @if($ukm->contact_person)
-                <div class="flex items-center space-x-3 p-2 bg-blue-50 rounded-lg">
-                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-phone-alt text-blue-600 text-xs"></i>
+                <div class="flex items-center space-x-3 p-2 bg-orange-50 rounded-lg">
+                    <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-phone-alt text-orange-600 text-xs"></i>
                     </div>
                     <div>
                         <p class="text-xs text-gray-500">Contact Person (WA)</p>
@@ -332,7 +332,7 @@
                     <i class="fas fa-lightbulb text-orange-500 mr-2"></i> Motivasi *
                 </label>
                 <textarea name="motivation" id="motivation" required 
-                          class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none placeholder:text-gray-400"
+                          class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all resize-none placeholder:text-gray-400"
                           rows="4" 
                           placeholder="Ceritakan mengapa Anda ingin bergabung dengan UKM ini dan harapan Anda..."></textarea>
                 <span id="motivationError" class="error-message"></span>
@@ -341,10 +341,10 @@
             
             <div>
                 <label for="experience" class="block text-sm font-semibold text-gray-800 mb-2 flex items-center">
-                    <i class="fas fa-history text-blue-500 mr-2"></i> Pengalaman (Opsional)
+                    <i class="fas fa-history text-orange-500 mr-2"></i> Pengalaman (Opsional)
                 </label>
                 <textarea name="experience" id="experience"
-                          class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none placeholder:text-gray-400"
+                          class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all resize-none placeholder:text-gray-400"
                           rows="2" 
                           placeholder="Pengalaman relevan di bidang ini (misalnya, organisasi, lomba, proyek)..."></textarea>
                 <span id="experienceError" class="error-message"></span>
@@ -356,7 +356,7 @@
                     <i class="fas fa-tools text-purple-500 mr-2"></i> Keahlian (Opsional)
                 </label>
                 <textarea name="skills" id="skills"
-                          class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none placeholder:text-gray-400"
+                          class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all resize-none placeholder:text-gray-400"
                           rows="2" 
                           placeholder="Sebutkan keahlian khusus yang dapat Anda kontribusikan (dipisahkan koma)..."></textarea>
                 <span id="skillsError" class="error-message"></span>

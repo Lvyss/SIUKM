@@ -2,24 +2,26 @@
 @extends('layouts.user')
 
 @section('content')
-    <div class="container mx-auto px-4 py-8">
 
-        <section class="navbar-bg py-16  text-white text-center shadow-lg -mx-8 mb-14">
-            <h1 class="text-3xl font-semibold tracking-wider pt-16">Daftar UKM</h1>
-            <p class="mt-2 text-sm text-gray-400">Temukan minat, kembangkan bakat, dan mulai perjalananmu di sini</p>
-        </section>
+<section class="md:mr-[-31px]  md:ml-[-32px] relative bg-cover bg-center text-white text-center shadow-lg mb-8 h-64 overflow-hidden" 
+         style="background-image: url('/img/header.png');">
+    
+    <div class="mt-8 relative z-10 h-full flex flex-col justify-center">
+        <h1 class="text-3xl tracking-wider">Daftar UKM</h1>
+        <p class="mt-2 text-sm text-gray-200">Mulai Perjalananmu Disini</p>
+    </div>
+</section>
 
-        <main class="container mx-auto px-4 sm:px-6 lg:px-8 -mt-24">
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <div class="flex flex-wrap gap-2 mb-8 border-b pb-4 overflow-x-auto whitespace-nowrap scrollbar-hide">
-                    <button
-                        class="px-4 py-2 text-sm font-medium rounded-full bg-gray-900 text-white shadow-md flex-shrink-0 category-filter active"
-                        data-category="all">
-                        SEMUA KATEGORI
-                    </button>
+
+        <main class="container mx-auto px-4 sm:px-6 lg:px-8 ">
+            <div class="">
+        <div class="flex flex-wrap justify-center gap-2 mb-8 border-b pb-4 overflow-x-auto whitespace-nowrap scrollbar-hide">
+            <button class="px-4 py-2 text-sm font-medium rounded-full bg-gray-900 text-white shadow-md flex-shrink-0 category-filter active" data-category="all">
+                SEMUA UKM
+            </button>
                     @foreach ($categories as $category)
                         <button
-                            class="px-4 py-2 text-sm font-medium rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 flex-shrink-0 category-filter"
+                            class="px-4 py-2 text-sm font-medium rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 flex-shrink-0  category-filter"
                             data-category="{{ $category->id }}">
                             {{ strtoupper($category->name) }}
                         </button>
@@ -47,7 +49,7 @@
                                 {{-- Category Badge (DITAMBAH CLASS: ukm-badge) --}}
                                 <div class="absolute top-3 right-3 z-10 ukm-badge transition duration-300">
                                     <span
-                                        class="px-3 py-1 bg-blue-600/90 text-white text-xs font-semibold rounded-full shadow-md">
+                                        class="px-3 py-1 bg-white text-xs font-semibold rounded-full shadow-md">
                                         {{ $ukm->category->name }}
                                     </span>
                                 </div>
@@ -74,10 +76,10 @@
                                     {{ Str::limit($ukm->description, 80) }}</p>
 
                                 <div class="flex flex-col items-center justify-center space-y-1 text-sm text-gray-500 mb-4">
-                                    @if ($ukm->contact_person)
-                                        <div class="flex items-center text-blue-600 font-medium">
-                                            <i class="fas fa-phone-alt mr-2 text-xs"></i>
-                                            <span>{{ $ukm->contact_person }}</span>
+                                    @if ($ukm->instagram)
+                                        <div class="flex items-center text-gray-600 font-medium">
+                                            <i class="fab fa-instagram mr-2 text-xs"></i>
+                                            <span>{{ $ukm->instagram }}</span>
                                         </div>
                                     @else
                                         <div class="flex items-center text-gray-400">
@@ -97,7 +99,7 @@
 
                                 <div class="mt-4">
                                     <a href="{{ route('user.ukm.detail', $ukm->id) }}"
-                                        class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors shadow-md">
+                                        class="inline-flex items-center bg-gray-600 hover:bg-orange-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors shadow-md">
                                         <i class="fas fa-info-circle mr-2"></i> Lihat Detail
                                     </a>
                                 </div>
@@ -132,7 +134,7 @@
                     <h3 class="text-xl font-semibold text-gray-600 mb-2">Tidak ada UKM di kategori ini</h3>
                     <p class="text-gray-500">Tidak ditemukan UKM untuk kategori yang dipilih.</p>
                     <button
-                        class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors category-filter"
+                        class="mt-4 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors category-filter"
                         data-category="all">
                         Tampilkan Semua UKM
                     </button>

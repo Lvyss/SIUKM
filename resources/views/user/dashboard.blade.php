@@ -234,7 +234,7 @@
 
                         {{-- Category Badge --}}
                         <div class="absolute top-2 right-2 z-10 ukm-badge transition duration-300">
-                            <span class="px-2 py-1 bg-orange-600/90 text-white text-xs font-semibold rounded-full shadow-md">
+                            <span class="px-2 py-1 bg-white text-xs font-semibold rounded-full shadow-md">
                                 {{ $ukm->category->name ?? 'Umum' }}
                             </span>
                         </div>

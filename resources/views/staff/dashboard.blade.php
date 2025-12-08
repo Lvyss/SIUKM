@@ -91,7 +91,7 @@
                             </p>
                         </div>
                     </div>
-                    <a href="{{ route('staff.ukms.edit', $ukm->id) }}" 
+                    <a href="{{ route('staff.ukms.index', $ukm->id) }}" 
                        class="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-800 mt-2">
                         Manage UKM <i class="fas fa-arrow-right ml-1 text-xs"></i>
                     </a>

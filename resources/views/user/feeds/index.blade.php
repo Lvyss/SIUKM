@@ -1,24 +1,35 @@
 @extends('layouts.user')
 
 @section('content')
-<section class="navbar-bg py-16 text-white text-center shadow-lg -mx-8 mb-14">
-    <h1 class="text-3xl font-semibold tracking-wider pt-16">Feeds</h1>
-    <p class="mt-2 text-sm text-gray-400">Update terbaru dari berbagai UKM</p>
+<section class="relative bg-cover bg-center text-white text-center shadow-lg mb-8 h-64 overflow-hidden" 
+         style="background-image: url('/img/header.png');">
+    
+
+
+<div class="relative z-10 h-full flex flex-col justify-center">
+
+<h1 class="mt-16 text-3xl tracking-wider">Feeds</h1>
+
+<p class="mt-2 text-sm text-gray-200">Berita & Informasi Terbaru</p>
+
+</div>
+
+
 </section>
 
-<main class="container mx-auto px-4 sm:px-6 lg:px-8 -mt-24">
-    <div class="bg-white p-6 rounded-xl shadow-lg">
+<main class="container mx-auto px-4 sm:px-6 lg:px-8 ">
+    <div class="">
         {{-- Tombol Filter dan Grid Feeds --}}
-        <div class="flex flex-wrap gap-2 mb-8 border-b pb-4 overflow-x-auto whitespace-nowrap scrollbar-hide">
-            <button class="px-4 py-2 text-sm font-medium rounded-full bg-gray-900 text-white shadow-md flex-shrink-0 category-filter active" data-category="all">
-                SEMUA UKM
-            </button>
-            @foreach($ukms as $ukmItem)
-            <button class="px-4 py-2 text-sm font-medium rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 flex-shrink-0 category-filter" data-category="{{ $ukmItem->id }}">
-                {{ strtoupper($ukmItem->name) }}
-            </button>
-            @endforeach
-        </div>
+<div class="flex flex-wrap justify-center gap-2 mb-8 border-b pb-4 overflow-x-auto whitespace-nowrap scrollbar-hide">
+    <button class="px-4 py-2 text-sm font-medium rounded-full bg-gray-900 text-white shadow-md flex-shrink-0 category-filter active" data-category="all">
+        SEMUA UKM
+    </button>
+    @foreach($ukms as $ukmItem)
+    <button class="px-4 py-2 text-sm font-medium rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 flex-shrink-0 category-filter" data-category="{{ $ukmItem->id }}">
+        {{ strtoupper($ukmItem->name) }}
+    </button>
+    @endforeach
+</div>
         
         {{-- TELAH DIKOREKSI: Mengubah grid-cols-1 sm:grid-cols-2 menjadi grid-cols-2 --}}
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-6" id="feeds-grid">
